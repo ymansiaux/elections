@@ -47,12 +47,12 @@ usethis::use_git()
 golem::use_recommended_tests()
 
 ## Use Recommended Packages ----
-golem::use_recommended_deps()
+golem::use_recommended_deps(recommended = c("shiny", "golem", "shinyjs","rlang", "bdxmetroidentity", "data.table", "xtradata"))
 
 ## Favicon ----
 # If you want to change the favicon (default is golem's one)
-golem::use_favicon() # path = "path/to/ico". Can be an online file. 
-golem::remove_favicon()
+golem::use_favicon("inst/app/www/LogoDataLab.ico") # path = "path/to/ico". Can be an online file. 
+#golem::remove_favicon()
 
 ## Add helper functions ----
 golem::use_utils_ui()

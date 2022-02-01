@@ -7,9 +7,17 @@ License: MIT + file LICENSE
 Imports: 
     config (>= 0.3.1),
     golem (>= 0.3.1),
+    magrittr,
+    processx,
+    rlang,
     shiny (>= 1.7.1)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 URL: https://git.scnbdx.fr/UVD/datalab/misc/elections
 BugReports: https://git.scnbdx.fr/UVD/datalab/misc/elections/issues
+Suggests: 
+    spelling,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Language: en-US
