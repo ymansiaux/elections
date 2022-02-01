@@ -1,0 +1,15 @@
+Package: elections
+Title: Elections
+Version: 0.0.0.9000
+Authors@R: person('Yohann', 'Mansiaux', email = 'y.mansiaux@bordeaux-metropole.fr', role = c('cre', 'aut'))
+Description: Resultats des elections (historiques).
+License: MIT + file LICENSE
+Imports: 
+    config (>= 0.3.1),
+    golem (>= 0.3.1),
+    shiny (>= 1.7.1)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+URL: https://git.scnbdx.fr/UVD/datalab/misc/elections
+BugReports: https://git.scnbdx.fr/UVD/datalab/misc/elections/issues
