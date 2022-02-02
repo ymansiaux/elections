@@ -3,6 +3,8 @@
 export("%>%")
 export(run_app)
 import(bdxmetroidentity)
+import(data.table)
+import(sf)
 import(shiny)
 importFrom(golem,activate_js)
 importFrom(golem,add_resource_path)
