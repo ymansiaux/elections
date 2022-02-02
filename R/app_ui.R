@@ -6,6 +6,7 @@
 #' @import bdxmetroidentity
 #' @importFrom shinyjs useShinyjs
 #' @importFrom shinybusy add_busy_spinner
+#' @importFrom shinyYM waiter_logo
 #' @noRd
 #'
 
@@ -14,15 +15,15 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     shinyjs::useShinyjs(),
-    # waiter_logoDatalab(golem::app_prod()),
+    waiter_logo(isinProd = TRUE, img_path = "www/LogoDataLab.png"),
     add_busy_spinner(spin = "fading-circle", color = "#ff4d3e", height = "150px", width = "150px"),
     fluidPage(
       navbarpage_bdx(
         title = "StatioStats",
         collapsible = TRUE,
         tabPanel(
-          "Accueil"#,
-          # uiOutput(outputId = "my_logo"),
+          "Accueil",
+          uiOutput(outputId = "my_logo")
           # mod_accueil_ui("accueil_ui_1")
         ),
         tabPanel(
