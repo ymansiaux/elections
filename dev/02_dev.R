@@ -15,7 +15,8 @@
 
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
-usethis::use_package( "thinkr" )
+usethis::use_package( "shinybusy" )
+usethis::use_package( "shinyYM" )
 usethis::use_pipe()
 
 ## Add modules ----

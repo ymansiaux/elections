@@ -12,12 +12,6 @@ renv::snapshot()
 # usethis::use_build_ignore("vignettes/questions")
 # usethis::use_build_ignore("vignettes/designApp")
 
-
-
-usethis::use_data_raw("parkings")
-
-usethis::use_vignette("occupationparkingsapp")
-usethis::use_vignette("questions")
 usethis::use_vignette("designApp")
 
 

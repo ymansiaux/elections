@@ -10,14 +10,19 @@ Imports:
     magrittr,
     processx,
     rlang,
-    shiny (>= 1.7.1)
+    shiny (>= 1.7.1),
+    shinybusy,
+    shinyYM
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 URL: https://git.scnbdx.fr/UVD/datalab/misc/elections
 BugReports: https://git.scnbdx.fr/UVD/datalab/misc/elections/issues
 Suggests: 
+    rmarkdown,
+    knitr,
     spelling,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Language: en-US
+VignetteBuilder: knitr
