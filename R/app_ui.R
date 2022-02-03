@@ -6,7 +6,7 @@
 #' @import bdxmetroidentity
 #' @importFrom shinyjs useShinyjs
 #' @importFrom shinybusy add_busy_spinner
-#' @importFrom shinyYM waiter_logo
+#' @importFrom shinyYM waiter_logo add_notie_deps
 #' @noRd
 #'
 
@@ -14,12 +14,13 @@ app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
+    add_notie_deps(),
     shinyjs::useShinyjs(),
-    waiter_logo(isinProd = TRUE, img_path = "www/LogoDataLab.png"),
+    waiter_logo(isinProd = golem::app_prod(), img_path = "www/LogoDataLab.png"),
     add_busy_spinner(spin = "fading-circle", color = "#ff4d3e", height = "150px", width = "150px"),
     fluidPage(
       navbarpage_bdx(
-        title = "StatioStats",
+        title = "Elections",
         collapsible = TRUE,
         tabPanel(
           "Accueil",
@@ -43,6 +44,7 @@ app_ui <- function(request) {
 #'
 #' @import shiny
 #' @importFrom golem add_resource_path activate_js favicon bundle_resources
+#' 
 #' @noRd
 golem_add_external_resources <- function() {
   add_resource_path(
