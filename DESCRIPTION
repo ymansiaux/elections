@@ -19,7 +19,9 @@ Imports:
     shiny (>= 1.7.1),
     shinybusy,
     shinyjs,
-    shinyYM
+    stringr,
+    shinyYM,
+    lubridate
 Suggests: 
     knitr,
     rmarkdown,

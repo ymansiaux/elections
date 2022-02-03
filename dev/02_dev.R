@@ -17,6 +17,9 @@
 ## Add one line by package you want to add as dependency
 usethis::use_package( "shinybusy" )
 usethis::use_package( "shinyYM" )
+usethis::use_package( "stringr" )
+usethis::use_package( "lubridate" )
+
 usethis::use_pipe()
 
 ## Add modules ----
