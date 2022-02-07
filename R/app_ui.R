@@ -24,32 +24,16 @@ app_ui <- function(request) {
       navbarpage_bdx(
         title = "Elections",
         collapsible = TRUE,
+        
         tabPanel(
           "Accueil",
-          uiOutput(outputId = "my_logo"),
-          
-          selectizeInput(
-            inputId = "type_elections",
-            label = "Type d'election",
-            choices = NULL,
-            multiple = FALSE,
-            options = list(deselectBehavior = "top")
-          ),
-          
-          selectizeInput(
-            inputId = "annee_elections",
-            label = "Annee de l'election",
-            choices = NULL,
-            multiple = FALSE,
-            options = list(deselectBehavior = "top")
-          )
-          
-          
-          # mod_accueil_ui("accueil_ui_1")
+          mod_accueil_ui("accueil_ui_1"),
+          uiOutput(outputId = "my_logo")
         ),
+        
         tabPanel(
-          "Occupation - observer 1 p\u00e9riode",
-          # mod_occupation_1_periode_ui("occupation_ui_1")
+          "Observer 1 élection",
+          mod_observer_1_election_ui("observer_1_election_ui_1")
         )
       )
     )

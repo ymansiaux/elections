@@ -7,8 +7,10 @@
 #' @import sf
 #' @importFrom shinyYM closeWaiter add_notie_alert
 #' @importFrom xtradata xtradata_requete_features
-#' @importFrom stringr str_extract
+#' @importFrom stringr str_extract str_sub
+#' @importFrom stringi stri_trans_general
 #' @importFrom lubridate as_date
+#' @importFrom janitor clean_names
 #' @noRd
 app_server <- function( input, output, session ) {
   # Your application server logic 
@@ -17,44 +19,8 @@ app_server <- function( input, output, session ) {
   
   observe(closeWaiter(golem::app_prod(), 3))
   
-  
-  ######
-  type_elections <- reactive({
-    req(data_elections$data)
-    sort(
-      unique(
-        data_elections$data$TYPE_ELECTION
-      )
-    )
-  }) #%>% debounce(100)
-  
-  annee_elections <- reactive({
-    req(data_elections$data)
-    req(input$type_elections)
-    
-    sort(
-      unique(
-        unlist(
-          data_elections$data[TYPE_ELECTION %in% input$type_elections, "ANNEE_ELECTION"])
-      )
-    )
-  })# %>% debounce(1000)
-  
-  
-  observe({
-    updateSelectizeInput(inputId = "type_elections",
-                         choices = type_elections()
-    )
-  })
-  
-  observeEvent(input$type_elections, {
-    updateSelectizeInput(inputId = "annee_elections",
-                         choices = annee_elections()
-    )
-  })
-  
-  
-  
+  mod_accueil_server("accueil_ui_1")
+  mod_observer_1_election_server("observer_1_election_ui_1", data_elections = data_elections)
   
   #######################################
   # Chargement des données au démarrage #
@@ -78,10 +44,10 @@ app_server <- function( input, output, session ) {
       data_elections$data <- copy(elections::sample_DACI_bdx) %>% 
         .[, TYPE_ELECTION := str_extract(string = NOM_ELECTION, pattern = "^[:alpha:]{1,}")] %>% 
         .[, DATE_ELECTION := as_date(DATE_ELECTION, format = "%d/%m/%Y")] %>% 
-        .[, ANNEE_ELECTION := year(DATE_ELECTION)]
-      # corriger les libelles
-      # virer les accents
-      # si la dernière lettre est un s on la vire
+        .[, ANNEE_ELECTION := year(DATE_ELECTION)] %>% 
+        .[, TYPE_ELECTION := stri_trans_general(str = TYPE_ELECTION, id = "Latin-ASCII")] %>%  #On vire les accents
+        .[str_sub(TYPE_ELECTION, start=-1) == "s", TYPE_ELECTION := str_sub(TYPE_ELECTION, end=nchar(TYPE_ELECTION)-1)] %>% 
+        clean_names()
     }
     
     
