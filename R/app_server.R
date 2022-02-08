@@ -11,6 +11,8 @@
 #' @importFrom stringi stri_trans_general
 #' @importFrom lubridate as_date
 #' @importFrom janitor clean_names
+#' @importFrom sysfonts font_add_google
+#' @importFrom showtext showtext_auto
 #' @noRd
 app_server <- function( input, output, session ) {
   # Your application server logic 
@@ -21,6 +23,11 @@ app_server <- function( input, output, session ) {
   
   mod_accueil_server("accueil_ui_1")
   mod_observer_1_election_server("observer_1_election_ui_1", data_elections = data_elections)
+  
+  #
+  font_add_google(name = "Playfair Display", family = "Playfair Display")
+  showtext_auto()
+  
   
   #######################################
   # Chargement des données au démarrage #
@@ -49,8 +56,6 @@ app_server <- function( input, output, session ) {
         .[str_sub(TYPE_ELECTION, start=-1) == "s", TYPE_ELECTION := str_sub(TYPE_ELECTION, end=nchar(TYPE_ELECTION)-1)] %>% 
         clean_names()
     }
-    
-    
   }, ignoreNULL = FALSE, once = TRUE)
   
   # output$print_data <- renderPrint(

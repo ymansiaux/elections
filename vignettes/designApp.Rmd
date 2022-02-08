@@ -32,4 +32,18 @@ et voir si ca se fait bien
 # Step 4 : Evolution d'un candidat sur plusieurs élections
 
 
+## Résultats d'une élection
+
+* abstention en fonction du tour
+* % / candidat en fonction du tour
+* géo : cliquer sur un BV / un LV pour avoir les résultats du tour 1 / tour 2 / évolution entre les 2 tours (récupérer code old app)
+
+## Résultats multi élections
+https://github.com/davidsjoberg/ggstream
+
+* suivi de l'abstention / élection / commune (ou BV ou LV)
+* suivi de la participation
+* suivi d'1 candidat sur plusieurs élections (voir 2020/27 C Scherrer)
+
+
 
