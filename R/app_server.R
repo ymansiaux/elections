@@ -54,7 +54,12 @@ app_server <- function( input, output, session ) {
         .[, ANNEE_ELECTION := year(DATE_ELECTION)] %>% 
         .[, TYPE_ELECTION := stri_trans_general(str = TYPE_ELECTION, id = "Latin-ASCII")] %>%  #On vire les accents
         .[str_sub(TYPE_ELECTION, start=-1) == "s", TYPE_ELECTION := str_sub(TYPE_ELECTION, end=nchar(TYPE_ELECTION)-1)] %>% 
+        .[, PRENOM := get_first_name(NOM_CANDIDAT)] %>% 
+        .[, NOM := get_last_name(NOM_CANDIDAT, PRENOM)] %>% 
+        .[NOM == "", NOM := PRENOM] %>% 
+        .[, NOM_CANDIDAT_SHORT := str_sub(NOM_CANDIDAT,1,10)] %>% 
         clean_names()
+        
     }
   }, ignoreNULL = FALSE, once = TRUE)
   

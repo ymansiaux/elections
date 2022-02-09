@@ -13,6 +13,8 @@
 #' @importFrom ggtext element_markdown
 #' @importFrom viridis scale_fill_viridis
 #' @importFrom stringr str_trim str_replace
+#' @importFrom leaflet leafletOutput createLeafletMap renderLeaflet awesomeIcons leaflet addTiles setView addAwesomeMarkers addPolygons highlightOptions
+
 mod_observer_1_election_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -34,7 +36,11 @@ mod_observer_1_election_ui <- function(id){
       multiple = FALSE,
       options = list(deselectBehavior = "top")
     ),
-    plotOutput(ns("plot1"))
+    plotOutput(ns("plot1")),
+    plotOutput(ns("plot2")),
+    leafletOutput(ns("myBVmap"))
+  
+    
     # radioButtons(inputId = ns("tour_election
     
   )
@@ -107,12 +113,9 @@ mod_observer_1_election_server <- function(id, data_elections){
           nb_voix = sum(nb_voix, na.rm = TRUE),
           nb_expr = sum(nb_expr, na.rm = TRUE)
         ),
-        by = list(nom_election, type_election, annee_election, numero_tour, nom_candidat)
+        by = list(nom_election, type_election, annee_election, numero_tour, nom_candidat, nom, nom_candidat_short)
         ] %>% 
-        .[, pct := nb_voix / nb_expr] %>% 
-        .[, prenom := get_first_name(nom_candidat)] %>% 
-        .[, nom := get_last_name(nom_candidat, prenom)] %>% 
-        .[nom == "", nom := prenom]
+        .[, pct := nb_voix / nb_expr] 
       
     }) %>% debounce(500)
     
@@ -123,7 +126,7 @@ mod_observer_1_election_server <- function(id, data_elections){
       # interactif
       
       g <- results_by_tour_by_candidate() %>%
-        ggplot(aes(x = as.factor(nom), y = pct, fill = as.factor(nom_candidat))) +
+        ggplot(aes(x = as.factor(nom_candidat_short), y = pct, fill = as.factor(nom_candidat))) +
         geom_col() +
         scale_y_continuous(labels = scales::percent) +
         scale_fill_viridis(discrete = TRUE) +
@@ -168,6 +171,61 @@ mod_observer_1_election_server <- function(id, data_elections){
     # évolution d'un candidat
     
     # graphe vagues avec l'abstention
+    
+    # Partie carto
+    #### Carte initiale
+    myBVmap <- leaflet::createLeafletMap(session, 'myBVmap')
+    
+    session$onFlushed(once = T, function() {
+       
+      output$myBVmap <- leaflet::renderLeaflet({
+        
+        popup_markers <- paste("<b>Lieu de vote</b>", elections::lieux_votes_bdx$libelle)
+        
+        icons <- leaflet::awesomeIcons(
+          icon = 'ios-close',
+          iconColor = color_vector(),
+          library = 'ion',
+          markerColor = color_vector()
+        )
+        
+        leaflet::leaflet(elections::lieux_votes_bdx) %>% 
+          leaflet::addTiles() %>% 
+          leaflet::setView(zoom = 11.5, lat =44.859684, lng=-0.568365) %>% 
+          leaflet::addAwesomeMarkers(popup = popup_markers, layerId = elections::lieux_votes_bdx$gid, icon = icons) %>% 
+          leaflet::addPolygons( data = elections::secteurs_votes_bdx,
+                                weight = 1, smoothFactor = 0.5,
+                                opacity = .75, fillOpacity = .2,
+                                highlightOptions = leaflet::highlightOptions(color = "black", weight = 2,
+                                                                             bringToFront = TRUE))
+
+        
+      })
+    })
+    
+    observeEvent(input$myBVmap_marker_click, { 
+      p <- input$myBVmap_marker_click  # typo was on this line
+      print(p)
+      
+      leaflet::leafletProxy("myBVmap") %>% 
+        leaflet::setView(zoom = input$myBVmap_zoom, lng = input$myBVmap$lng, lat = input$myBVmap$lat)
+      
+    })
+    
+    
+    clickedIds <- reactiveValues(ids = vector())
+    
+    color_vector <- reactive({
+      
+      if(is.null(input$myBVmap_marker_click)) rep("blue", length(elections::lieux_votes_bdx$gid))
+      else {
+        clicked_marker <- input$myBVmap_marker_click$id 
+        
+        ifelse(elections::lieux_votes_bdx$gid == clicked_marker, "red", "blue")
+      }
+      
+    })
+    
   })
 }
 
