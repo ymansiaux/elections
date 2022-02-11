@@ -16,20 +16,24 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     add_notie_deps(),
     shinyjs::useShinyjs(),
+    
     waiter_logo(isinProd = golem::app_prod(), img_path = "www/LogoDataLab.png"),
     add_busy_spinner(spin = "fading-circle", color = "#ff4d3e", height = "150px", width = "150px"),
+    
     fluidPage(
       navbarpage_bdx(
         title = "Elections",
         collapsible = TRUE,
+        
         tabPanel(
           "Accueil",
+          mod_accueil_ui("accueil_ui_1"),
           uiOutput(outputId = "my_logo")
-          # mod_accueil_ui("accueil_ui_1")
         ),
+        
         tabPanel(
-          "Occupation - observer 1 p\u00e9riode",
-          # mod_occupation_1_periode_ui("occupation_ui_1")
+          "Observer 1 élection",
+          mod_observer_1_election_ui("observer_1_election_ui_1")
         )
       )
     )

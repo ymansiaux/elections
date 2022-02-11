@@ -348,6 +348,13 @@
       "Repository": "RSPM",
       "Hash": "44594a07a42e5f91fac9f93fda6d0109"
     },
+    "generics": {
+      "Package": "generics",
+      "Version": "0.1.2",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "177475892cf4a55865868527654a7741"
+    },
     "geojsonsf": {
       "Package": "geojsonsf",
       "Version": "2.0.1",
@@ -543,6 +550,13 @@
       "Source": "Repository",
       "Repository": "RSPM",
       "Hash": "a6b6d352e3ed897373ab19d8395c98d0"
+    },
+    "lubridate": {
+      "Package": "lubridate",
+      "Version": "1.8.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "2ff5eedb6ee38fb1b81205c73be1be5a"
     },
     "magrittr": {
       "Package": "magrittr",
@@ -860,6 +874,20 @@
       "Repository": "RSPM",
       "Hash": "802e4786b353a4bb27116957558548d5"
     },
+    "showtext": {
+      "Package": "showtext",
+      "Version": "0.9-4",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "57151c081eee689dc669d1bb9a77bbb7"
+    },
+    "showtextdb": {
+      "Package": "showtextdb",
+      "Version": "3.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "c12e756cf947e58b0f2c2a520521a5a8"
+    },
     "sourcetools": {
       "Package": "sourcetools",
       "Version": "0.1.7",
@@ -894,6 +922,13 @@
       "Source": "Repository",
       "Repository": "RSPM",
       "Hash": "b227d13e29222b4574486cfcbde077fa"
+    },
+    "sysfonts": {
+      "Package": "sysfonts",
+      "Version": "0.8.5",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "d5e2db91a3aa1ac242a6edb6b2093eb5"
     },
     "testthat": {
       "Package": "testthat",
