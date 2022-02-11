@@ -144,7 +144,8 @@ mod_observer_1_election_server <- function(id, data_elections){
       # }
       # 
       # g
-      graphique_resultats_election(data = results_by_tour_by_candidate(), x = "nom_candidat_short", y = "pct", fill = "nom_candidat")
+      # graphique_resultats_election(data = results_by_tour_by_candidate(), x = "nom_candidat_short", y = "pct", fill = "nom_candidat")
+      graphique_resultats_election(data = results_by_tour_by_candidate(), x = nom_candidat_short, y = pct, fill = nom_candidat)
       
     })
     
@@ -175,7 +176,9 @@ mod_observer_1_election_server <- function(id, data_elections){
       #   scale_y_continuous(labels = scales::percent) +
       #   scale_fill_viridis(discrete = TRUE) +
       #   create_theme()
-      graphique_resultats_election(data = abstention(), x = "numero_tour", y = "pct", fill = "numero_tour")
+      # graphique_resultats_election(data = abstention(), x = "numero_tour", y = "pct", fill = "numero_tour")
+      graphique_resultats_election(data = abstention(), x = numero_tour, y = pct, fill = numero_tour)
+      
       
     })
     
@@ -297,13 +300,17 @@ mod_observer_1_election_server <- function(id, data_elections){
     })
     
     output$plot3 <- renderPlot({
-      graphique_resultats_election(data = resultats_by_BV(), x = "nom_candidat_short", y = "pct", fill = "nom_candidat")
+      # graphique_resultats_election(data = resultats_by_BV(), x = "nom_candidat_short", y = "pct", fill = "nom_candidat")
+      graphique_resultats_election(data = resultats_by_BV(), x = nom_candidat_short, y = pct, fill = nom_candidat)
+      
       
     })
     
     
     output$plot4 <- renderPlot({
-      graphique_resultats_election(data = resultats_by_LV(), x = "nom_candidat_short", y = "pct", fill = "nom_candidat")
+      # graphique_resultats_election(data = resultats_by_LV(), x = "nom_candidat_short", y = "pct", fill = "nom_candidat")
+      graphique_resultats_election(data = resultats_by_LV(), x = nom_candidat_short, y = pct, fill = nom_candidat)
+      
       
     })
     
