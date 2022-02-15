@@ -19,32 +19,36 @@ mod_observer_1_election_ui <- function(id){
   ns <- NS(id)
   tagList(
     
-    actionButton(ns("pause"), "pause"),
-    
-    selectizeInput(
-      inputId = ns("type_elections"),
-      label = "Type d'election",
-      choices = NULL,
-      multiple = FALSE,
-      options = list(deselectBehavior = "top")
-    ),
-    
-    selectizeInput(
-      inputId = ns("annee_elections"),
-      label = "Annee de l'election",
-      choices = NULL,
-      multiple = FALSE,
-      options = list(deselectBehavior = "top")
-    ),
-    plotOutput(ns("plot1")),
-    plotOutput(ns("plot2")),
-    leafletOutput(ns("myBVmap")),
-    plotOutput(ns("plot3")),
-    plotOutput(ns("plot4"))
-    
-    
-    # radioButtons(inputId = ns("tour_election
-    
+    fluidRow(
+      
+      column(width = 12,
+             
+             actionButton(ns("pause"), "pause"),
+             
+             selectizeInput(
+               inputId = ns("type_elections"),
+               label = "Type d'election",
+               choices = NULL,
+               multiple = FALSE,
+               options = list(deselectBehavior = "top")
+             ),
+             
+             selectizeInput(
+               inputId = ns("annee_elections"),
+               label = "Annee de l'election",
+               choices = NULL,
+               multiple = FALSE,
+               options = list(deselectBehavior = "top")
+             ),
+             plotOutput(ns("plot1")),
+             plotOutput(ns("plot2")),
+             leafletOutput(ns("myBVmap")),
+             plotOutput(ns("plot3")),
+             plotOutput(ns("plot4"))
+             
+      )
+      # radioButtons(inputId = ns("tour_election
+    )
   )
 }
 
@@ -149,7 +153,7 @@ mod_observer_1_election_server <- function(id, data_elections){
       
     })
     
-
+    
     # graphe absention
     abstention <- reactive({
       
