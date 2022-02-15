@@ -4,12 +4,13 @@
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @import data.table
+#' @import collapse
 #' @import sf
 #' @importFrom shinyYM closeWaiter add_notie_alert
 #' @importFrom xtradata xtradata_requete_features
 #' @importFrom stringr str_extract str_sub
 #' @importFrom stringi stri_trans_general
-#' @importFrom lubridate as_date
+#' @importFrom lubridate as_date year
 #' @importFrom janitor clean_names
 #' @importFrom sysfonts font_add_google
 #' @importFrom showtext showtext_auto
@@ -18,6 +19,7 @@ app_server <- function( input, output, session ) {
   # Your application server logic 
   options(datatable.print.class = TRUE)
   options(bitmapType = "cairo")
+  options(collapse_mask = "manip")
   
   observe(closeWaiter(golem::app_prod(), 3))
   
@@ -49,18 +51,20 @@ app_server <- function( input, output, session ) {
       
       #### A MODIFIER QUAND LES DONNEES SERONT SUR XTRADATA ####
       #data_elections$data <- dat
-      data_elections$data <- copy(elections::sample_DACI_bdx) %>% 
-        .[, TYPE_ELECTION := str_extract(string = NOM_ELECTION, pattern = "^[:alpha:]{1,}")] %>% 
-        .[, DATE_ELECTION := as_date(DATE_ELECTION, format = "%d/%m/%Y")] %>% 
-        .[, ANNEE_ELECTION := year(DATE_ELECTION)] %>% 
-        .[, TYPE_ELECTION := stri_trans_general(str = TYPE_ELECTION, id = "Latin-ASCII")] %>%  #On vire les accents
-        .[str_sub(TYPE_ELECTION, start=-1) == "s", TYPE_ELECTION := str_sub(TYPE_ELECTION, end=nchar(TYPE_ELECTION)-1)] %>% 
-        .[, PRENOM := get_first_name(NOM_CANDIDAT)] %>% 
-        .[, NOM := get_last_name(NOM_CANDIDAT, PRENOM)] %>% 
-        .[NOM == "", NOM := PRENOM] %>% 
-        .[, NOM_CANDIDAT_SHORT := str_sub(NOM_CANDIDAT,1,10)] %>% 
+      data_elections$data <-  qTBL(elections::sample_DACI_bdx) %>% 
+        mutate(TYPE_ELECTION = str_extract(string = NOM_ELECTION, pattern = "^[:alpha:]{1,}"),
+               DATE_ELECTION = as_date(DATE_ELECTION, format = "%d/%m/%Y"),
+               ANNEE_ELECTION = year(DATE_ELECTION)) %>% 
+        mutate(TYPE_ELECTION = stri_trans_general(str = TYPE_ELECTION, id = "Latin-ASCII") ) %>%  #On vire les accents
+        mutate(TYPE_ELECTION = ifelse(str_sub(TYPE_ELECTION, start=-1) == "s", 
+                                      str_sub(TYPE_ELECTION, end=nchar(TYPE_ELECTION)-1),
+                                      TYPE_ELECTION)) %>% 
+        mutate(PRENOM = get_first_name(NOM_CANDIDAT)) %>% 
+        mutate(NOM = get_last_name(NOM_CANDIDAT, PRENOM)) %>% 
+        mutate(NOM = ifelse(NOM == "", PRENOM, NOM)) %>% 
+        mutate(NOM_CANDIDAT_SHORT = str_sub(NOM_CANDIDAT,1,10)) %>% 
         clean_names()
-        
+      
     }
   }, ignoreNULL = FALSE, once = TRUE)
   

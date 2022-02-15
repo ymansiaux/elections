@@ -1,7 +1,6 @@
 graphique_resultats_election <- function(data, x, y, fill) {
   
   g <- data %>%
-    # ggplot(aes(x = as.factor(get(x)), y = get(y), fill = as.factor(get(fill)))) +
     ggplot(aes(x = as.factor({{x}}), y = {{y}}, fill = as.factor({{fill}}))) +
     geom_col() +
     scale_y_continuous(labels = scales::percent) +

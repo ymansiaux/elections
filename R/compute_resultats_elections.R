@@ -1,25 +1,21 @@
-compute_resultats_elections <- function(data, type = "participation", group_by_vars) {
+compute_resultats_elections <- function(data, type = "participation", ...) {
   
   if(type == "participation") {
+
+    data %>% 
+      group_by(...) %>% 
+      summarise(nb_voix = fsum(nb_voix),
+                nb_expr = fsum(nb_expr)) %>% 
+      mutate(pct = nb_voix / nb_expr)
     
-    copy(data) %>% 
-      .[, .(
-        nb_voix = sum(nb_voix, na.rm = TRUE),
-        nb_expr = sum(nb_expr, na.rm = TRUE)
-      ),
-      by = group_by_vars
-      ] %>% 
-      .[, pct := nb_voix / nb_expr] 
-    
+
   } else if(type == "abstention") {
     
-    copy(data) %>% 
-      .[, .(
-        nb_inscrits = sum(nb_inscrits, na.rm = TRUE),
-        nb_votants = sum(nb_votants, na.rm = TRUE)
-      ),
-      by = group_by_vars
-      ] %>% 
-      .[, pct := 1- nb_votants / nb_inscrits] 
+    data %>% 
+      group_by(...) %>% 
+      summarise(nb_inscrits = fsum(nb_inscrits),
+                nb_votants = fsum(nb_votants)) %>% 
+      mutate(pct = nb_votants / nb_inscrits)
+    
   }
 }
