@@ -63,6 +63,7 @@ app_server <- function( input, output, session ) {
         mutate(NOM = get_last_name(NOM_CANDIDAT, PRENOM)) %>% 
         mutate(NOM = ifelse(NOM == "", PRENOM, NOM)) %>% 
         mutate(NOM_CANDIDAT_SHORT = str_sub(NOM_CANDIDAT,1,10)) %>% 
+        mutate(CODE_INSEE = 33063) %>% 
         clean_names()
       
     }

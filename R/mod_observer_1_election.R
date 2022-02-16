@@ -41,6 +41,16 @@ mod_observer_1_election_ui <- function(id){
                multiple = FALSE,
                options = list(deselectBehavior = "top")
              ),
+             
+             selectizeInput(
+               inputId = ns("commune_elections"),
+               label = "Commune",
+               choices = NULL,
+               multiple = FALSE,
+               options = list(deselectBehavior = "top")
+             ),
+             
+             
              plotOutput(ns("plot1")),
              plotOutput(ns("plot2")),
              leafletOutput(ns("myBVmap")),
@@ -70,7 +80,7 @@ mod_observer_1_election_server <- function(id, data_elections){
           data_elections$data$type_election
         )
       )
-    }) #%>% debounce(100)
+    })
     
     annee_elections <- reactive({
       req(data_elections$data)
@@ -81,6 +91,21 @@ mod_observer_1_election_server <- function(id, data_elections){
         select(annee_election) %>% 
         unique %>%
         roworder(annee_election) %>% 
+        pull()
+      
+    })
+    
+    commune_elections <- reactive({
+      req(data_elections$data)
+      req(input$type_elections)
+      req(input$annee_elections)
+      
+      
+      data_elections$data %>%
+        subset(type_election %in% input$type_elections & annee_election %in% input$annee_elections) %>% 
+        select(code_insee) %>% 
+        unique %>%
+        roworder(code_insee) %>% 
         pull()
       
     })
@@ -99,6 +124,15 @@ mod_observer_1_election_server <- function(id, data_elections){
                            choices = annee_elections(),
                            server = TRUE
       )
+ 
+    })
+    
+    observeEvent(list(input$type_elections, input$annee_elections), {
+      updateSelectizeInput(session,
+                           inputId = "commune_elections",
+                           choices = commune_elections(),
+                           server = TRUE
+      )
     })
     
     election_selectionnee <- reactive({
@@ -107,7 +141,9 @@ mod_observer_1_election_server <- function(id, data_elections){
       req(input$type_elections)
       
       data_elections$data %>%
-        subset(type_election %in% input$type_elections & annee_election %in% input$annee_elections) %>% 
+        subset(type_election %in% input$type_elections & 
+                 annee_election %in% input$annee_elections &
+                 code_insee %in% input$commune_elections) %>% 
         mutate(numero_tour = ifelse(is.na(numero_tour), 1, numero_tour))
       
       
