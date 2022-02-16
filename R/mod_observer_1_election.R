@@ -77,9 +77,9 @@ mod_observer_1_election_server <- function(id, data_elections){
       req(input$type_elections)
       
       data_elections$data %>%
-        fsubset(type_election %in% input$type_elections) %>% 
-        fselect(annee_election) %>% 
-        funique %>%
+        subset(type_election %in% input$type_elections) %>% 
+        select(annee_election) %>% 
+        unique %>%
         roworder(annee_election) %>% 
         pull()
       
@@ -107,7 +107,7 @@ mod_observer_1_election_server <- function(id, data_elections){
       req(input$type_elections)
       
       data_elections$data %>%
-        fsubset(type_election %in% input$type_elections & annee_election %in% input$annee_elections) %>% 
+        subset(type_election %in% input$type_elections & annee_election %in% input$annee_elections) %>% 
         mutate(numero_tour = ifelse(is.na(numero_tour), 1, numero_tour))
       
       
