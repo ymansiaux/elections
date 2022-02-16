@@ -3,8 +3,8 @@
 #' @param input,output,session Internal parameters for {shiny}. 
 #'     DO NOT REMOVE.
 #' @import shiny
-#' @import data.table
 #' @import collapse
+#' @import dplyr
 #' @import sf
 #' @importFrom shinyYM closeWaiter add_notie_alert
 #' @importFrom xtradata xtradata_requete_features
@@ -23,8 +23,10 @@ app_server <- function( input, output, session ) {
   
   observe(closeWaiter(golem::app_prod(), 3))
   
+  debug_whereami <- TRUE
+  
   mod_accueil_server("accueil_ui_1")
-  mod_observer_1_election_server("observer_1_election_ui_1", data_elections = data_elections)
+  mod_observer_1_election_server("observer_1_election_ui_1", data_elections = data_elections, debug_whereami = debug_whereami)
   mod_observer_plusieurs_elections_server("observer_plusieurs_elections_ui_1", data_elections = data_elections)
   
   #
