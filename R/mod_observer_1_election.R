@@ -23,6 +23,8 @@ mod_observer_1_election_ui <- function(id){
     sidebarLayout(
       
       sidebarPanel(
+        width = 2,
+        
         fluidRow(
           
           column(width = 12,
@@ -58,8 +60,17 @@ mod_observer_1_election_ui <- function(id){
       ),
       
       mainPanel(
+        width = 10,
+        
         tabsetPanel(
           tabPanel("Plot", 
+                   fluidRow(
+                     column(width = 12,
+                            plotOutput(ns("graphique_resultats")),
+                            plotOutput(ns("graphique_abstention"))
+                     )
+                   ),
+                   
                    fluidRow(
                      column(width = 2,
                             radioButtons(inputId = ns("numero_scrutin"),
@@ -76,14 +87,12 @@ mod_observer_1_election_ui <- function(id){
                             )
                      )
                    ),
-                   
                    fluidRow(
-                     column(width = 10,
-                            plotOutput(ns("graphique_resultats")),
-                            plotOutput(ns("graphique_abstention"))
+                     column(width = 12,
+                            leafletOutput(ns("carto_resultats"))
                      )
                    )
-          ), 
+          ),
           tabPanel("Map", leafletOutput(ns("myBVmap"))
           ), 
           tabPanel("Plot2", 
@@ -121,10 +130,10 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
       req(input$type_elections)
       
       data_elections$data %>%
-        fsubset(type_election %in% input$type_elections) %>% 
-        fselect(annee_election) %>% 
-        funique %>%
-        roworder(annee_election) %>% 
+        filter(type_election %in% input$type_elections) %>% 
+        select(annee_election) %>% 
+        distinct %>%
+        arrange(annee_election) %>% 
         pull()
       
     })
@@ -136,10 +145,10 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
       req(input$annee_elections)
       
       data_elections$data %>%
-        subset(type_election %in% input$type_elections & annee_election %in% input$annee_elections) %>% 
-        fselect(code_insee) %>% 
-        funique %>%
-        roworder(code_insee) %>% 
+        filter(type_election %in% input$type_elections & annee_election %in% input$annee_elections) %>% 
+        select(code_insee) %>% 
+        distinct %>%
+        arrange(code_insee) %>% 
         pull()
       
     })
@@ -177,10 +186,10 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
       req(input$commune_elections)
       
       data_elections$data %>%
-        fsubset(type_election %in% input$type_elections &
-                  annee_election %in% input$annee_elections &
-                  code_insee %in% input$commune_elections) %>%
-        fmutate(numero_tour = ifelse(is.na(numero_tour), 1, numero_tour))
+        filter(type_election %in% input$type_elections &
+                 annee_election %in% input$annee_elections &
+                 code_insee %in% input$commune_elections) %>%
+        mutate(numero_tour = ifelse(is.na(numero_tour), 1, numero_tour))
       
     })
     
@@ -201,7 +210,7 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
       req(input$numero_scrutin)
       
       election_selectionnee_d() %>%
-        subset(numero_tour %in% input$numero_scrutin)
+        filter(numero_tour %in% input$numero_scrutin)
     })
     
     election_selectionnee_tour_selectionne_d <- debounce(election_selectionnee_tour_selectionne, 500)
@@ -216,9 +225,9 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
       
       compute_resultats_elections(data = election_selectionnee_d(), 
                                   type = "participation", 
-                                  nom_election, type_election, annee_election, 
-                                  numero_tour, nom_candidat, nom, nom_candidat_short) %>% 
-        
+                                  grouping_vars = c(
+                                    "nom_election", "type_election", "annee_election", 
+                                    "numero_tour", "nom_candidat", "nom", "nom_candidat_short")) %>%
         graphique_resultats_election(data = ., x = nom_candidat_short, y = pct, fill = nom_candidat)
       
     })
@@ -232,8 +241,8 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
       
       compute_resultats_elections(data = election_selectionnee_d(),
                                   type = "abstention",
-                                  nom_election, type_election, annee_election, numero_tour)  %>% 
-        
+                                  grouping_vars = c(
+                                    "nom_election", "type_election", "annee_election", "numero_tour")) %>% 
         graphique_resultats_election(data = ., x = numero_tour, y = pct, fill = numero_tour)
       
     })
@@ -245,50 +254,65 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
     # 
     donnees_geo_selectionnees <- reactive({
       
-      # if(input$niveau_geo_restitution == "id_bureau") {
+      if(input$niveau_geo_restitution == "id_bureau") {
         elections::bureaux_votes_bdx
-      # } else {
-      #   elections::lieux_votes_bdx
-      # }
+      } else {
+        elections::bureaux_votes_bdx %>% 
+          group_by(libelle, rs_el_lieuvote_p) %>% 
+          summarise(geometry = st_union(geometry))
+      }
       
     })
     
     
     ## CARTO OK BV
-    
-    donnees_carto_resultats <- reactive({
-      
+    donnees_carto_vainqueur_by_unite_geo <- reactive({ 
       ## FONCTIONNE TB AVEC LES MUNICIPALES DE 2020
       ## VOIR UNE FOIS QUE L'HISTO SERA DISPO
       data <-  compute_resultats_elections(data = election_selectionnee_tour_selectionne_d(),
                                            type = "participation",
-                                           nom_election, type_election, annee_election,
-                                           nom_candidat, nom, nom_candidat_short,
-                                           numero_tour, 
-                                           id_bureau) %>% 
-        fmutate(id_bureau = as.character(id_bureau))
+                                           grouping_vars = c(
+                                             "nom_election", "type_election", "annee_election",
+                                             "nom_candidat", "nom", "nom_candidat_short",
+                                             "numero_tour", 
+                                             input$niveau_geo_restitution)) %>% 
+        mutate_at(vars(input$niveau_geo_restitution),as.character)
       
       winner <- data %>% 
-        fgroup_by(numero_tour, id_bureau) %>% 
-        fmutate(pctmax = max(pct)) %>%
-        fsubset(pctmax == pct)
+        group_by(!!!syms(c("numero_tour", input$niveau_geo_restitution))) %>% 
+        mutate(pctmax = max(pct)) %>%
+        filter(pctmax == pct) %>% 
+        ungroup()
       
-      donnees_geo_winner <- merge(donnees_geo_selectionnees(),
-                                  winner,
-                                  by.x = "code",
-                                  by.y = "id_bureau")
       
+      if(input$niveau_geo_restitution == "id_bureau") {
+        
+        donnees_geo_winner <- merge(donnees_geo_selectionnees(),
+                                    winner,
+                                    by.x = "code", by.y = input$niveau_geo_restitution)
+        
+      } else {
+        donnees_geo_winner <- merge(donnees_geo_selectionnees(),
+                                    winner,
+                                    by.x = "rs_el_lieuvote_p", by.y = input$niveau_geo_restitution)
+        
+      }
+      
+      donnees_geo_winner
+      
+    })
+    
+    output$carto_resultats <- renderLeaflet({
       #####################################
       # création de la palette de couleur #
       ####################################
       
       # quels sont les candidats vainqueurs ?
       candidats_vainqueurs_couleurs <- data.frame(
-        "nom_candidat" = sort(unique(donnees_geo_winner$nom_candidat)),
-        "couleur" = viridis::viridis_pal()(length(unique(donnees_geo_winner$nom_candidat)))
-      )
+        "nom_candidat" = sort(unique(donnees_carto_vainqueur_by_unite_geo()$nom_candidat)),
+        "couleur" = viridis::viridis_pal()(length(unique(donnees_carto_vainqueur_by_unite_geo()$nom_candidat))))
       
-      donnees_geo_winner <- merge(donnees_geo_winner,
+      donnees_geo_winner <- merge(donnees_carto_vainqueur_by_unite_geo(),
                                   candidats_vainqueurs_couleurs,
                                   by = "nom_candidat")
       
@@ -302,7 +326,6 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
                        "<br><strong>% recueillis: </strong>",
                        sprintf("%.2f",donnees_geo_winner$pct * 100))
       
-      
       leaflet(donnees_geo_winner) %>% 
         addTiles() %>% 
         setView(zoom = 11.5, lat = 44.859684, lng = -0.568365) %>%
@@ -312,30 +335,7 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
                     popup = popup,
                     highlightOptions = leaflet::highlightOptions(color = "black", weight = 2,
                                                                  bringToFront = TRUE))
-      
-      
-      ## CARTO OK LV
-      
-      
-      # 
-      # 
-      # roworder(data, id_bureau) %>% fgroup_by(id_bureau) %>% fmutate(P = fmax(pct)) %>% fsubset(P == pct)
-      
-      # il nous faut le vainqueur par unité géo
-      # 
-      # 
-      # colnames(data)[colnames(data) == "get(input$niveau_geo_restitution)"] <- input$niveau_geo_restitution
-      # 
-      # if(input$niveau_geo_restitution == "id_bureau") {
-      #   data[, "id_bureau"] <- as.character(data[, "id_bureau"])
-      #   inner_join(donnees_geo_selectionnees(), data, by = c("code" = "id_bureau"))
-      #   
-      # }
-      
-      
-      
     })
-    
     
   })
 }
