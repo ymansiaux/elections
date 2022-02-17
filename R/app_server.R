@@ -3,8 +3,8 @@
 #' @param input,output,session Internal parameters for {shiny}. 
 #'     DO NOT REMOVE.
 #' @import shiny
+#' @importFrom dplyr pull
 #' @import collapse
-#' @import dplyr
 #' @import sf
 #' @importFrom shinyYM closeWaiter add_notie_alert
 #' @importFrom xtradata xtradata_requete_features
@@ -17,10 +17,7 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   # Your application server logic 
-  options(datatable.print.class = TRUE)
-  options(bitmapType = "cairo")
-  options(collapse_mask = "manip")
-  
+
   observe(closeWaiter(golem::app_prod(), 3))
   
   debug_whereami <- TRUE
@@ -54,18 +51,18 @@ app_server <- function( input, output, session ) {
       #### A MODIFIER QUAND LES DONNEES SERONT SUR XTRADATA ####
       #data_elections$data <- dat
       data_elections$data <-  qTBL(elections::sample_DACI_bdx) %>% 
-        mutate(TYPE_ELECTION = str_extract(string = NOM_ELECTION, pattern = "^[:alpha:]{1,}"),
+        fmutate(TYPE_ELECTION = str_extract(string = NOM_ELECTION, pattern = "^[:alpha:]{1,}"),
                DATE_ELECTION = as_date(DATE_ELECTION, format = "%d/%m/%Y"),
                ANNEE_ELECTION = year(DATE_ELECTION)) %>% 
-        mutate(TYPE_ELECTION = stri_trans_general(str = TYPE_ELECTION, id = "Latin-ASCII") ) %>%  #On vire les accents
-        mutate(TYPE_ELECTION = ifelse(str_sub(TYPE_ELECTION, start=-1) == "s", 
+        fmutate(TYPE_ELECTION = stri_trans_general(str = TYPE_ELECTION, id = "Latin-ASCII") ) %>%  #On vire les accents
+        fmutate(TYPE_ELECTION = ifelse(str_sub(TYPE_ELECTION, start=-1) == "s", 
                                       str_sub(TYPE_ELECTION, end=nchar(TYPE_ELECTION)-1),
                                       TYPE_ELECTION)) %>% 
-        mutate(PRENOM = get_first_name(NOM_CANDIDAT)) %>% 
-        mutate(NOM = get_last_name(NOM_CANDIDAT, PRENOM)) %>% 
-        mutate(NOM = ifelse(NOM == "", PRENOM, NOM)) %>% 
-        mutate(NOM_CANDIDAT_SHORT = str_sub(NOM_CANDIDAT,1,10)) %>% 
-        mutate(CODE_INSEE = 33063) %>% 
+        fmutate(PRENOM = get_first_name(NOM_CANDIDAT)) %>% 
+        fmutate(NOM = get_last_name(NOM_CANDIDAT, PRENOM)) %>% 
+        fmutate(NOM = ifelse(NOM == "", PRENOM, NOM)) %>% 
+        fmutate(NOM_CANDIDAT_SHORT = str_sub(NOM_CANDIDAT,1,10)) %>% 
+        fmutate(CODE_INSEE = 33063) %>% 
         clean_names()
       
     }

@@ -33,7 +33,6 @@ Imports:
     stringr,
     sysfonts,
     viridis,
-    whereami,
     xtradata
 Suggests: 
     knitr,
