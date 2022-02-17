@@ -158,6 +158,7 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
       updateSelectizeInput(session,
                            inputId = "type_elections",
                            choices = type_elections(),
+                           selected = "Municipale",
                            server = TRUE
       )
     })
@@ -166,6 +167,7 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
       updateSelectizeInput(session,
                            inputId = "annee_elections",
                            choices = annee_elections(),
+                           selected = 2020,
                            server = TRUE
       )
       
@@ -175,6 +177,7 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
       updateSelectizeInput(session,
                            inputId = "commune_elections",
                            choices = commune_elections(),
+                           selected = 33063,
                            server = TRUE
       )
     })
