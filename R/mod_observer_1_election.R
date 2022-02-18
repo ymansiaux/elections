@@ -63,14 +63,11 @@ mod_observer_1_election_ui <- function(id){
         width = 10,
         
         tabsetPanel(
-          tabPanel("Plot", 
-                   # mod_observer_1_election_resultats_globaux_ui("observer_1_election_resultats_globaux_ui_1")
-                   fluidRow(
-                     column(width = 12,
-                            plotOutput(ns("graphique_resultats")),
-                            plotOutput(ns("graphique_abstention"))
-                     )
-                   ),
+          tabPanel("Plot",
+                   
+                   mod_observer_1_election_resultats_globaux_ui(ns("observer_1_election_resultats_globaux_ui_1")),
+                   
+                   # ,
                    # mod_observer_1_election_resultats_carto_candidat_vainqueur_ui("observer_1_election_resultats_carto_candidat_vainqueur_ui_1")
                    fluidRow(
                      column(width = 2,
@@ -115,7 +112,7 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
     ns <- session$ns
     
     observeEvent(input$pause, browser())
-    # mod_observer_1_election_resultats_globaux_server("observer_1_election_resultats_globaux_ui_1")
+    mod_observer_1_election_resultats_globaux_server("observer_1_election_resultats_globaux_ui_1", election_selectionnee_d)
     # mod_observer_1_election_resultats_carto_candidat_vainqueur_server("observer_1_election_resultats_carto_candidat_vainqueur_ui_1")
     ######
     type_elections <- reactive({
@@ -220,37 +217,7 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
     
     election_selectionnee_tour_selectionne_d <- debounce(election_selectionnee_tour_selectionne, 500)
     
-    ### GRAPHIQUE RESULTATS AGREGES 
-    output$graphique_resultats <- renderPlot({
-      # pivoter les axes des x
-      # faire un joli theme
-      # changer les couleurs
-      # interactif
-      
-      
-      compute_resultats_elections(data = election_selectionnee_d(), 
-                                  type = "participation", 
-                                  grouping_vars = c(
-                                    "nom_election", "type_election", "annee_election", 
-                                    "numero_tour", "nom_candidat", "nom", "nom_candidat_short")) %>%
-        graphique_resultats_election(data = ., x = nom_candidat_short, y = pct, fill = nom_candidat)
-      
-    })
     
-    
-    output$graphique_abstention <- renderPlot({
-      # pivoter les axes des x
-      # faire un joli theme
-      # changer les couleurs
-      # interactif
-      
-      compute_resultats_elections(data = election_selectionnee_d(),
-                                  type = "abstention",
-                                  grouping_vars = c(
-                                    "nom_election", "type_election", "annee_election", "numero_tour")) %>% 
-        graphique_resultats_election(data = ., x = numero_tour, y = pct, fill = numero_tour)
-      
-    })
     
     #### CARTO RESULTATS DETAILLES
     # 
