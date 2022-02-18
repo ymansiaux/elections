@@ -26,6 +26,8 @@ usethis::use_pipe()
 ## Create a module infrastructure in R/
 golem::add_module( name = "accueil" ) # Name of the module
 golem::add_module( name = "observer_1_election" ) # Name of the module
+golem::add_module( name = "observer_1_election_resultats_globaux" ) # Name of the module
+golem::add_module( name = "observer_1_election_resultats_carto_candidat_vainqueur" ) # Name of the module
 golem::add_module( name = "observer_plusieurs_elections" ) # Name of the module
 
 

@@ -64,13 +64,14 @@ mod_observer_1_election_ui <- function(id){
         
         tabsetPanel(
           tabPanel("Plot", 
+                   # mod_observer_1_election_resultats_globaux_ui("observer_1_election_resultats_globaux_ui_1")
                    fluidRow(
                      column(width = 12,
                             plotOutput(ns("graphique_resultats")),
                             plotOutput(ns("graphique_abstention"))
                      )
                    ),
-                   
+                   # mod_observer_1_election_resultats_carto_candidat_vainqueur_ui("observer_1_election_resultats_carto_candidat_vainqueur_ui_1")
                    fluidRow(
                      column(width = 2,
                             radioButtons(inputId = ns("numero_scrutin"),
@@ -114,7 +115,8 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
     ns <- session$ns
     
     observeEvent(input$pause, browser())
-    
+    # mod_observer_1_election_resultats_globaux_server("observer_1_election_resultats_globaux_ui_1")
+    # mod_observer_1_election_resultats_carto_candidat_vainqueur_server("observer_1_election_resultats_carto_candidat_vainqueur_ui_1")
     ######
     type_elections <- reactive({
       req(data_elections$data)
