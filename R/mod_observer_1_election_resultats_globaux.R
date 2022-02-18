@@ -26,9 +26,7 @@ mod_observer_1_election_resultats_globaux_server <- function(id, election_select
   moduleServer( id, function(input, output, session){
     # ns <- session$ns
     
-observe(print(election_selectionnee_d()))
-    
-        output$graphique_resultats <- renderPlot({
+    output$graphique_resultats <- renderPlot({
       compute_resultats_elections(data = election_selectionnee_d(), 
                                   type = "participation", 
                                   grouping_vars = c(
