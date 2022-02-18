@@ -67,7 +67,8 @@ mod_observer_1_election_ui <- function(id){
                    mod_observer_1_election_resultats_globaux_ui(ns("observer_1_election_resultats_globaux_ui_1")),
                    mod_observer_1_election_resultats_carto_candidat_vainqueur_ui(ns("observer_1_election_resultats_carto_candidat_vainqueur_ui_1"))
           ),
-          tabPanel("Map", leafletOutput(ns("myBVmap"))
+          tabPanel("Map", 
+                   mod_observer_1_election_selection_LV_sur_carte_ui(ns("observer_1_election_selection_LV_sur_carte_ui_1"))
           ), 
           tabPanel("Plot2", 
                    plotOutput(ns("plot3")),
@@ -88,7 +89,7 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
     ns <- session$ns
     
     observeEvent(input$pause, browser())
-
+    
     ######
     type_elections <- reactive({
       req(data_elections$data)
@@ -172,9 +173,11 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
     
     election_selectionnee_d <- debounce(election_selectionnee, 500)
     
-   ## SOUS MODULES
+    ## SOUS MODULES
     mod_observer_1_election_resultats_globaux_server("observer_1_election_resultats_globaux_ui_1", election_selectionnee_d)
     mod_observer_1_election_resultats_carto_candidat_vainqueur_server("observer_1_election_resultats_carto_candidat_vainqueur_ui_1", election_selectionnee_d)
+    
+    mod_observer_1_election_selection_LV_sur_carte_server("observer_1_election_selection_LV_sur_carte_ui_1", election_selectionnee_d)
     
     
   })
