@@ -132,7 +132,8 @@ mod_observer_1_election_resultats_carto_candidat_vainqueur_server <- function(id
       
       donnees_geo_winner <- merge(donnees_carto_vainqueur_by_unite_geo(),
                                   candidats_vainqueurs_couleurs,
-                                  by = "nom_candidat")
+                                  by = "nom_candidat") %>% 
+        mutate(pct = pct * 100)
       
       
       # donnees_geo_selectionnees()[!donnees_geo_selectionnees()$code%in% data$id_bureau,]
@@ -142,7 +143,7 @@ mod_observer_1_election_resultats_carto_candidat_vainqueur_server <- function(id
                        "<br><strong>Candidat: </strong>",
                        donnees_geo_winner$nom_candidat,
                        "<br><strong>% recueillis: </strong>",
-                       sprintf("%.2f",donnees_geo_winner$pct * 100))
+                       sprintf("%.2f",donnees_geo_winner$pct))
       
       leaflet(donnees_geo_winner) %>% 
         addTiles() %>% 

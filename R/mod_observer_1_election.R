@@ -14,7 +14,7 @@
 #' @importFrom ggtext element_markdown
 #' @importFrom viridis scale_fill_viridis
 #' @importFrom stringr str_trim str_replace
-#' @importFrom leaflet leafletOutput createLeafletMap renderLeaflet awesomeIcons leaflet addTiles setView addAwesomeMarkers addPolygons highlightOptions leafletProxy setView
+#' @importFrom leaflet leafletOutput createLeafletMap renderLeaflet awesomeIcons leaflet addTiles setView addAwesomeMarkers addPolygons highlightOptions leafletProxy setView colorNumeric addLegend
 
 mod_observer_1_election_ui <- function(id){
   ns <- NS(id)
@@ -71,8 +71,7 @@ mod_observer_1_election_ui <- function(id){
                    mod_observer_1_election_selection_LV_sur_carte_ui(ns("observer_1_election_selection_LV_sur_carte_ui_1"))
           ), 
           tabPanel("Plot2", 
-                   plotOutput(ns("plot3")),
-                   plotOutput(ns("plot4"))
+                   mod_observer_1_election_selection_1_candidat_ui(ns("observer_1_election_selection_1_candidat_ui_1"))
           )
         )
         
@@ -179,7 +178,7 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
     
     mod_observer_1_election_selection_LV_sur_carte_server("observer_1_election_selection_LV_sur_carte_ui_1", election_selectionnee_d)
     
-    
+    mod_observer_1_election_selection_1_candidat_server("observer_1_election_selection_1_candidat_ui_1", election_selectionnee_d)
   })
 }
 

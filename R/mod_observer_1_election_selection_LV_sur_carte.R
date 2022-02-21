@@ -124,7 +124,7 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, election_s
     resultats_by_BV <- reactive({
       
       req(isTruthy(filtered_data_by_BV()))
-      browser()
+      
       compute_resultats_elections(data = filtered_data_by_BV(), 
                                   type = "participation", 
                                   grouping_vars = c(
