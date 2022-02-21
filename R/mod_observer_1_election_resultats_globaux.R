@@ -11,9 +11,98 @@ mod_observer_1_election_resultats_globaux_ui <- function(id){
   ns <- NS(id)
   tagList(
     fluidRow(
+      column(width = 2,
+             ## comparer avec shinydashboard box et bs4dash bs4TabCard {bs4Dash}
+             tags$div(
+               class = "nav flex-column nav-pills",
+               style = "margin-top:100px;",
+               id = "v-pills-tab",
+               role = "tablist",
+               `aria-orientation` = "vertical",
+               tags$a(
+                 class = "nav-link active",
+                 id = "v-pills-home-tab",
+                 `data-toggle` = "pill",
+                 href = "#v-pills-home",
+                 role = "tab",
+                 `aria-controls` = "v-pills-home",
+                 `aria-selected` = "true",
+                 "Home"
+               ),
+               tags$a(
+                 class = "nav-link",
+                 id = "v-pills-profile-tab",
+                 `data-toggle` = "pill",
+                 href = "#v-pills-profile",
+                 role = "tab",
+                 `aria-controls` = "v-pills-profile",
+                 `aria-selected` = "false",
+                 "Profile"
+               ),
+               tags$a(
+                 class = "nav-link",
+                 id = "v-pills-messages-tab",
+                 `data-toggle` = "pill",
+                 href = "#v-pills-messages",
+                 role = "tab",
+                 `aria-controls` = "v-pills-messages",
+                 `aria-selected` = "false",
+                 "Messages"
+               ),
+               tags$a(
+                 class = "nav-link",
+                 id = "v-pills-settings-tab",
+                 `data-toggle` = "pill",
+                 href = "#v-pills-settings",
+                 role = "tab",
+                 `aria-controls` = "v-pills-settings",
+                 `aria-selected` = "false",
+                 "Settings"
+               )
+             )
+             ),
+      column(width = 10,
+             tags$div(
+               class = "tab-content",
+               id = "v-pills-tabContent",
+               tags$div(
+                 class = "tab-pane fade show active",
+                 id = "v-pills-home",
+                 role = "tabpanel",
+                 `aria-labelledby` = "v-pills-home-tab",
+                 plotOutput(ns("graphique_resultats"))
+               ),
+               tags$div(
+                 class = "tab-pane fade",
+                 id = "v-pills-profile",
+                 role = "tabpanel",
+                 `aria-labelledby` = "v-pills-profile-tab",
+                 plotOutput(ns("graphique_abstention"))
+               ),
+               tags$div(
+                 class = "tab-pane fade",
+                 id = "v-pills-messages",
+                 role = "tabpanel",
+                 `aria-labelledby` = "v-pills-messages-tab",
+                 "..."
+               ),
+               tags$div(
+                 class = "tab-pane fade",
+                 id = "v-pills-settings",
+                 role = "tabpanel",
+                 `aria-labelledby` = "v-pills-settings-tab",
+                 "..."
+               )
+             )
+      )
+    ),
+    
+    fluidRow(
       column(width = 12,
-             plotOutput(ns("graphique_resultats")),
-             plotOutput(ns("graphique_abstention"))
+             
+             
+             h2("toto")
+             
       )
     )
   )

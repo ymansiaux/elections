@@ -16,7 +16,8 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   # Your application server logic 
-
+  options(bitmapType = "cairo")
+  
   observe(closeWaiter(golem::app_prod(), 3))
   
   debug_whereami <- TRUE

@@ -62,7 +62,8 @@ mod_observer_1_election_ui <- function(id){
       mainPanel(
         width = 10,
         
-        tabsetPanel(
+        tabsetPanel( type = "pills",
+                     
           tabPanel("Plot",
                    mod_observer_1_election_resultats_globaux_ui(ns("observer_1_election_resultats_globaux_ui_1")),
                    mod_observer_1_election_resultats_carto_candidat_vainqueur_ui(ns("observer_1_election_resultats_carto_candidat_vainqueur_ui_1"))
