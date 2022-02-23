@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro|Montserrat|Raleway');
+@import url('https://fonts.googleapis.com/css?family=Inconsolata');
+@import url('https://fonts.googleapis.com/css2?family=Raleway+Dots&display=swap');
+
+.title_crazy {
+  /* border-top: 2px solid #F92C85 ;
+  border-bottom: 2px solid #F92C85 ; */
+  /* border-top: 2px solid #99DDFF ;
+  border-bottom: 2px solid #99DDFF ;
+  padding: 0.5rem;
+  margin: 0 auto;
+  color:#00458B; */
+    
+    /* border-radius: 50% ; */
+    border-top: 2px solid #3FD2C7 ;
+  border-bottom: 2px solid #3FD2C7 ;
+  /* padding: 0.5rem;
+  margin: 0 auto; */
+    /* font: #00458B; */
+    color: #00458B;
+    background: #cceeff;    
+    opacity: 0.5;
+}
+
+body {
+ background-color: black; 
+ color:white;
+    /* background: whitesmoke; */
+  /* font-family: 'Raleway Dots', cursive; */
+}
+
+.nav-link.active {
+  background-color:lightsteelblue;
+  color: #00458B;
+}
+
+.title_container{
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon_title {
+  font-size: 180%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  
+}
+
+.section_title {
+  padding: 0.75rem;
+  margin: 0 auto;
+}
+
+/* 
+  h1 {
+    
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  } */

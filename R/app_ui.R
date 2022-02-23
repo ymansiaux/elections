@@ -20,8 +20,15 @@ app_ui <- function(request) {
     waiter_logo(isinProd = golem::app_prod(), img_path = "www/LogoDataLab.png"),
     add_busy_spinner(spin = "fading-circle", color = "#ff4d3e", height = "150px", width = "150px"),
     
-    fluidPage(
-      navbarpage_bdx(
+    navbarPage(
+      theme = bdxmetroidentity::theme_bdxmetro_shiny(
+        bg = "#3FD2C7",
+        fg = "white",
+        #bg = "black",
+        base_font = sass::font_google("Nunito"), 
+        heading_font = sass::font_google("Nunito")
+      ),
+      
         title = "Elections",
         collapsible = TRUE,
         
@@ -42,7 +49,7 @@ app_ui <- function(request) {
         )
       )
     )
-  )
+  
 }
 
 
