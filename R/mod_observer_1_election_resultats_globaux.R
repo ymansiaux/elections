@@ -40,7 +40,6 @@ mod_observer_1_election_resultats_globaux_ui <- function(id){
     
     fluidRow(
       column(width = 10,
-             
              plotOutput(ns("graphique_abstention"))
       )
     )

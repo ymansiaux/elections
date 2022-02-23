@@ -60,24 +60,13 @@ mod_observer_1_election_ui <- function(id){
         fluidRow(
           column(width = 12,
                  mod_observer_1_election_resultats_globaux_ui(ns("observer_1_election_resultats_globaux_ui_1")))
+        ),
+        
+        fluidRow(
+          column(width = 12,
+                 mod_observer_1_election_resultats_carto_candidat_vainqueur_ui(ns("observer_1_election_resultats_carto_candidat_vainqueur_ui_1"))
+          )
         )
-        
-       
-        
-        # tabsetPanel( type = "pills",
-        #              
-        #              tabPanel("Plot",
-        #                       mod_observer_1_election_resultats_globaux_ui(ns("observer_1_election_resultats_globaux_ui_1")),
-        #                       mod_observer_1_election_resultats_carto_candidat_vainqueur_ui(ns("observer_1_election_resultats_carto_candidat_vainqueur_ui_1"))
-        #              ),
-        #              tabPanel("Map", 
-        #                       mod_observer_1_election_selection_LV_sur_carte_ui(ns("observer_1_election_selection_LV_sur_carte_ui_1"))
-        #              ), 
-        #              tabPanel("Plot2", 
-        #                       mod_observer_1_election_selection_1_candidat_ui(ns("observer_1_election_selection_1_candidat_ui_1"))
-        #              )
-        # )
-        
       )
     )
   )
