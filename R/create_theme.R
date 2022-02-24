@@ -22,7 +22,7 @@ palette <-  c(
   "#c14089"
 )
 
-create_theme <- function() {
+theme_elections <- function() {
 my_font <- "Playfair Display"
 bg_color <- "white"
 

@@ -12,7 +12,6 @@ mod_observer_1_election_resultats_globaux_ui <- function(id){
   tagList(
     fluidRow(
       column(width = 10,
-             
              div(class ="title_crazy title_container",
                  div(icon(name="democrat", class = "icon_title")),
                  div(h1("Résultats globaux", class = "text-uppercase title")),
@@ -61,7 +60,8 @@ mod_observer_1_election_resultats_globaux_server <- function(id, election_select
                                   grouping_vars = c(
                                     "nom_election", "type_election", "annee_election", 
                                     "numero_tour", "nom_candidat", "nom", "nom_candidat_short")) %>%
-        graphique_resultats_election(data = ., x = nom_candidat_short, y = pct, fill = nom_candidat, facet = TRUE, facet_var = numero_tour)
+        graphique_resultats_election(data = ., x = nom_candidat_short, y = pct, fill = nom_candidat, 
+                                     facet = TRUE, facet_var = numero_tour, theme_fun = theme_elections())
       
     })
     
@@ -72,7 +72,7 @@ mod_observer_1_election_resultats_globaux_server <- function(id, election_select
                                   type = "abstention",
                                   grouping_vars = c(
                                     "nom_election", "type_election", "annee_election", "numero_tour")) %>% 
-        graphique_resultats_election(data = ., x = numero_tour, y = pct, fill = numero_tour, facet = FALSE)
+        graphique_resultats_election(data = ., x = numero_tour, y = pct, fill = numero_tour, facet = FALSE, theme_fun = theme_elections())
       
     })
     

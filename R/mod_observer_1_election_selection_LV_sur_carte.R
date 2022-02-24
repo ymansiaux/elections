@@ -154,7 +154,7 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, election_s
     
     output$plot3 <- renderPlot({
       # là il faut le bv en facet
-      graphique_resultats_election(data = resultats_by_BV(), x = nom_candidat_short, y = pct, fill = nom_candidat, facet_var = id_bureau)
+      graphique_resultats_election(data = resultats_by_BV(), x = nom_candidat_short, y = pct, fill = nom_candidat, facet_var = id_bureau, theme_fun = theme_elections())
       
       
     })
@@ -163,7 +163,7 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, election_s
     output$plot4 <- renderPlot({
       # là il faut le lv en facet
       
-      graphique_resultats_election(data = resultats_by_LV(), x = nom_candidat_short, y = pct, fill = nom_candidat, facet_var = nom_lieu)
+      graphique_resultats_election(data = resultats_by_LV(), x = nom_candidat_short, y = pct, fill = nom_candidat, facet_var = nom_lieu, theme_fun = theme_elections())
       
       
     })

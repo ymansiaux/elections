@@ -216,7 +216,8 @@ mod_observer_1_election_selection_1_candidat_server <- function(id, election_sel
     output$graphique_resultats <- renderPlot({
       req(resultats_elections_candidat())
       
-      graphique_resultats_election(data = resultats_elections_candidat(), x = !!rlang::sym(input$niveau_geo_restitution), y = pct, fill = nom_candidat, facet = FALSE)
+      graphique_resultats_election(data = resultats_elections_candidat(), x = !!rlang::sym(input$niveau_geo_restitution), 
+                                   y = pct, fill = nom_candidat, facet = FALSE, theme_fun = theme_elections())
       
     })
     

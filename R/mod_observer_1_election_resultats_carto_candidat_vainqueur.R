@@ -23,12 +23,6 @@ mod_observer_1_election_resultats_carto_candidat_vainqueur_ui <- function(id){
     ),
     
     fluidRow(
-      column(width = 10,
-             plotOutput(ns("graphique_abstention"))
-      )
-    )
-    
-    fluidRow(
       column(width = 2,
              radioButtons(inputId = ns("numero_scrutin"),
                           label = "Choisir un scrutin",
@@ -42,10 +36,9 @@ mod_observer_1_election_resultats_carto_candidat_vainqueur_ui <- function(id){
                multiple = FALSE,
                options = list(deselectBehavior = "top")
              )
-      )
-    ),
-    fluidRow(
-      column(width = 12,
+      ),
+      
+      column(width = 8,
              leafletOutput(ns("carto_resultats"))
       )
     )
@@ -71,7 +64,7 @@ mod_observer_1_election_resultats_carto_candidat_vainqueur_server <- function(id
     })
     
     election_selectionnee_tour_selectionne <- reactive({
-    
+      
       req(input$numero_scrutin)
       
       election_selectionnee_d() %>%
@@ -140,7 +133,7 @@ mod_observer_1_election_resultats_carto_candidat_vainqueur_server <- function(id
       #####################################
       # création de la palette de couleur #
       ####################################
-   
+      
       # quels sont les candidats vainqueurs ?
       candidats_vainqueurs_couleurs <- data.frame(
         "nom_candidat" = sort(unique(donnees_carto_vainqueur_by_unite_geo()$nom_candidat)),
