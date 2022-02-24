@@ -10,39 +10,62 @@
 mod_observer_1_election_resultats_globaux_ui <- function(id){
   ns <- NS(id)
   tagList(
+    
     fluidRow(
-      column(width = 10,
-             div(class ="title_crazy title_container",
-                 div(icon(name="democrat", class = "icon_title")),
-                 div(h1("Résultats globaux", class = "text-uppercase title")),
-                 div(icon(name="democrat", class = "icon_title"))
+      column(width = 12,
+             div(class = "container",
+                 style = "display:flex;
+        flex-direction : column;
+        justify-content: space-between",
+                 
+                 div(
+                   plotOutput(ns("graphique_resultats"))
+                 ),
+                 
+                 
+                 div(
+                   plotOutput(ns("graphique_abstention"))
+                 )
              )
-      )
-    ),
-    
-    fluidRow(
-      column(width = 10,
-             
-             plotOutput(ns("graphique_resultats"))
-      )
-    ),
-    
-    fluidRow(
-      column(width = 10,
-             div(class ="title_crazy title_container",
-                 div(icon(name="democrat", class = "icon_title")),
-                 div(h1("Abstention", class = "text-uppercase title")),
-                 div(icon(name="democrat", class = "icon_title"))
-             )
-      )
-    ),
-    
-    fluidRow(
-      column(width = 10,
-             plotOutput(ns("graphique_abstention"))
       )
     )
   )
+  
+  
+  # 
+  # fluidRow(
+  #   column(width = 10,
+  #          div(class ="title_crazy title_container",
+  #              div(icon(name="democrat", class = "icon_title")),
+  #              div(h1("Résultats globaux", class = "text-uppercase title")),
+  #              div(icon(name="democrat", class = "icon_title"))
+  #          )
+  #   )
+  # ),
+  # 
+  # fluidRow(
+  #   column(width = 10,
+  #          
+  #          plotOutput(ns("graphique_resultats"))
+  #   )
+  # ),
+  # 
+  # fluidRow(
+  #   column(width = 10,
+  #          div(class ="title_crazy title_container",
+  #              div(icon(name="democrat", class = "icon_title")),
+  #              div(h1("Abstention", class = "text-uppercase title")),
+  #              div(icon(name="democrat", class = "icon_title"))
+  #          )
+  #   )
+  # ),
+  # 
+  # fluidRow(
+  #   column(width = 10,
+  #          plotOutput(ns("graphique_abstention"))
+  #   )
+  # )
+  
 }
 
 #' observer_1_election_resultats_globaux Server Functions

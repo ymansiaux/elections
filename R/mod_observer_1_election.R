@@ -19,56 +19,72 @@
 mod_observer_1_election_ui <- function(id){
   ns <- NS(id)
   tagList(
-    
-    sidebarLayout(
-      
-      sidebarPanel(
-        width = 2,
-        
-        tagList(
-          actionButton(ns("pause"), "pause"),
-          
-          selectizeInput(
-            inputId = ns("type_elections"),
-            label = "Type d'election",
-            choices = NULL,
-            multiple = FALSE,
-            options = list(deselectBehavior = "top")
-          ),
-          
-          selectizeInput(
-            inputId = ns("annee_elections"),
-            label = "Annee de l'election",
-            choices = NULL,
-            multiple = FALSE,
-            options = list(deselectBehavior = "top")
-          ),
-          
-          selectizeInput(
-            inputId = ns("commune_elections"),
-            label = "Commune",
-            choices = NULL,
-            multiple = FALSE,
-            options = list(deselectBehavior = "top")
-          )
-        )
-      ),
-      
-      mainPanel(
-        width = 10,
-        
-        fluidRow(
-          column(width = 12,
-                 mod_observer_1_election_resultats_globaux_ui(ns("observer_1_election_resultats_globaux_ui_1")))
-        ),
-        
-        fluidRow(
-          column(width = 12,
-                 mod_observer_1_election_resultats_carto_candidat_vainqueur_ui(ns("observer_1_election_resultats_carto_candidat_vainqueur_ui_1"))
-          )
-        )
+    fluidRow(
+      column(width = 12,
+             div(class = "container",
+                 style = "display:flex;
+        flex-direction : row;
+        justify-content: space-evenly",
+                 
+                 div(
+                   actionButton(ns("pause"), "pause")
+                 ),
+                 div(
+                   selectizeInput(
+                     inputId = ns("type_elections"),
+                     label = "Type d'election",
+                     choices = NULL,
+                     multiple = FALSE,
+                     options = list(deselectBehavior = "top")
+                   )
+                 ),
+                 div(
+                   selectizeInput(
+                     inputId = ns("annee_elections"),
+                     label = "Annee de l'election",
+                     choices = NULL,
+                     multiple = FALSE,
+                     options = list(deselectBehavior = "top")
+                   )
+                 ),
+                 div(
+                   selectizeInput(
+                     inputId = ns("commune_elections"),
+                     label = "Commune",
+                     choices = NULL,
+                     multiple = FALSE,
+                     options = list(deselectBehavior = "top")
+                   ),
+                   
+                 )
+                 
+             )
       )
+    ),
+    
+    fluidRow(
+      column(width = 7,
+             mod_observer_1_election_resultats_carto_candidat_vainqueur_ui(ns("observer_1_election_resultats_carto_candidat_vainqueur_ui_1"))
+      ),
+      column(width = 5,
+             mod_observer_1_election_resultats_globaux_ui(ns("observer_1_election_resultats_globaux_ui_1")))
     )
+    
+    
+    # mainPanel(
+    # width = 10,
+    # 
+    # fluidRow(
+    #   column(width = 12,
+    #          
+    # ),
+    # 
+    # fluidRow(
+    #   column(width = 12,
+    
+    #   )
+    #   
+    # )
   )
 }
 
