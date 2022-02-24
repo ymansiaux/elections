@@ -18,6 +18,12 @@ mod_observer_1_election_resultats_carto_candidat_vainqueur_ui <- function(id){
         flex-direction : column;
         justify-content: space-evenly",
                  
+                 div(class ="title_crazy title_container",
+                     div(icon(name="democrat", class = "icon_title")),
+                     div(h2("Vainqueur par unité géo.", class = "text-uppercase")),
+                     div(icon(name="democrat", class = "icon_title"))
+                 ),
+                 
                  div(
                    leafletOutput(ns("carto_resultats"), height = 800)
                  ),

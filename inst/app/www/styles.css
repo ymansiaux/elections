@@ -17,9 +17,16 @@
   /* padding: 0.5rem;
   margin: 0 auto; */
     /* font: #00458B; */
-    color: #00458B;
-    background: #cceeff;    
-    opacity: 0.5;
+    /*color: #00458B;*/
+    /*font-size:35px;*/
+    color:white;
+    /*background: #cceeff;    
+    opacity: 0.5; */
+}
+
+.title_container h2 {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 body {
@@ -43,7 +50,7 @@ body {
 }
 
 .icon_title {
-  font-size: 180%;
+  font-size: 100%;
   padding-left: 1rem;
   padding-right: 1rem;
   
