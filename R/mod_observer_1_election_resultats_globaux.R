@@ -18,10 +18,21 @@ mod_observer_1_election_resultats_globaux_ui <- function(id){
         flex-direction : column;
         justify-content: space-between",
                  
+                 div(class ="title_crazy title_container",
+                     div(icon(name="democrat", class = "icon_title")),
+                     div(h2("Résultats par candidats", class = "text-uppercase")),
+                     div(icon(name="democrat", class = "icon_title"))
+                 ),
+                 
                  div(
                    plotOutput(ns("graphique_resultats"))
                  ),
                  
+                 div(class ="title_crazy title_container",
+                     div(icon(name="democrat", class = "icon_title")),
+                     div(h2("Abstention", class = "text-uppercase")),
+                     div(icon(name="democrat", class = "icon_title"))
+                 ),
                  
                  div(
                    plotOutput(ns("graphique_abstention"))
@@ -84,18 +95,33 @@ mod_observer_1_election_resultats_globaux_server <- function(id, election_select
                                     "nom_election", "type_election", "annee_election", 
                                     "numero_tour", "nom_candidat", "nom", "nom_candidat_short")) %>%
         graphique_resultats_election(data = ., x = nom_candidat_short, y = pct, fill = nom_candidat, 
-                                     facet = TRUE, facet_var = numero_tour, theme_fun = theme_elections())
+                                     facet = TRUE, facet_var = numero_tour, 
+                                     theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
+                                                                         light_font_family = "Nunito",
+                                                                         axis.text.x = element_blank()),
+                                     title = "", subtitle = "", caption = "", xlab = "", ylab = "Voix (%)", legend_name = "Candidat")
       
     })
     
     
     output$graphique_abstention <- renderPlot({
       
+      # compute_resultats_elections(data = election_selectionnee_d(),
+      #                             type = "abstention",
+      #                             grouping_vars = c(
+      #                               "nom_election", "type_election", "annee_election", "numero_tour")) %>% 
+      #   graphique_resultats_election(data = ., x = numero_tour, y = pct, fill = numero_tour, facet = FALSE, theme_fun = theme_elections())
+      
       compute_resultats_elections(data = election_selectionnee_d(),
                                   type = "abstention",
                                   grouping_vars = c(
                                     "nom_election", "type_election", "annee_election", "numero_tour")) %>% 
-        graphique_resultats_election(data = ., x = numero_tour, y = pct, fill = numero_tour, facet = FALSE, theme_fun = theme_elections())
+        graphique_resultats_election(data = ., x = numero_tour, y = pct, fill = numero_tour, 
+                                     facet = FALSE, 
+                                     theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
+                                                                     light_font_family = "Nunito",
+                                                                     axis.text.x = element_blank()),
+                                     title = "", subtitle = "", caption = "", xlab = "", ylab = "Abstention (%)", legend_name = "Tour")
       
     })
     

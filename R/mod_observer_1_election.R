@@ -10,7 +10,7 @@
 #' @import ggplot2
 #' @importFrom scales percent
 #' @importFrom dplyr pull
-#' @importFrom bdxmetroidentity scale_fill_bdxmetro_discrete
+#' @importFrom bdxmetroidentity scale_fill_bdxmetro_discrete theme_bdxmetro_dark
 #' @importFrom ggtext element_markdown
 #' @importFrom viridis scale_fill_viridis
 #' @importFrom stringr str_trim str_replace

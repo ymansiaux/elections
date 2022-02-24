@@ -28,6 +28,7 @@ app_server <- function( input, output, session ) {
   
   #
   font_add_google(name = "Playfair Display", family = "Playfair Display")
+  font_add_google(name = "Nunito", family = "Nunito")
   showtext_auto()
   
   
