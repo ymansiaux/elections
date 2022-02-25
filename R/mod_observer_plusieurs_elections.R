@@ -17,37 +17,7 @@ mod_observer_plusieurs_elections_ui <- function(id){
                id = "carouselMultiItemExample",
                class = "carousel slide carousel-dark text-center",
                `data-mdb-ride` = "carousel",
-               tags$div(
-                 class = "d-flex justify-content-center mb-4",
-                 tags$button(
-                   class = "carousel-control-prev position-relative",
-                   type = "button",
-                   `data-mdb-target` = "#carouselMultiItemExample",
-                   `data-mdb-slide` = "prev",
-                   tags$span(
-                     class = "carousel-control-prev-icon",
-                     `aria-hidden` = "true"
-                   ),
-                   tags$span(
-                     class = "visually-hidden",
-                     "Previous"
-                   )
-                 ),
-                 tags$button(
-                   class = "carousel-control-next position-relative",
-                   type = "button",
-                   `data-mdb-target` = "#carouselMultiItemExample",
-                   `data-mdb-slide` = "next",
-                   tags$span(
-                     class = "carousel-control-next-icon",
-                     `aria-hidden` = "true"
-                   ),
-                   tags$span(
-                     class = "visually-hidden",
-                     "Next"
-                   )
-                 )
-               ),
+               
                tags$div(
                  class = "carousel-inner py-4",
                  tags$div(
@@ -69,7 +39,7 @@ mod_observer_plusieurs_elections_ui <- function(id){
                              class = "card-body",
                              tags$h5(
                                class = "card-title",
-                               "Card title"
+                               "Card title 1"
                              ),
                              tags$p(
                                class = "card-text",
@@ -79,7 +49,8 @@ mod_observer_plusieurs_elections_ui <- function(id){
                              tags$a(
                                href = "#!",
                                class = "btn btn-primary",
-                               "Button"
+                               "Button 1",
+                               onclick="$('li:eq(1) a').tab('show');"
                              )
                            )
                          )
@@ -97,7 +68,7 @@ mod_observer_plusieurs_elections_ui <- function(id){
                              class = "card-body",
                              tags$h5(
                                class = "card-title",
-                               "Card title"
+                               "Card title 2"
                              ),
                              tags$p(
                                class = "card-text",
@@ -107,7 +78,8 @@ mod_observer_plusieurs_elections_ui <- function(id){
                              tags$a(
                                href = "#!",
                                class = "btn btn-primary",
-                               "Button"
+                               "Button 2",
+                               onclick="$('li:eq(2) a').tab('show');"
                              )
                            )
                          )
@@ -125,7 +97,7 @@ mod_observer_plusieurs_elections_ui <- function(id){
                              class = "card-body",
                              tags$h5(
                                class = "card-title",
-                               "Card title"
+                               "Card title 3"
                              ),
                              tags$p(
                                class = "card-text",
@@ -135,193 +107,8 @@ mod_observer_plusieurs_elections_ui <- function(id){
                              tags$a(
                                href = "#!",
                                class = "btn btn-primary",
-                               "Button"
-                             )
-                           )
-                         )
-                       )
-                     )
-                   )
-                 ),
-                 tags$div(
-                   class = "carousel-item",
-                   tags$div(
-                     class = "container",
-                     tags$div(
-                       class = "row",
-                       tags$div(
-                         class = "col-lg-4 col-md-12",
-                         tags$div(
-                           class = "card",
-                           tags$img(
-                             src = "https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp",
-                             class = "card-img-top",
-                             alt = "Fissure in Sandstone"
-                           ),
-                           tags$div(
-                             class = "card-body",
-                             tags$h5(
-                               class = "card-title",
-                               "Card title"
-                             ),
-                             tags$p(
-                               class = "card-text",
-                               "Some quick example text to build on the card title and make up
-                                    the bulk of the card's content."
-                             ),
-                             tags$a(
-                               href = "#!",
-                               class = "btn btn-primary",
-                               "Button"
-                             )
-                           )
-                         )
-                       ),
-                       tags$div(
-                         class = "col-lg-4 d-none d-lg-block",
-                         tags$div(
-                           class = "card",
-                           tags$img(
-                             src = "https://mdbcdn.b-cdn.net/img/new/standard/nature/185.webp",
-                             class = "card-img-top",
-                             alt = "Storm Clouds"
-                           ),
-                           tags$div(
-                             class = "card-body",
-                             tags$h5(
-                               class = "card-title",
-                               "Card title"
-                             ),
-                             tags$p(
-                               class = "card-text",
-                               "Some quick example text to build on the card title and make up
-                                    the bulk of the card's content."
-                             ),
-                             tags$a(
-                               href = "#!",
-                               class = "btn btn-primary",
-                               "Button"
-                             )
-                           )
-                         )
-                       ),
-                       tags$div(
-                         class = "col-lg-4 d-none d-lg-block",
-                         tags$div(
-                           class = "card",
-                           tags$img(
-                             src = "https://mdbcdn.b-cdn.net/img/new/standard/nature/186.webp",
-                             class = "card-img-top",
-                             alt = "Hot Air Balloons"
-                           ),
-                           tags$div(
-                             class = "card-body",
-                             tags$h5(
-                               class = "card-title",
-                               "Card title"
-                             ),
-                             tags$p(
-                               class = "card-text",
-                               "Some quick example text to build on the card title and make up
-                                    the bulk of the card's content."
-                             ),
-                             tags$a(
-                               href = "#!",
-                               class = "btn btn-primary",
-                               "Button"
-                             )
-                           )
-                         )
-                       )
-                     )
-                   )
-                 ),
-                 tags$div(
-                   class = "carousel-item",
-                   tags$div(
-                     class = "container",
-                     tags$div(
-                       class = "row",
-                       tags$div(
-                         class = "col-lg-4 col-md-12 mb-4 mb-lg-0",
-                         tags$div(
-                           class = "card",
-                           tags$img(
-                             src = "https://mdbcdn.b-cdn.net/img/new/standard/nature/187.webp",
-                             class = "card-img-top",
-                             alt = "Peaks Against the Starry Sky"
-                           ),
-                           tags$div(
-                             class = "card-body",
-                             tags$h5(
-                               class = "card-title",
-                               "Card title"
-                             ),
-                             tags$p(
-                               class = "card-text",
-                               "Some quick example text to build on the card title and make up
-                                    the bulk of the card's content."
-                             ),
-                             tags$a(
-                               href = "#!",
-                               class = "btn btn-primary",
-                               "Button"
-                             )
-                           )
-                         )
-                       ),
-                       tags$div(
-                         class = "col-lg-4 mb-4 mb-lg-0 d-none d-lg-block",
-                         tags$div(
-                           class = "card",
-                           tags$img(
-                             src = "https://mdbcdn.b-cdn.net/img/new/standard/nature/188.webp",
-                             class = "card-img-top",
-                             alt = "Bridge Over Water"
-                           ),
-                           tags$div(
-                             class = "card-body",
-                             tags$h5(
-                               class = "card-title",
-                               "Card title"
-                             ),
-                             tags$p(
-                               class = "card-text",
-                               "Some quick example text to build on the card title and make up
-                                    the bulk of the card's content."
-                             ),
-                             tags$a(
-                               href = "#!",
-                               class = "btn btn-primary",
-                               "Button"
-                             )
-                           )
-                         )
-                       ),
-                       tags$div(
-                         class = "col-lg-4 mb-4 mb-lg-0 d-none d-lg-block",
-                         tags$div(
-                           class = "card",
-                           tags$img(
-                             src = "https://mdbcdn.b-cdn.net/img/new/standard/nature/189.webp",
-                             class = "card-img-top",
-                             alt = "Purbeck Heritage Coast"
-                           ),
-                           tags$div(
-                             class = "card-body",
-                             tags$h5(
-                               class = "card-title",
-                               "Card title"
-                             ),
-                             tags$p(
-                               class = "card-text",
-                               "Some quick example text to build on the card title and make up
-                                    the bulk of the card's content."
-                             ),
-                             tags$a(
-                               href = "#!",
-                               class = "btn btn-primary",
-                               "Button"
+                               "Button 3",
+                               onclick="$('li:eq(3) a').tab('show');"
                              )
                            )
                          )
@@ -329,14 +116,14 @@ mod_observer_plusieurs_elections_ui <- function(id){
                      )
                    )
                  )
+                 
+                 
                )
              )
-             
-             
       )
-    )
-    
+    )      
   )
+  
 }
 
 #' observer_plusieurs_elections Server Functions

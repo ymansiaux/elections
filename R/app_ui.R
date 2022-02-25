@@ -29,26 +29,31 @@ app_ui <- function(request) {
         heading_font = sass::font_google("Nunito")
       ),
       
-        title = "Elections",
-        collapsible = TRUE,
-        
-        tabPanel(
-          "Accueil",
-          mod_accueil_ui("accueil_ui_1"),
-          uiOutput(outputId = "my_logo")
-        ),
-        
-        tabPanel(
-          "Observer 1 élection",
-          mod_observer_1_election_ui("observer_1_election_ui_1")
-        ),
-        
-        tabPanel(
-          "Observer plusieurs élections",
-          mod_observer_plusieurs_elections_ui("observer_plusieurs_elections_ui_1")
-        )
+      title = "Elections",
+      collapsible = TRUE,
+      
+      tabPanel(
+        "Accueil",
+        mod_accueil_ui("accueil_ui_1"),
+        uiOutput(outputId = "my_logo")
+      ),
+      
+      tabPanel(
+        "Observer 1 élection",
+        mod_observer_1_election_ui("observer_1_election_ui_1")
+      ),
+      
+      tabPanel(
+        "Observer 1 BV ou 1 LV d'1 élection",
+        mod_observer_1_election_selection_LV_sur_carte_ui("observer_1_election_selection_LV_sur_carte_ui_1")
+      ),
+      
+      tabPanel(
+        "Observer plusieurs élections",
+        mod_observer_plusieurs_elections_ui("observer_plusieurs_elections_ui_1")
       )
     )
+  )
   
 }
 

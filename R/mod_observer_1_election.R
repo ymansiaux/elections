@@ -184,7 +184,7 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
     mod_observer_1_election_resultats_globaux_server("observer_1_election_resultats_globaux_ui_1", election_selectionnee_d)
     mod_observer_1_election_resultats_carto_candidat_vainqueur_server("observer_1_election_resultats_carto_candidat_vainqueur_ui_1", election_selectionnee_d)
     
-    mod_observer_1_election_selection_LV_sur_carte_server("observer_1_election_selection_LV_sur_carte_ui_1", election_selectionnee_d)
+    # mod_observer_1_election_selection_LV_sur_carte_server("observer_1_election_selection_LV_sur_carte_ui_1", election_selectionnee_d)
     
     mod_observer_1_election_selection_1_candidat_server("observer_1_election_selection_1_candidat_ui_1", election_selectionnee_d)
   })

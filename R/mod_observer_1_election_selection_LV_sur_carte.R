@@ -9,24 +9,24 @@
 #' @importFrom shiny NS tagList 
 mod_observer_1_election_selection_LV_sur_carte_ui <- function(id){
   ns <- NS(id)
-  tagList(
-    fluidRow(
-      column(width = 2,
-             radioButtons(inputId = ns("numero_scrutin"),
-                          label = "Choisir un scrutin",
-                          choiceNames = "Aucune élection sélectionnée",
-                          choiceValues = "")
-      )
-    ),
-    
-    fluidRow(
-      column(width = 12,
-             leafletOutput(ns("myBVmap")),
-             plotOutput(ns("plot3")),
-             plotOutput(ns("plot4"))
-      )
-    )
-  )
+  # tagList(
+  #   fluidRow(
+  #     column(width = 2,
+  #            radioButtons(inputId = ns("numero_scrutin"),
+  #                         label = "Choisir un scrutin",
+  #                         choiceNames = "Aucune élection sélectionnée",
+  #                         choiceValues = "")
+  #     )
+  #   ),
+  #   
+  #   fluidRow(
+  #     column(width = 12,
+  #            leafletOutput(ns("myBVmap")),
+  #            plotOutput(ns("plot3")),
+  #            plotOutput(ns("plot4"))
+  #     )
+  #   )
+  # )
 }
 
 ### RAJOUTER SELECTION D'UN TOUR
