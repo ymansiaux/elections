@@ -43,10 +43,10 @@ app_ui <- function(request) {
         mod_observer_1_election_resultats_globaux_ui("observer_1_election_ui_1")
       ),
       
-      # tabPanel(
-      #   "Observer 1 BV ou 1 LV d'1 élection",
-      #   mod_observer_1_election_selection_LV_sur_carte_ui("observer_1_election_selection_LV_sur_carte_ui_1")
-      # ),
+      tabPanel(
+        "Observer 1 BV ou 1 LV d'1 élection",
+        mod_observer_1_election_resultats_selectionLVBV_ui("observer_1_election_selection_LV_sur_carte_ui_1")
+      ),
       
       tabPanel(
         "Observer plusieurs élections",
