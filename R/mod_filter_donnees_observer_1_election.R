@@ -1,4 +1,4 @@
-#' observer_1_election UI Function
+#' filter_donnees_observer_1_election UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,16 +7,7 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-#' @import ggplot2
-#' @importFrom scales percent
-#' @importFrom dplyr pull
-#' @importFrom bdxmetroidentity scale_fill_bdxmetro_discrete theme_bdxmetro_dark
-#' @importFrom ggtext element_markdown
-#' @importFrom viridis scale_fill_viridis
-#' @importFrom stringr str_trim str_replace
-#' @importFrom leaflet leafletOutput createLeafletMap renderLeaflet awesomeIcons leaflet addTiles setView addAwesomeMarkers addPolygons highlightOptions leafletProxy setView colorNumeric addLegend
-
-mod_observer_1_election_ui <- function(id){
+mod_filter_donnees_observer_1_election_ui <- function(id){
   ns <- NS(id)
   tagList(
     fluidRow(
@@ -26,9 +17,9 @@ mod_observer_1_election_ui <- function(id){
         flex-direction : row;
         justify-content: space-evenly",
                  
-                 div(
-                   actionButton(ns("pause"), "pause")
-                 ),
+                  div(
+                    actionButton(ns("pause"), "pause")
+                  ),
                  div(
                    selectizeInput(
                      inputId = ns("type_elections"),
@@ -60,44 +51,20 @@ mod_observer_1_election_ui <- function(id){
                  
              )
       )
-    ),
-    
-    fluidRow(
-      column(width = 7,
-             mod_observer_1_election_resultats_carto_candidat_vainqueur_ui(ns("observer_1_election_resultats_carto_candidat_vainqueur_ui_1"))
-      ),
-      column(width = 5,
-             mod_observer_1_election_resultats_globaux_ui(ns("observer_1_election_resultats_globaux_ui_1")))
     )
     
-    
-    # mainPanel(
-    # width = 10,
-    # 
-    # fluidRow(
-    #   column(width = 12,
-    #          
-    # ),
-    # 
-    # fluidRow(
-    #   column(width = 12,
-    
-    #   )
-    #   
-    # )
+   
   )
 }
-
-#' observer_1_election Server Functions
+    
+#' filter_donnees_observer_1_election Server Functions
 #'
 #' @noRd 
-mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
+mod_filter_donnees_observer_1_election_server <- function(id, data_elections){
   moduleServer( id, function(input, output, session){
-    ns <- session$ns
+    # ns <- session$ns
+ 
     
-    observeEvent(input$pause, browser())
-    
-    ######
     type_elections <- reactive({
       req(data_elections$data)
       sort(
@@ -178,20 +145,12 @@ mod_observer_1_election_server <- function(id, data_elections, debug_whereami){
       
     })
     
-    election_selectionnee_d <- debounce(election_selectionnee, 500)
-    
-    ## SOUS MODULES
-    mod_observer_1_election_resultats_globaux_server("observer_1_election_resultats_globaux_ui_1", election_selectionnee_d)
-    mod_observer_1_election_resultats_carto_candidat_vainqueur_server("observer_1_election_resultats_carto_candidat_vainqueur_ui_1", election_selectionnee_d)
-    
-    # mod_observer_1_election_selection_LV_sur_carte_server("observer_1_election_selection_LV_sur_carte_ui_1", election_selectionnee_d)
-    
-    mod_observer_1_election_selection_1_candidat_server("observer_1_election_selection_1_candidat_ui_1", election_selectionnee_d)
+    return(election_selectionnee)
   })
 }
-
+    
 ## To be copied in the UI
-# mod_observer_1_election_ui("observer_1_election_ui_1")
-
+# mod_filter_donnees_observer_1_election_ui("filter_donnees_observer_1_election_ui_1")
+    
 ## To be copied in the server
-# mod_observer_1_election_server("observer_1_election_ui_1")
+# mod_filter_donnees_observer_1_election_server("filter_donnees_observer_1_election_ui_1")

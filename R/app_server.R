@@ -23,7 +23,7 @@ app_server <- function( input, output, session ) {
   debug_whereami <- TRUE
   
   mod_accueil_server("accueil_ui_1")
-  mod_observer_1_election_server("observer_1_election_ui_1", data_elections = data_elections, debug_whereami = debug_whereami)
+  mod_observer_1_election_resultats_globaux_server("observer_1_election_ui_1", data_elections = data_elections, debug_whereami = debug_whereami)
   mod_observer_plusieurs_elections_server("observer_plusieurs_elections_ui_1", data_elections = data_elections)
   
   #
@@ -51,7 +51,6 @@ app_server <- function( input, output, session ) {
       
       #### A MODIFIER QUAND LES DONNEES SERONT SUR XTRADATA ####
       #data_elections$data <- dat
-      
       data_elections$data <-  as_tibble(elections::sample_DACI_bdx) %>% 
         mutate(
           DATE_ELECTION = as_date(DATE_EVENEMENT, format = "%d/%m/%Y"),

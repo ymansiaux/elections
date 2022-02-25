@@ -7,7 +7,7 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-mod_observer_1_election_resultats_carto_candidat_vainqueur_ui <- function(id){
+mod_observer_1_election_resultats_globaux_carto_ui <- function(id){
   ns <- NS(id)
   tagList(
     
@@ -52,35 +52,6 @@ mod_observer_1_election_resultats_carto_candidat_vainqueur_ui <- function(id){
                  )
                  
                  
-                 # fluidRow(
-                 #   column(width = 10,
-                 #          div(class ="title_crazy title_container",
-                 #              div(icon(name="democrat", class = "icon_title")),
-                 #              div(h1("Abstention", class = "text-uppercase title")),
-                 #              div(icon(name="democrat", class = "icon_title"))
-                 #          )
-                 #   )
-                 # ),
-                 
-                 # fluidRow(
-                 #   column(width = 2,
-                 #          radioButtons(inputId = ns("numero_scrutin"),
-                 #                       label = "Choisir un scrutin",
-                 #                       choiceNames = "Aucune élection sélectionnée",
-                 #                       choiceValues = ""),
-                 #          
-                 #          selectizeInput(
-                 #            inputId = ns("niveau_geo_restitution"),
-                 #            label = "Niveau de restitution",
-                 #            choices = c("Bureau de vote" = "id_bureau", "Lieu de vote" = "id_lieu"),
-                 #            multiple = FALSE,
-                 #            options = list(deselectBehavior = "top")
-                 #          )
-                 #   ),
-                 #   
-                 #   column(width = 8,
-                 #          leafletOutput(ns("carto_resultats"))
-                 #   )
              )
       )
     )
@@ -90,7 +61,7 @@ mod_observer_1_election_resultats_carto_candidat_vainqueur_ui <- function(id){
 #' observer_1_election_resultats_carto_candidat_vainqueur Server Functions
 #'
 #' @noRd 
-mod_observer_1_election_resultats_carto_candidat_vainqueur_server <- function(id, election_selectionnee_d){
+mod_observer_1_election_resultats_globaux_carto_server <- function(id, election_selectionnee_d){
   moduleServer( id, function(input, output, session){
     # ns <- session$ns
     

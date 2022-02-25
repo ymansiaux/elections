@@ -1,4 +1,4 @@
-#' observer_1_election_resultats_globaux UI Function
+#' observer_1_election UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,129 +7,63 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
+#' @import ggplot2
+#' @importFrom scales percent
+#' @importFrom dplyr pull
+#' @importFrom bdxmetroidentity scale_fill_bdxmetro_discrete theme_bdxmetro_dark
+#' @importFrom ggtext element_markdown
+#' @importFrom viridis scale_fill_viridis
+#' @importFrom stringr str_trim str_replace
+#' @importFrom leaflet leafletOutput createLeafletMap renderLeaflet awesomeIcons leaflet addTiles setView addAwesomeMarkers addPolygons highlightOptions leafletProxy setView colorNumeric addLegend
+
 mod_observer_1_election_resultats_globaux_ui <- function(id){
   ns <- NS(id)
   tagList(
-    
     fluidRow(
       column(width = 12,
-             div(class = "container",
-                 style = "display:flex;
-        flex-direction : column;
-        justify-content: space-between",
-                 
-                 div(class ="title_crazy title_container",
-                     div(icon(name="democrat", class = "icon_title")),
-                     div(h2("Résultats par candidats", class = "text-uppercase")),
-                     div(icon(name="democrat", class = "icon_title"))
-                 ),
-                 
-                 div(
-                   plotOutput(ns("graphique_resultats"))
-                 ),
-                 
-                 div(class ="title_crazy title_container",
-                     div(icon(name="democrat", class = "icon_title")),
-                     div(h2("Abstention", class = "text-uppercase")),
-                     div(icon(name="democrat", class = "icon_title"))
-                 ),
-                 
-                 div(
-                   plotOutput(ns("graphique_abstention"))
-                 )
-             )
+             mod_filter_donnees_observer_1_election_ui(ns("observer_1_election_resultats_globaux_ui_1"))
       )
+    ),
+    
+    fluidRow(
+      column(width = 7,
+             # mod_observer_1_election_resultats_carto_candidat_vainqueur_ui(ns("observer_1_election_resultats_carto_candidat_vainqueur_ui_1"))
+             mod_observer_1_election_resultats_globaux_carto_ui(ns("observer_1_election_resultats_globaux_ui_1"))
+             
+      ),
+      column(width = 5,
+             # mod_observer_1_election_resultats_globaux_ui(ns("observer_1_election_resultats_globaux_ui_1")))
+             mod_observer_1_election_resultats_globaux_barplot_ui(ns("observer_1_election_resultats_globaux_ui_1")))
+      
     )
+  
   )
-  
-  
-  # 
-  # fluidRow(
-  #   column(width = 10,
-  #          div(class ="title_crazy title_container",
-  #              div(icon(name="democrat", class = "icon_title")),
-  #              div(h1("Résultats globaux", class = "text-uppercase title")),
-  #              div(icon(name="democrat", class = "icon_title"))
-  #          )
-  #   )
-  # ),
-  # 
-  # fluidRow(
-  #   column(width = 10,
-  #          
-  #          plotOutput(ns("graphique_resultats"))
-  #   )
-  # ),
-  # 
-  # fluidRow(
-  #   column(width = 10,
-  #          div(class ="title_crazy title_container",
-  #              div(icon(name="democrat", class = "icon_title")),
-  #              div(h1("Abstention", class = "text-uppercase title")),
-  #              div(icon(name="democrat", class = "icon_title"))
-  #          )
-  #   )
-  # ),
-  # 
-  # fluidRow(
-  #   column(width = 10,
-  #          plotOutput(ns("graphique_abstention"))
-  #   )
-  # )
-  
 }
 
-#' observer_1_election_resultats_globaux Server Functions
+#' observer_1_election Server Functions
 #'
 #' @noRd 
-mod_observer_1_election_resultats_globaux_server <- function(id, election_selectionnee_d){
+mod_observer_1_election_resultats_globaux_server <- function(id, data_elections, debug_whereami){
   moduleServer( id, function(input, output, session){
-    # ns <- session$ns
+    ns <- session$ns
+ 
+    election_selectionnee <- mod_filter_donnees_observer_1_election_server("observer_1_election_resultats_globaux_ui_1", data_elections)
+    election_selectionnee_d <- debounce(election_selectionnee, 500)
     
-    output$graphique_resultats <- renderPlot({
-      req(election_selectionnee_d())
-      
-      compute_resultats_elections(data = election_selectionnee_d(), 
-                                  type = "participation", 
-                                  grouping_vars = c(
-                                    "nom_election", "type_election", "annee_election", 
-                                    "numero_tour", "nom_candidat", "nom", "nom_candidat_short")) %>%
-        graphique_resultats_election(data = ., x = nom_candidat_short, y = pct, fill = nom_candidat, 
-                                     facet = TRUE, facet_var = numero_tour, 
-                                     theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
-                                                                         light_font_family = "Nunito",
-                                                                         axis.text.x = element_blank()),
-                                     title = "", subtitle = "", caption = "", xlab = "", ylab = "Voix (%)", legend_name = "Candidat")
-      
-    })
+    ## SOUS MODULES ( COMPARER AVEC LES NS )
+    mod_observer_1_election_resultats_globaux_barplot_server("observer_1_election_resultats_globaux_ui_1", election_selectionnee_d)
+    mod_observer_1_election_resultats_globaux_carto_server("observer_1_election_resultats_globaux_ui_1", election_selectionnee_d)
+    # mod_observer_1_election_resultats_globaux_server("observer_1_election_resultats_globaux_ui_1", election_selectionnee_d)
+    # mod_observer_1_election_resultats_carto_candidat_vainqueur_server("observer_1_election_resultats_carto_candidat_vainqueur_ui_1", election_selectionnee_d)
+    # 
+    # mod_observer_1_election_selection_LV_sur_carte_server("observer_1_election_selection_LV_sur_carte_ui_1", election_selectionnee_d)
     
-    
-    output$graphique_abstention <- renderPlot({
-      
-      # compute_resultats_elections(data = election_selectionnee_d(),
-      #                             type = "abstention",
-      #                             grouping_vars = c(
-      #                               "nom_election", "type_election", "annee_election", "numero_tour")) %>% 
-      #   graphique_resultats_election(data = ., x = numero_tour, y = pct, fill = numero_tour, facet = FALSE, theme_fun = theme_elections())
-      
-      compute_resultats_elections(data = election_selectionnee_d(),
-                                  type = "abstention",
-                                  grouping_vars = c(
-                                    "nom_election", "type_election", "annee_election", "numero_tour")) %>% 
-        graphique_resultats_election(data = ., x = numero_tour, y = pct, fill = numero_tour, 
-                                     facet = FALSE, 
-                                     theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
-                                                                     light_font_family = "Nunito",
-                                                                     axis.text.x = element_blank()),
-                                     title = "", subtitle = "", caption = "", xlab = "", ylab = "Abstention (%)", legend_name = "Tour")
-      
-    })
-    
+    # mod_observer_1_election_selection_1_candidat_server("observer_1_election_selection_1_candidat_ui_1", election_selectionnee_d)
   })
 }
 
 ## To be copied in the UI
-# mod_observer_1_election_resultats_globaux_ui("observer_1_election_resultats_globaux_ui_1")
+# mod_observer_1_election_ui("observer_1_election_ui_1")
 
 ## To be copied in the server
-# mod_observer_1_election_resultats_globaux_server("observer_1_election_resultats_globaux_ui_1")
+# mod_observer_1_election_server("observer_1_election_ui_1")
