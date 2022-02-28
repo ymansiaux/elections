@@ -29,6 +29,8 @@ app_server <- function( input, output, session ) {
   
   mod_observer_1_election_resultats_selectionLVBV_server("observer_1_election_selection_LV_sur_carte_ui_1", data_elections = data_elections)
 
+  mod_observer_1_election_resultats_1candidat_server("observer_1_candidat_ui_1", data_elections = data_elections)
+  
   mod_observer_plusieurs_elections_server("observer_plusieurs_elections_ui_1", data_elections = data_elections)
   
   #

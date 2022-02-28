@@ -49,6 +49,11 @@ app_ui <- function(request) {
       ),
       
       tabPanel(
+        "Observer 1 candidat",
+        mod_observer_1_election_resultats_1candidat_ui("observer_1_candidat_ui_1")
+      ),
+      
+      tabPanel(
         "Observer plusieurs élections",
         mod_observer_plusieurs_elections_ui("observer_plusieurs_elections_ui_1")
       )
