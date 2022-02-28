@@ -13,6 +13,7 @@
 #' @importFrom janitor clean_names
 #' @importFrom sysfonts font_add_google
 #' @importFrom showtext showtext_auto
+#' @importFrom shinyjs runjs
 #' @noRd
 app_server <- function( input, output, session ) {
   # Your application server logic 
@@ -42,12 +43,15 @@ app_server <- function( input, output, session ) {
   data_elections <- reactiveValues(data = NULL)
   
   observeEvent(session, {
+    # browser()
+   runjs('$(".nav-link").addClass("disabled");');
     
     dat <- try(xtradata_requete_features(key = Sys.getenv("XTRADATA_KEY"), typename = "ST_PARK_P", showURL = TRUE))
     
     if(inherits(dat, "try-error")) {
       add_notie_alert(type = "error", text = "Echec de récupération des données",
                       stay = TRUE, time = 5, position = "bottom", session)
+      
       
     } else {
       add_notie_alert(type = "success", text = "Connexion à la base OK",
@@ -67,6 +71,7 @@ app_server <- function( input, output, session ) {
         rename(NB_VOIX = VALEUR) %>% 
         clean_names()
       
+      runjs('$(".nav-link").removeClass("disabled");');
       
     }
   }, ignoreNULL = FALSE, once = TRUE)

@@ -11,19 +11,58 @@ mod_observer_1_election_selection_LV_sur_carte_ui <- function(id){
   ns <- NS(id)
   tagList(
     fluidRow(
-      column(width = 2,
-             radioButtons(inputId = ns("numero_scrutin"),
-                          label = "Choisir un scrutin",
-                          choiceNames = "Aucune élection sélectionnée",
-                          choiceValues = "")
-      )
-    ),
-
-    fluidRow(
-      column(width = 12,
-             leafletOutput(ns("myBVmap")),
-             plotOutput(ns("plot3")),
-             plotOutput(ns("plot4"))
+      column(width = 7,
+             div(class = "container",
+                 style = "display:flex;
+        flex-direction : column;
+        justify-content: space-evenly",
+                 
+                 div(class ="title_crazy title_container",
+                     div(icon(name="democrat", class = "icon_title")),
+                     div(h2("Sélection d'un lieu de vote", class = "text-uppercase")),
+                     div(icon(name="democrat", class = "icon_title"))
+                 ),
+                 
+                 div(
+                   radioButtons(inputId = ns("numero_scrutin"),
+                                label = "Choisir un scrutin",
+                                choiceNames = "Aucune élection sélectionnée",
+                                choiceValues = "",
+                                inline = TRUE)
+                 ),
+                 
+                 div(
+                   leafletOutput(ns("myBVmap"), height = 800)
+                 )
+             )
+      ),
+      
+      column(width = 5,
+             div(class = "container",
+                 style = "display:flex;
+        flex-direction : column;
+        justify-content: space-between",
+                 
+                 div(class ="title_crazy title_container",
+                     div(icon(name="democrat", class = "icon_title")),
+                     div(h2("Résultats par BV", class = "text-uppercase")),
+                     div(icon(name="democrat", class = "icon_title"))
+                 ),
+                 
+                 div(
+                   plotOutput(ns("plot_resultats_BV"))
+                 ),
+                 
+                 div(class ="title_crazy title_container",
+                     div(icon(name="democrat", class = "icon_title")),
+                     div(h2("Résultats par LV", class = "text-uppercase")),
+                     div(icon(name="democrat", class = "icon_title"))
+                 ),
+                 
+                 div(
+                   plotOutput(ns("plot_resultats_LV"))
+                 )
+             )
       )
     )
   )
@@ -87,6 +126,8 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, election_s
       })
     })
     
+  
+    
     observeEvent(input$myBVmap_marker_click, { 
       p <- input$myBVmap_marker_click  # typo was on this line
       print(p)
@@ -123,7 +164,7 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, election_s
     
     resultats_by_BV <- reactive({
       
-      req(isTruthy(filtered_data_by_BV()))
+      # req(isTruthy(filtered_data_by_BV()))
       
       compute_resultats_elections(data = filtered_data_by_BV(), 
                                   type = "participation", 
@@ -139,7 +180,7 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, election_s
     
     resultats_by_LV <- reactive({
       
-      req(isTruthy(filtered_data_by_BV()))
+      # req(isTruthy(filtered_data_by_BV()))
       
       compute_resultats_elections(data = filtered_data_by_BV(), 
                                   type = "participation", 
@@ -152,18 +193,38 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, election_s
       
     })
     
-    output$plot3 <- renderPlot({
-      # là il faut le bv en facet
-      graphique_resultats_election(data = resultats_by_BV(), x = nom_candidat_short, y = pct, fill = nom_candidat, facet_var = id_bureau, theme_fun = theme_elections())
+    output$plot_resultats_BV <- renderPlot({
+      validate(
+        need(!is.null(input$myBVmap_marker_click), "Sélectionnez 1 lieu de vote")
+      )
       
+      graphique_resultats_election(data = resultats_by_BV(), x = nom_candidat_short, y = pct, 
+                                   fill = nom_candidat, 
+                                   facet = TRUE, facet_var = id_bureau, 
+                                   theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
+                                                                       light_font_family = "Nunito",
+                                                                       axis.text.x = element_blank()),
+                                   title = "", subtitle = "", caption = "", xlab = "", ylab = "Vote (%)", legend_name = "Candidat")
       
     })
     
     
-    output$plot4 <- renderPlot({
-      # là il faut le lv en facet
+    output$plot_resultats_LV <- renderPlot({
       
-      graphique_resultats_election(data = resultats_by_LV(), x = nom_candidat_short, y = pct, fill = nom_candidat, facet_var = nom_lieu, theme_fun = theme_elections())
+      validate(
+        need(!is.null(input$myBVmap_marker_click), "Sélectionnez 1 lieu de vote")
+        
+    )
+      
+      print(isTruthy(resultats_by_LV()))
+            print(nrow(resultats_by_LV()))
+      
+      graphique_resultats_election(data = resultats_by_LV(), x = nom_candidat_short, y = pct, fill = nom_candidat, 
+                                   facet = TRUE, facet_var = nom_lieu, 
+                                   theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
+                                                                       light_font_family = "Nunito",
+                                                                       axis.text.x = element_blank()),
+                                   title = "", subtitle = "", caption = "", xlab = "", ylab = "Vote (%)", legend_name = "Candidat")
       
       
     })

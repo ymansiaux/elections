@@ -14,15 +14,14 @@ mod_observer_1_election_resultats_selectionLVBV_ui <- function(id){
       column(width = 12,
              mod_filter_donnees_observer_1_election_ui(ns("observer_1_election_resultats_selectionLVBVspecifique_ui_1"))
       )
-    )
-    #,
+    ),
     # 
-    # fluidRow(
-    #   column(width = 7,
-    #          mod_observer_1_election_selection_LV_sur_carte_ui("observer_1_election_resultats_globaux_ui_2")
-    #          
-    #   )
-    # )
+     fluidRow(
+       column(width = 12,
+              mod_observer_1_election_selection_LV_sur_carte_ui(ns("observer_1_election_resultats_selectionLVBVspecifique_ui_1"))
+              
+      )
+     )
     
   )
 }
@@ -37,15 +36,8 @@ mod_observer_1_election_resultats_selectionLVBV_server <- function(id, data_elec
     election_selectionnee <- mod_filter_donnees_observer_1_election_server("observer_1_election_resultats_selectionLVBVspecifique_ui_1", data_elections)
     election_selectionnee_d <- debounce(election_selectionnee, 500)
     
-    ## SOUS MODULES ( COMPARER AVEC LES NS )
-    # mod_observer_1_election_resultats_globaux_barplot_server("observer_1_election_resultats_globaux_ui_1", election_selectionnee_d)
-    # mod_observer_1_election_resultats_globaux_carto_server("observer_1_election_resultats_globaux_ui_1", election_selectionnee_d)
-    # mod_observer_1_election_resultats_globaux_server("observer_1_election_resultats_globaux_ui_1", election_selectionnee_d)
-    # mod_observer_1_election_resultats_carto_candidat_vainqueur_server("observer_1_election_resultats_carto_candidat_vainqueur_ui_1", election_selectionnee_d)
-    # 
-    # mod_observer_1_election_selection_LV_sur_carte_server("observer_1_election_resultats_globaux_ui_2", election_selectionnee_d)
+    mod_observer_1_election_selection_LV_sur_carte_server("observer_1_election_resultats_selectionLVBVspecifique_ui_1", election_selectionnee_d)
     
-    # mod_observer_1_election_selection_1_candidat_server("observer_1_election_selection_1_candidat_ui_1", election_selectionnee_d)
   })
 }
 ## To be copied in the UI
