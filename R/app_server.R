@@ -83,7 +83,7 @@ app_server <- function( input, output, session ) {
   
   ### PARTIE BDXMETROIDENTITY ###
   rv <- reactiveValues()
-  rv$theme <- "light"
+  rv$theme <- "dark"
   
   output$my_logo <- renderUI({
     if (rv$theme == "light") {
