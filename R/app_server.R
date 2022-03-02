@@ -25,73 +25,79 @@ app_server <- function( input, output, session ) {
   
   mod_accueil_server("accueil_ui_1")
   
-  mod_observer_1_election_resultats_globaux_server("observer_1_election_ui_1", data_elections = data_elections, debug_whereami = debug_whereami)
-  
-  mod_observer_1_election_resultats_selectionLVBV_server("observer_1_election_selection_LV_sur_carte_ui_1", data_elections = data_elections)
+  # observeEvent(!is.null(data_elections$data), {
+    
+    mod_observer_1_election_resultats_globaux_server("observer_1_election_ui_1", data_elections = data_elections, debug_whereami = debug_whereami)
+    
+    mod_observer_1_election_resultats_selectionLVBV_server("observer_1_election_selection_LV_sur_carte_ui_1", data_elections = data_elections)
+    
+    mod_observer_1_election_resultats_1candidat_server("observer_1_candidat_ui_1", data_elections = data_elections)
+    
+    # mod_observer_plusieurs_elections_server("observer_plusieurs_elections_ui_1", data_elections = data_elections)
+  # })
 
-  mod_observer_1_election_resultats_1candidat_server("observer_1_candidat_ui_1", data_elections = data_elections)
+#
+font_add_google(name = "Playfair Display", family = "Playfair Display")
+# font_add_google(name = "Nunito", family = "Nunito")
+showtext_auto()
+
+
+#######################################
+# Chargement des données au démarrage #
+#######################################
+data_elections <- reactiveValues(data = NULL)
+
+observeEvent(session, {
+  # browser()
+  # runjs('$(".nav-link").addClass("disabled");');
   
-  mod_observer_plusieurs_elections_server("observer_plusieurs_elections_ui_1", data_elections = data_elections)
+  add_notie_alert(type = "info", text = "Récupération des données ... Patience ...",
+                  stay = TRUE, time = 5, position = "bottom", session)
   
-  #
-  font_add_google(name = "Playfair Display", family = "Playfair Display")
-  font_add_google(name = "Nunito", family = "Nunito")
-  showtext_auto()
+  dat <- try(xtradata_requete_features(key = Sys.getenv("XTRADATA_KEY"), typename = "ST_PARK_P", showURL = TRUE))
   
-  
-  #######################################
-  # Chargement des données au démarrage #
-  #######################################
-  data_elections <- reactiveValues(data = NULL)
-  
-  observeEvent(session, {
-    # browser()
-   runjs('$(".nav-link").addClass("disabled");');
+  if(inherits(dat, "try-error")) {
+    add_notie_alert(type = "error", text = "Echec de récupération des données",
+                    stay = TRUE, time = 5, position = "bottom", session)
     
-    dat <- try(xtradata_requete_features(key = Sys.getenv("XTRADATA_KEY"), typename = "ST_PARK_P", showURL = TRUE))
     
-    if(inherits(dat, "try-error")) {
-      add_notie_alert(type = "error", text = "Echec de récupération des données",
-                      stay = TRUE, time = 5, position = "bottom", session)
-      
-      
-    } else {
-      add_notie_alert(type = "success", text = "Connexion à la base OK",
-                      stay = FALSE, time = 5, position = "bottom", session)
-      
-      #### A MODIFIER QUAND LES DONNEES SERONT SUR XTRADATA ####
-      #data_elections$data <- dat
-      data_elections$data <-  as_tibble(elections::sample_DACI_bdx) %>% 
-        mutate(
-          DATE_ELECTION = as_date(DATE_EVENEMENT, format = "%d/%m/%Y"),
-          ANNEE_ELECTION = year(DATE_ELECTION)) %>% 
-        mutate(PRENOM = get_first_name(NOM_CANDIDAT)) %>% 
-        mutate(NOM = get_last_name(NOM_CANDIDAT, PRENOM)) %>% 
-        mutate(NOM = ifelse(NOM == "", PRENOM, NOM)) %>% 
-        mutate(NOM_CANDIDAT_SHORT = str_sub(NOM_CANDIDAT,1,10)) %>% 
-        select(-DATE_EVENEMENT) %>% 
-        rename(NB_VOIX = VALEUR) %>% 
-        clean_names()
-      
-      runjs('$(".nav-link").removeClass("disabled");');
-      
-    }
-  }, ignoreNULL = FALSE, once = TRUE)
-  
-  # output$print_data <- renderPrint(
-  #   head(data_elections$data)
-  # )
-  
-  
-  ### PARTIE BDXMETROIDENTITY ###
-  rv <- reactiveValues()
-  rv$theme <- "dark"
-  
-  output$my_logo <- renderUI({
-    if (rv$theme == "light") {
-      tags$img(src = "www/datalab-logo-lightmode.png", width = "150px")
-    } else if (rv$theme == "dark") {
-      tags$img(src = "www/datalab-logo-darkmode.png", width = "150px")
-    }
-  })
+  } else {
+    add_notie_alert(type = "success", text = "Connexion à la base OK",
+                    stay = FALSE, time = 5, position = "bottom", session)
+    
+    #### A MODIFIER QUAND LES DONNEES SERONT SUR XTRADATA ####
+    #data_elections$data <- dat
+    data_elections$data <-  as_tibble(elections::sample_DACI_bdx) %>% 
+      mutate(
+        DATE_ELECTION = as_date(DATE_EVENEMENT, format = "%d/%m/%Y"),
+        ANNEE_ELECTION = year(DATE_ELECTION)) %>% 
+      mutate(PRENOM = get_first_name(NOM_CANDIDAT)) %>% 
+      mutate(NOM = get_last_name(NOM_CANDIDAT, PRENOM)) %>% 
+      mutate(NOM = ifelse(NOM == "", PRENOM, NOM)) %>% 
+      mutate(NOM_CANDIDAT_SHORT = str_sub(NOM_CANDIDAT,1,10)) %>% 
+      select(-DATE_EVENEMENT) %>% 
+      rename(NB_VOIX = VALEUR) %>% 
+      clean_names()
+    
+    # runjs('$(".nav-link").removeClass("disabled");');
+    
+  }
+}, ignoreNULL = FALSE, once = TRUE)
+
+# output$print_data <- renderPrint(
+#   head(data_elections$data)
+# )
+
+
+### PARTIE BDXMETROIDENTITY ###
+rv <- reactiveValues()
+rv$theme <- "dark"
+
+output$my_logo <- renderUI({
+  if (rv$theme == "light") {
+    tags$img(src = "www/datalab-logo-lightmode.png", width = "150px")
+  } else if (rv$theme == "dark") {
+    tags$img(src = "www/datalab-logo-darkmode.png", width = "150px")
+  }
+})
 }

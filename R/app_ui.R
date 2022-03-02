@@ -18,7 +18,7 @@ app_ui <- function(request) {
     shinyjs::useShinyjs(),
     
     waiter_logo(isinProd = golem::app_prod(), img_path = "www/LogoDataLab.png"),
-    add_busy_spinner(spin = "fading-circle", color = "#ff4d3e", height = "150px", width = "150px"),
+    # add_busy_spinner(spin = "fading-circle", color = "#ff4d3e", height = "150px", width = "150px"),
     
     navbarPage(
       theme = bdxmetroidentity::theme_bdxmetro_shiny(
@@ -51,12 +51,12 @@ app_ui <- function(request) {
       tabPanel(
         "Observer 1 candidat",
         mod_observer_1_election_resultats_1candidat_ui("observer_1_candidat_ui_1")
-      ),
+      )#,
       
-      tabPanel(
-        "Observer plusieurs élections",
-        mod_observer_plusieurs_elections_ui("observer_plusieurs_elections_ui_1")
-      )
+      # tabPanel(
+      #   "Observer plusieurs élections",
+      #   mod_observer_plusieurs_elections_ui("observer_plusieurs_elections_ui_1")
+      # )
     )
   )
   

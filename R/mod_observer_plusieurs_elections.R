@@ -30,21 +30,25 @@ mod_observer_plusieurs_elections_ui <- function(id){
                          class = "col-lg-4",
                          tags$div(
                            class = "card",
+                           style = "height: 500px",
                            tags$img(
-                             src = "https://mdbcdn.b-cdn.net/img/new/standard/nature/181.webp",
+                             src = "www/img/vote1.jpg",
                              class = "card-img-top",
+                             style = "height:50%;",
                              alt = "Waterfall"
                            ),
                            tags$div(
                              class = "card-body",
                              tags$h5(
                                class = "card-title",
-                               "Card title 1"
+                               
+                               "Résultats globaux"
                              ),
                              tags$p(
                                class = "card-text",
-                               "Some quick example text to build on the card title and make up
-                                    the bulk of the card's content."
+                               style = "height: 40%;",
+                               
+                               "Observer les résultats complets d'une élection : voix obtenues pour chaque liste ou candidat, abstention"
                              ),
                              tags$a(
                                href = "#!",
@@ -59,21 +63,25 @@ mod_observer_plusieurs_elections_ui <- function(id){
                          class = "col-lg-4 d-none d-lg-block",
                          tags$div(
                            class = "card",
+                           style = "height: 500px",
+                           
                            tags$img(
-                             src = "https://mdbcdn.b-cdn.net/img/new/standard/nature/182.webp",
+                             src = "www/img/vote2.jpg",
                              class = "card-img-top",
+                             style = "height:50%;",
                              alt = "Sunset Over the Sea"
                            ),
                            tags$div(
                              class = "card-body",
                              tags$h5(
                                class = "card-title",
-                               "Card title 2"
+                               "Résultats pour un lieu de vote"
                              ),
                              tags$p(
                                class = "card-text",
-                               "Some quick example text to build on the card title and make up
-                                    the bulk of the card's content."
+                               style = "height: 40%;",
+                               
+                               "Résultats détaillés pour un lieu de vote et les bureaux qui y sont rattachés"
                              ),
                              tags$a(
                                href = "#!",
@@ -88,21 +96,26 @@ mod_observer_plusieurs_elections_ui <- function(id){
                          class = "col-lg-4 d-none d-lg-block",
                          tags$div(
                            class = "card",
+                           style = "height: 500px",
+                           
                            tags$img(
-                             src = "https://mdbcdn.b-cdn.net/img/new/standard/nature/183.webp",
+                             src = "www/img/vote3.jpg",
                              class = "card-img-top",
+                             style = "height:50%;",
                              alt = "Sunset over the Sea"
                            ),
                            tags$div(
                              class = "card-body",
                              tags$h5(
                                class = "card-title",
-                               "Card title 3"
+                               
+                               "Résultats d'un candidat"
                              ),
                              tags$p(
                                class = "card-text",
-                               "Some quick example text to build on the card title and make up
-                                    the bulk of the card's content."
+                               style = "height: 40%;",
+                               
+                               "Résultats détaillés d'un candidat dans les différents lieux et bureaux de vote"
                              ),
                              tags$a(
                                href = "#!",

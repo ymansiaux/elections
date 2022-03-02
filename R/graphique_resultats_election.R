@@ -7,7 +7,7 @@ graphique_resultats_election <- function(data, x, y, fill,
     ggplot(aes(x = as.factor({{x}}), y = {{y}}, fill = as.factor({{fill}}))) +
     geom_col() +
     scale_y_continuous(labels = scales::percent) +
-    scale_fill_viridis(discrete = TRUE, name = legend_name) +
+    scale_fill_viridis(discrete = TRUE, name = legend_name, direction = 1, begin = 0.2, end = 1) +
     labs(title = title, subtitle = subtitle, caption = caption) +
     xlab(xlab) +
     ylab(ylab)
