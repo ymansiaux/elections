@@ -32,10 +32,13 @@ app_ui <- function(request) {
       title = "Elections",
       collapsible = TRUE,
       
+      # footer = includeHTML(app_sys("app/www/footer.html")),
+      
       tabPanel(
         "Accueil",
         mod_accueil_ui("accueil_ui_1"),
-        uiOutput(outputId = "my_logo")
+        includeHTML(app_sys("app/www/footer.html"))
+        # uiOutput(outputId = "my_logo")
       ),
       
       tabPanel(

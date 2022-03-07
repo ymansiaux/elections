@@ -287,7 +287,7 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
     
     output$barplot_BV <- renderPlot({
       graphique_resultats_election(data = resultats_elections_candidat()$resultats_BV, 
-                                   x = id_bureau, y = pct, fill = nom_candidat,  
+                                   x = id_bureau, y = pct, fill = id_bureau,  
                                    facet = FALSE, 
                                    theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
                                                                        light_font_family = "Nunito",
@@ -299,7 +299,7 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
     
     output$barplot_LV <- renderPlot({
       graphique_resultats_election(data = resultats_elections_candidat()$resultats_LV, 
-                                   x = nom_lieu, y = pct, fill = nom_candidat,  
+                                   x = nom_lieu, y = pct, fill = nom_lieu,  
                                    facet = FALSE, 
                                    theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
                                                                        light_font_family = "Nunito",
