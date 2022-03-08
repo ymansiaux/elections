@@ -21,6 +21,8 @@ app_ui <- function(request) {
     # add_busy_spinner(spin = "fading-circle", color = "#ff4d3e", height = "150px", width = "150px"),
     
     navbarPage(
+      # tags$style(".footer{position:fixed;bottom:0; width:100%;}"),
+      
       theme = bdxmetroidentity::theme_bdxmetro_shiny(
         bg = "#3FD2C7",
         fg = "white",
@@ -32,12 +34,12 @@ app_ui <- function(request) {
       title = "Elections",
       collapsible = TRUE,
       
-      # footer = includeHTML(app_sys("app/www/footer.html")),
+      footer = includeHTML(app_sys("app/www/footer.html")),
       
       tabPanel(
         "Accueil",
-        mod_accueil_ui("accueil_ui_1"),
-        includeHTML(app_sys("app/www/footer.html"))
+        mod_accueil_ui("accueil_ui_1")#,
+        # includeHTML(app_sys("app/www/footer.html"))
         # uiOutput(outputId = "my_logo")
       ),
       

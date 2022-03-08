@@ -23,6 +23,7 @@ app_server <- function( input, output, session ) {
   
   debug_whereami <- TRUE
   
+  
   mod_accueil_server("accueil_ui_1")
   
   # observeEvent(!is.null(data_elections$data), {
@@ -51,6 +52,9 @@ app_server <- function( input, output, session ) {
   # browser()
   # 
   observeEvent(NULL, ignoreNULL = FALSE, ignoreInit = FALSE, once = TRUE, {
+    #runjs('$("body").addClass("d-flex").addClass("flex-column").addClass("min-vh-100");');
+    #runjs('$(".container-fluid").addClass("min-vh-100");)');
+    # runjs("$(#page-container).")
     runjs('$(".nav-link").addClass("disabled");');
     print("alerte1")
     add_notie_alert(type = "info", text = "Récupération des données ... Patience ...",
