@@ -9,12 +9,7 @@
 #' @importFrom shiny NS tagList 
 mod_accueil_ui <- function(id){
   ns <- NS(id)
-  # tagList(
-  #   fluidRow(
-  #     column(width = 12,
-  #            h1("titi"))
-  #   )
-  # )
+
   tagList(
     fluidRow(
       column(width = 12,

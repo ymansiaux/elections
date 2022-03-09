@@ -154,11 +154,11 @@ mod_observer_plusieurs_elections_server <- function(id, data_elections){
     #   t <- copy(data_elections$data) %>% 
     #     .[, .(
     #       nb_voix = sum(nb_voix, na.rm = TRUE),
-    #       nb_expr = sum(nb_expr, na.rm = TRUE)
+    #       nb_exprimes = sum(nb_exprimes, na.rm = TRUE)
     #     ),
     #     by = list(id_bureau = as.factor(id_bureau), date_election = as.integer(date_election))
     #     ] %>% 
-    #     .[, pct := nb_voix / nb_expr] %>% 
+    #     .[, pct := nb_voix / nb_exprimes] %>% 
     #     # .[, titi := as.factor("titi")] %>% 
     #     .[order(date_election)]
     #   

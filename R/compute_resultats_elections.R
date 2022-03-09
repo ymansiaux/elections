@@ -5,8 +5,8 @@ compute_resultats_elections <- function(data, type = "participation", grouping_v
     data %>% 
       group_by(!!!syms(grouping_vars)) %>% 
       summarise(nb_voix = sum(nb_voix, na.rm = TRUE),
-                nb_expr = sum(nb_expr, na.rm = TRUE)) %>% 
-      mutate(pct = nb_voix / nb_expr) %>% 
+                nb_exprimes = sum(nb_exprimes, na.rm = TRUE)) %>% 
+      mutate(pct = nb_voix / nb_exprimes) %>% 
       ungroup()
     
     
