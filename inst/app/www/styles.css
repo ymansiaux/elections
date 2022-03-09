@@ -2,6 +2,14 @@
 @import url('https://fonts.googleapis.com/css?family=Inconsolata');
 @import url('https://fonts.googleapis.com/css2?family=Raleway+Dots&display=swap'); */
 
+.content {
+   min-height: calc(100vh - 200px);
+  /* min-height: 100vh; */
+}
+.footer {
+  height: 100px;
+}
+
 .title_crazy {
   /* border-top: 2px solid #F92C85 ;
   border-bottom: 2px solid #F92C85 ; */

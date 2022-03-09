@@ -38,14 +38,22 @@ app_ui <- function(request) {
       
       tabPanel(
         "Accueil",
-        mod_accueil_ui("accueil_ui_1")#,
+        div(class = "content",
+            mod_accueil_ui("accueil_ui_1")
+        )#,
+        # div(
+          # includeHTML(app_sys("app/www/footer.html")))#,
         # includeHTML(app_sys("app/www/footer.html"))
         # uiOutput(outputId = "my_logo")
       ),
       
       tabPanel(
         "Observer 1 élection",
+        div(class = "content",
         mod_observer_1_election_resultats_globaux_ui("observer_1_election_ui_1")
+        )#,
+        # div(
+          # includeHTML(app_sys("app/www/footer.html")))
       ),
       
       tabPanel(
