@@ -25,7 +25,12 @@ mod_observer_1_election_resultats_globaux_carto_ui <- function(id){
                  ),
                  
                  div(
-                   leafletOutput(ns("carto_resultats"), height = 800)
+                   div(style="z-index:2",
+                       leafletOutput(ns("carto_resultats"), height = 800)
+                   ),
+                   div(style="z-index:1",
+                       h3("titi")
+                   ),
                  ),
                  div(
                    class = "container",
