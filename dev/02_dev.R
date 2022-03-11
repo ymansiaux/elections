@@ -19,6 +19,8 @@ usethis::use_package( "shinybusy" )
 usethis::use_package( "shinyYM" )
 usethis::use_package( "stringr" )
 usethis::use_package( "lubridate" )
+usethis::use_package( "glue" )
+
 
 usethis::use_pipe()
 

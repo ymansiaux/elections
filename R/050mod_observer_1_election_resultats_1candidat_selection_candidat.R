@@ -15,8 +15,8 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_ui <- function(id
       column(width = 7,
              div(class = "container",
                  style = "display:flex;
-        flex-direction : column;
-        justify-content: space-evenly",
+                          flex-direction : column;
+                          justify-content: space-evenly",
                  
                  div(class ="title_crazy title_container",
                      div(icon(name="democrat", class = "icon_title")),
@@ -26,8 +26,8 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_ui <- function(id
                  
                  div(class = "container",
                      style = "display:flex;
-        flex-direction : row;
-        justify-content: space-around",
+                             flex-direction : row;
+                             justify-content: space-around",
                      div(   
                        radioButtons(inputId = ns("numero_scrutin"),
                                     label = "Choisir un scrutin",
@@ -57,9 +57,16 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_ui <- function(id
                      )
                  ),
                  
-                 div(
-                   leafletOutput(ns("carto_resultats"), height = 800)
+                 div(class = "map_container",
+                     div(class = "map", id = ns("map"),
+                         leafletOutput(ns("carto_resultats"), height = 800)
+                     ),
+                     div(class = "centered", id = ns("message_absence_donnees_carto"),
+                         h1("Les données de localisation des bureaux ne sont pas disponibles pour ce scrutin ou cette commune")
+                     )
+                     
                  )
+                 
              )
       ),
       column(width = 5,
@@ -89,7 +96,7 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_ui <- function(id
                  )
              )
       )
-   
+      
     )
     
   )
@@ -100,48 +107,66 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_ui <- function(id
 #' @noRd 
 mod_observer_1_election_resultats_1candidat_selection_candidat_server <- function(id, election_selectionnee_d){
   moduleServer( id, function(input, output, session){
-    # ns <- session$ns
-    
+    ns <- session$ns
+    # #whereami::cat_where(where = whereami::whereami())
     observeEvent(input$pause, browser())
+    
+    observe({
+      
+      # if(election_selectionnee_d()$annee_election[1] == 2006) browser()
+      
+      if(!election_selectionnee_d()$annee_election[1] %in% annees_elections_avec_donnees_geo | 
+         !election_selectionnee_d()$code_insee[1] %in% communes_elections_avec_donnees_geo) {
+        
+        runjs(glue('$("#{ns("map")}").addClass("map_with_opacity");'));
+        runjs(glue('$("#{ns("message_absence_donnees_carto")}").show();'));
+        
+      } else {
+        
+        runjs(glue('$("#{ns("map")}").removeClass("map_with_opacity");'));
+        runjs(glue('$("#{ns("message_absence_donnees_carto")}").hide();'));
+        
+      }
+    })
     
     
     observeEvent(election_selectionnee_d(), {
-      
+      #whereami::cat_where(where = whereami::whereami())
       updateSelectizeInput(session,
                            inputId = "candidat",
                            choices = sort(unique(election_selectionnee_d()$nom_candidat)),
                            selected = sort(unique(election_selectionnee_d()$nom_candidat))[1],
                            server = TRUE
       )
-      
-      
-      
-      
     })
     
     observeEvent(input$candidat, {
+      #whereami::cat_where(where = whereami::whereami())
       
-      tours_dispos <- election_selectionnee_d() %>% 
-        filter(nom_candidat %in% input$candidat) %>% 
-        select(numero_tour) %>% 
-        distinct() %>% 
-        pull()
-      
-      
-      updateRadioButtons(session,
-                         inputId = "numero_scrutin",
-                         choiceNames = paste("Tour", sort(tours_dispos)),
-                         choiceValues = sort(tours_dispos)
-      )
-      
+      if(input$candidat %in% election_selectionnee_d()$nom_candidat) {
+        
+        tours_dispos <- election_selectionnee_d() %>% 
+          filter(nom_candidat %in% input$candidat) %>% 
+          select(numero_tour) %>% 
+          distinct() %>% 
+          pull()
+        
+        
+        updateRadioButtons(session,
+                           inputId = "numero_scrutin",
+                           choiceNames = paste("Tour", sort(tours_dispos)),
+                           choiceValues = sort(tours_dispos)
+        )
+      }
     })
     
     
     donnees_elections_candidat <- reactive({
-      
+      req(input$candidat %in% election_selectionnee_d()$nom_candidat)
       req(input$candidat)
       req(input$numero_scrutin)
-      
+      # if(election_selectionnee_d()$annee_election[1] == 2006) browser()
+      #whereami::cat_where(where = whereami::whereami())
       election_selectionnee_d() %>% 
         filter(nom_candidat %in% input$candidat & numero_tour %in% input$numero_scrutin)
       
@@ -149,7 +174,7 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
     
     donnees_elections_candidat_d <- debounce(donnees_elections_candidat, 500)
     
-    
+    #whereami::cat_where(where = whereami::whereami())
     resultats_elections_candidat <- reactive({
       list("resultats_BV" = compute_resultats_elections(data = donnees_elections_candidat_d(),
                                                         type = "participation",
@@ -171,22 +196,13 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
            
            
            
-           )
-      # 
-      # 
-      # compute_resultats_elections(data = donnees_elections_candidat_d(),
-      #                             type = "participation",
-      #                             grouping_vars = c(
-      #                               "nom_election", "type_election", "annee_election",
-      #                               "nom_candidat", "nom", "nom_candidat_short",
-      #                               "numero_tour", 
-      #                               input$niveau_geo_restitution)) %>% 
-      #   mutate_at(vars(input$niveau_geo_restitution),as.character)
+      )
       
     })
     
     
     donnees_geo_selectionnees <- reactive({
+      #whereami::cat_where(where = whereami::whereami())
       if(input$niveau_geo_restitution == "id_bureau") {
         elections::bureaux_votes_bdx
       } else {
@@ -199,14 +215,14 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
     })
     
     donnees_cartos <- reactive({ 
-      
+      #whereami::cat_where(where = whereami::whereami())
       if(input$niveau_geo_restitution == "id_bureau") {
         merge(donnees_geo_selectionnees(),
               resultats_elections_candidat()$resultats_BV,
               by.x = "code", by.y = input$niveau_geo_restitution)
         
       } else {
-        # browser()
+        
         merge(donnees_geo_selectionnees(),
               resultats_elections_candidat()$resultats_LV,
               by.x = "rs_el_lieuvote_p", by.y = input$niveau_geo_restitution)
@@ -308,13 +324,6 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
       
     })
     
-    # output$graphique_resultats <- renderPlot({
-    #   req(resultats_elections_candidat())
-    #   
-    #   graphique_resultats_election(data = resultats_elections_candidat(), x = !!rlang::sym(input$niveau_geo_restitution), 
-    #                                y = pct, fill = nom_candidat, facet = FALSE, theme_fun = theme_elections())
-    #   
-    # })
     
   })
 }

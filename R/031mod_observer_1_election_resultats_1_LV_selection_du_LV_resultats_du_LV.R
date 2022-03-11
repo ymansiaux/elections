@@ -31,8 +31,14 @@ mod_observer_1_election_selection_LV_sur_carte_ui <- function(id){
                                 inline = TRUE)
                  ),
                  
-                 div(
-                   leafletOutput(ns("myBVmap"), height = 800)
+                 div(class = "map_container",
+                     div(class = "map", id = ns("map"),
+                         leafletOutput(ns("myBVmap"), height = 800)
+                     ),
+                     div(class = "centered", id = ns("message_absence_donnees_carto"),
+                         h1("Les données de localisation des bureaux ne sont pas disponibles pour ce scrutin ou cette commune")
+                     )
+                     
                  )
              )
       ),
@@ -75,7 +81,22 @@ mod_observer_1_election_selection_LV_sur_carte_ui <- function(id){
 #' @noRd 
 mod_observer_1_election_selection_LV_sur_carte_server <- function(id, election_selectionnee_d){
   moduleServer( id, function(input, output, session){
-    # ns <- session$ns
+    ns <- session$ns
+    
+    observe({
+      if(!election_selectionnee_d()$annee_election[1] %in% annees_elections_avec_donnees_geo | 
+         !election_selectionnee_d()$code_insee[1] %in% communes_elections_avec_donnees_geo) {
+        
+        runjs(glue('$("#{ns("map")}").addClass("map_with_opacity");'));
+        runjs(glue('$("#{ns("message_absence_donnees_carto")}").show();'));
+        
+      } else {
+        
+        runjs(glue('$("#{ns("map")}").removeClass("map_with_opacity");'));
+        runjs(glue('$("#{ns("message_absence_donnees_carto")}").hide();'));
+        
+      }
+    })
     
     observeEvent(election_selectionnee_d(), {
       updateRadioButtons(session,
@@ -126,7 +147,7 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, election_s
       })
     })
     
-  
+    
     
     observeEvent(input$myBVmap_marker_click, { 
       p <- input$myBVmap_marker_click  # typo was on this line
@@ -214,10 +235,10 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, election_s
       validate(
         need(!is.null(input$myBVmap_marker_click), "Sélectionnez 1 lieu de vote")
         
-    )
+      )
       
       print(isTruthy(resultats_by_LV()))
-            print(nrow(resultats_by_LV()))
+      print(nrow(resultats_by_LV()))
       
       graphique_resultats_election(data = resultats_by_LV(), x = nom_candidat_short, y = pct, fill = nom_candidat, 
                                    facet = TRUE, facet_var = nom_lieu, 
