@@ -22,9 +22,7 @@
 
 body {
  background-color: black; 
- color:white;
-    /* background: whitesmoke; */
-  /* font-family: 'Raleway Dots', cursive; */
+ color:white;    
 }
 
 .nav-link.active {
@@ -67,4 +65,30 @@ body {
 
 .map_with_opacity {
   opacity: 0.1;
+}
+
+
+
+.card_title_flex_style {
+  flex: 1 1 0;
+}
+
+.card_text_flex_style {
+  flex: 2 1 0;
+}
+
+.card_button_flex_style {
+  flex: 1 1 0;
+}
+
+.card_content_flex_style {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.card_content_flex_style > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
