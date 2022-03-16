@@ -18,7 +18,7 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_ui <- function(id
                           flex-direction : column;
                           justify-content: space-evenly",
                  
-                 div(class ="title_crazy title_container",
+                 div(class ="title_section title_container",
                      div(icon(name="democrat", class = "icon_title")),
                      div(h2("Sélection d'un candidat", class = "text-uppercase")),
                      div(icon(name="democrat", class = "icon_title"))
@@ -72,10 +72,10 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_ui <- function(id
       column(width = 5,
              div(class = "container",
                  style = "display:flex;
-        flex-direction : column;
-        justify-content: space-between",
+                          flex-direction : column;
+                          justify-content: space-between",
                  
-                 div(class ="title_crazy title_container",
+                 div(class ="title_section title_container",
                      div(icon(name="democrat", class = "icon_title")),
                      div(h2("Résultats par BV", class = "text-uppercase")),
                      div(icon(name="democrat", class = "icon_title"))
@@ -85,7 +85,7 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_ui <- function(id
                    plotOutput(ns("barplot_BV"))
                  ),
                  
-                 div(class ="title_crazy title_container",
+                 div(class ="title_section title_container",
                      div(icon(name="democrat", class = "icon_title")),
                      div(h2("Résultats par LV", class = "text-uppercase")),
                      div(icon(name="democrat", class = "icon_title"))

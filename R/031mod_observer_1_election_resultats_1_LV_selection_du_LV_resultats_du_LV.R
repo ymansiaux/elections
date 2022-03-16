@@ -17,7 +17,7 @@ mod_observer_1_election_selection_LV_sur_carte_ui <- function(id){
         flex-direction : column;
         justify-content: space-evenly",
                  
-                 div(class ="title_crazy title_container",
+                 div(class ="title_section title_container",
                      div(icon(name="democrat", class = "icon_title")),
                      div(h2("Sélection d'un lieu de vote", class = "text-uppercase")),
                      div(icon(name="democrat", class = "icon_title"))
@@ -49,7 +49,7 @@ mod_observer_1_election_selection_LV_sur_carte_ui <- function(id){
         flex-direction : column;
         justify-content: space-between",
                  
-                 div(class ="title_crazy title_container",
+                 div(class ="title_section title_container",
                      div(icon(name="democrat", class = "icon_title")),
                      div(h2("Résultats par BV", class = "text-uppercase")),
                      div(icon(name="democrat", class = "icon_title"))
@@ -59,7 +59,7 @@ mod_observer_1_election_selection_LV_sur_carte_ui <- function(id){
                    plotOutput(ns("plot_resultats_BV"))
                  ),
                  
-                 div(class ="title_crazy title_container",
+                 div(class ="title_section title_container",
                      div(icon(name="democrat", class = "icon_title")),
                      div(h2("Résultats par LV", class = "text-uppercase")),
                      div(icon(name="democrat", class = "icon_title"))

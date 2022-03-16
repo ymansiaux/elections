@@ -18,7 +18,7 @@ mod_observer_1_election_resultats_globaux_barplot_ui <- function(id){
         flex-direction : column;
         justify-content: space-between",
                  
-                 div(class ="title_crazy title_container",
+                 div(class ="title_section title_container",
                      div(icon(name="democrat", class = "icon_title")),
                      div(h2("Résultats par candidats", class = "text-uppercase")),
                      div(icon(name="democrat", class = "icon_title"))
@@ -28,7 +28,7 @@ mod_observer_1_election_resultats_globaux_barplot_ui <- function(id){
                    plotOutput(ns("graphique_resultats"))
                  ),
                  
-                 div(class ="title_crazy title_container",
+                 div(class ="title_section title_container",
                      div(icon(name="democrat", class = "icon_title")),
                      div(h2("Abstention", class = "text-uppercase")),
                      div(icon(name="democrat", class = "icon_title"))

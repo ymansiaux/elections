@@ -14,12 +14,11 @@ mod_filter_donnees_observer_1_election_ui <- function(id){
       column(width = 12,
              div(class = "container",
                  style = "display:flex;
-        flex-direction : row;
-        justify-content: space-evenly",
+                  flex-direction : row;
+                  justify-content: space-evenly",
                  
-                  div(
-                    actionButton(ns("pause"), "pause")
-                  ),
+                 # actionButton(ns("pause"), "pause")
+                 
                  div(
                    selectizeInput(
                      inputId = ns("type_elections"),
@@ -53,17 +52,17 @@ mod_filter_donnees_observer_1_election_ui <- function(id){
       )
     )
     
-   
+    
   )
 }
-    
+
 #' filter_donnees_observer_1_election Server Functions
 #'
 #' @noRd 
 mod_filter_donnees_observer_1_election_server <- function(id, data_elections){
   moduleServer( id, function(input, output, session){
     # ns <- session$ns
- 
+    
     
     type_elections <- reactive({
       req(data_elections$data)
@@ -148,9 +147,9 @@ mod_filter_donnees_observer_1_election_server <- function(id, data_elections){
     return(election_selectionnee)
   })
 }
-    
+
 ## To be copied in the UI
 # mod_filter_donnees_observer_1_election_ui("filter_donnees_observer_1_election_ui_1")
-    
+
 ## To be copied in the server
 # mod_filter_donnees_observer_1_election_server("filter_donnees_observer_1_election_ui_1")

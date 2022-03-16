@@ -16,10 +16,10 @@ mod_observer_1_election_resultats_globaux_carto_ui <- function(id){
       column(width = 12,
              div(class = "container",
                  style = "display:flex;
-        flex-direction : column;
-        justify-content: space-evenly",
+                          flex-direction : column;
+                          justify-content: space-evenly",
                  
-                 div(class ="title_crazy title_container",
+                 div(class ="title_section title_container",
                      div(icon(name="democrat", class = "icon_title")),
                      div(h2("Vainqueur par unité géo.", class = "text-uppercase")),
                      div(icon(name="democrat", class = "icon_title"))
@@ -27,7 +27,7 @@ mod_observer_1_election_resultats_globaux_carto_ui <- function(id){
                  
                  div(class = "map_container",
                      div(class = "map", id = ns("map"),
-                       leafletOutput(ns("carto_resultats"), height = 800)
+                         leafletOutput(ns("carto_resultats"), height = 800)
                      ),
                      div(class = "centered", id = ns("message_absence_donnees_carto"),
                          h1("Les données de localisation des bureaux ne sont pas disponibles pour ce scrutin ou cette commune")
@@ -38,8 +38,8 @@ mod_observer_1_election_resultats_globaux_carto_ui <- function(id){
                  div(
                    class = "container",
                    style = "display:flex;
-        flex-direction : row;
-        justify-content: flex-start",
+                            flex-direction : row;
+                            justify-content: flex-start",
                    
                    div(
                      radioButtons(inputId = ns("numero_scrutin"),
@@ -73,7 +73,7 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, election_
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
-    observeEvent(input$pause, browser())
+    # observeEvent(input$pause, browser())
     
     observe({
       if(!election_selectionnee_d()$annee_election[1] %in% annees_elections_avec_donnees_geo | 
@@ -81,13 +81,13 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, election_
         
         runjs(glue('$("#{ns("map")}").addClass("map_with_opacity");'));
         runjs(glue('$("#{ns("message_absence_donnees_carto")}").show();'));
-    
+        
       } else {
         
         runjs(glue('$("#{ns("map")}").removeClass("map_with_opacity");'));
         runjs(glue('$("#{ns("message_absence_donnees_carto")}").hide();'));
         
-        }
+      }
     })
     
     observeEvent(election_selectionnee_d(), {

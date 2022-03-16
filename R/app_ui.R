@@ -7,6 +7,7 @@
 #' @importFrom shinyjs useShinyjs
 #' @importFrom shinybusy add_busy_spinner
 #' @importFrom shinyYM waiter_logo add_notie_deps
+#' @importFrom sass font_google
 #' @noRd
 #'
 
@@ -15,20 +16,17 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     add_notie_deps(),
-    shinyjs::useShinyjs(),
+    useShinyjs(),
     
     waiter_logo(isinProd = golem::app_prod(), img_path = "www/LogoDataLab.png"),
-    # add_busy_spinner(spin = "fading-circle", color = "#ff4d3e", height = "150px", width = "150px"),
     
     navbarPage(
-      # tags$style(".footer{position:fixed;bottom:0; width:100%;}"),
       
-      theme = bdxmetroidentity::theme_bdxmetro_shiny(
+      theme = theme_bdxmetro_shiny(
         bg = "#3FD2C7",
         fg = "white",
-        #bg = "black",
-        base_font = sass::font_google("Nunito"), 
-        heading_font = sass::font_google("Nunito")
+        base_font = font_google("Nunito"), 
+        heading_font = font_google("Nunito")
       ),
       
       title = "Elections",
@@ -40,20 +38,14 @@ app_ui <- function(request) {
         "Accueil",
         div(class = "content",
             mod_accueil_ui("accueil_ui_1")
-        )#,
-        # div(
-          # includeHTML(app_sys("app/www/footer.html")))#,
-        # includeHTML(app_sys("app/www/footer.html"))
-        # uiOutput(outputId = "my_logo")
+        )
       ),
       
       tabPanel(
         "Observer 1 élection",
         div(class = "content",
         mod_observer_1_election_resultats_globaux_ui("observer_1_election_ui_1")
-        )#,
-        # div(
-          # includeHTML(app_sys("app/www/footer.html")))
+        )
       ),
       
       tabPanel(

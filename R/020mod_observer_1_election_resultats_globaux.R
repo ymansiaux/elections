@@ -27,12 +27,10 @@ mod_observer_1_election_resultats_globaux_ui <- function(id){
     
     fluidRow(
       column(width = 7,
-             # mod_observer_1_election_resultats_carto_candidat_vainqueur_ui(ns("observer_1_election_resultats_carto_candidat_vainqueur_ui_1"))
              mod_observer_1_election_resultats_globaux_carto_ui(ns("observer_1_election_resultats_globaux_ui_1"))
              
       ),
       column(width = 5,
-             # mod_observer_1_election_resultats_globaux_ui(ns("observer_1_election_resultats_globaux_ui_1")))
              mod_observer_1_election_resultats_globaux_barplot_ui(ns("observer_1_election_resultats_globaux_ui_1")))
       
     )
@@ -53,12 +51,6 @@ mod_observer_1_election_resultats_globaux_server <- function(id, data_elections,
     ## SOUS MODULES ( COMPARER AVEC LES NS )
     mod_observer_1_election_resultats_globaux_barplot_server("observer_1_election_resultats_globaux_ui_1", election_selectionnee_d)
     mod_observer_1_election_resultats_globaux_carto_server("observer_1_election_resultats_globaux_ui_1", election_selectionnee_d)
-    # mod_observer_1_election_resultats_globaux_server("observer_1_election_resultats_globaux_ui_1", election_selectionnee_d)
-    # mod_observer_1_election_resultats_carto_candidat_vainqueur_server("observer_1_election_resultats_carto_candidat_vainqueur_ui_1", election_selectionnee_d)
-    # 
-    # mod_observer_1_election_selection_LV_sur_carte_server("observer_1_election_selection_LV_sur_carte_ui_1", election_selectionnee_d)
-    
-    # mod_observer_1_election_selection_1_candidat_server("observer_1_election_selection_1_candidat_ui_1", election_selectionnee_d)
   })
 }
 
