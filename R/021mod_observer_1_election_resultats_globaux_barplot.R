@@ -7,6 +7,7 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
+#' @importFrom cols4all scale_color_discrete_c4a_cat
 mod_observer_1_election_resultats_globaux_barplot_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -76,12 +77,15 @@ mod_observer_1_election_resultats_globaux_barplot_server <- function(id, electio
                                   type = "abstention",
                                   grouping_vars = c(
                                     "nom_election", "type_election", "annee_election", "numero_tour")) %>% 
+        
         graphique_resultats_election(data = ., x = numero_tour, y = pct, fill = numero_tour, 
                                      facet = FALSE, 
                                      theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
                                                                      light_font_family = "Nunito",
                                                                      axis.text.x = element_blank()),
-                                     title = "", subtitle = "", caption = "", xlab = "", ylab = "Abstention (%)", legend_name = "Tour")
+                                     title = "", subtitle = "", caption = "", 
+                                     xlab = "", ylab = "Abstention (%)", legend_name = "Tour",
+                                     scale_fill_function = scale_color_discrete_c4a_cat(palette = "harmonic"))
       
     })
     

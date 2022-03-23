@@ -21,6 +21,7 @@ usethis::use_package( "stringr" )
 usethis::use_package( "lubridate" )
 usethis::use_package( "glue" )
 usethis::use_package( "sass" )
+usethis::use_package( "cols4all" )
 
 
 usethis::use_pipe()
