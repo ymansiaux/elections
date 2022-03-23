@@ -23,10 +23,14 @@ app_ui <- function(request) {
     navbarPage(
       
       theme = theme_bdxmetro_shiny(
-        bg = "#3FD2C7",
+        bg = "#32A89F",
         fg = "white",
         base_font = font_google("Nunito"), 
-        heading_font = font_google("Nunito")
+        heading_font = font_google("Nunito"),
+        primary = "#e30b5d",
+        "navbar-light-bg" = "#32A89F",
+        "navbar-light-color" = "black",
+        "navbar-light-active-color" = "darkblue"
       ),
       
       title = "Elections",
