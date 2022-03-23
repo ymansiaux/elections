@@ -22,12 +22,10 @@
 
 body {
  background-color: black; 
- color:white;    
 }
 
 .nav-link.active {
   background-color:lightsteelblue;
-  color: #00458B;
 }
 
 .title_container{
