@@ -22,6 +22,7 @@ app_server <- function( input, output, session ) {
   observe(closeWaiter(golem::app_prod(), 3))
   
   debug_whereami <- TRUE
+  light_dataset <- TRUE
   
   
   mod_accueil_server("accueil_ui_1")
@@ -48,7 +49,11 @@ app_server <- function( input, output, session ) {
     add_notie_alert(type = "info", text = "Récupération des données ... Patience ...",
                     stay = FALSE, time = 10, position = "top", session)
 
-    dat <- try(xtradata_requete_features(key = Sys.getenv("XTRADATA_KEY"), typename = "EL_RESULTAT_A", showURL = TRUE))
+    filter <- ifelse(light_dataset, list(type_election = "Présidentielle"), NULL)
+    
+    dat <- try(xtradata_requete_features(key = Sys.getenv("XTRADATA_KEY"), typename = "EL_RESULTAT_A",
+                                         filter = filter,
+                                         showURL = TRUE))
     print(dat)
 
     if(inherits(dat, "try-error")) {
