@@ -19,6 +19,9 @@ usethis::use_package( "shinybusy" )
 usethis::use_package( "shinyYM" )
 usethis::use_package( "stringr" )
 usethis::use_package( "lubridate" )
+usethis::use_package( "glue" )
+usethis::use_package( "sass" )
+
 
 usethis::use_pipe()
 
@@ -26,6 +29,15 @@ usethis::use_pipe()
 ## Create a module infrastructure in R/
 golem::add_module( name = "accueil" ) # Name of the module
 golem::add_module( name = "observer_1_election" ) # Name of the module
+golem::add_module( name = "observer_1_election_resultats_globaux" ) # Name of the module
+golem::add_module( name = "observer_1_election_resultats_selectionLVBV" ) 
+
+golem::add_module( name = "observer_1_election_resultats_carto_candidat_vainqueur" ) # Name of the module
+golem::add_module( name = "observer_1_election_selection_LV_sur_carte")
+golem::add_module( name = "observer_1_election_selection_1_candidat")
+
+golem::add_module( name = "observer_plusieurs_elections" ) # Name of the module
+
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*

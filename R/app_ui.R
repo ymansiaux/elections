@@ -7,6 +7,7 @@
 #' @importFrom shinyjs useShinyjs
 #' @importFrom shinybusy add_busy_spinner
 #' @importFrom shinyYM waiter_logo add_notie_deps
+#' @importFrom sass font_google
 #' @noRd
 #'
 
@@ -15,29 +16,55 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     add_notie_deps(),
-    shinyjs::useShinyjs(),
+    useShinyjs(),
     
     waiter_logo(isinProd = golem::app_prod(), img_path = "www/LogoDataLab.png"),
-    add_busy_spinner(spin = "fading-circle", color = "#ff4d3e", height = "150px", width = "150px"),
     
-    fluidPage(
-      navbarpage_bdx(
-        title = "Elections",
-        collapsible = TRUE,
-        
-        tabPanel(
-          "Accueil",
-          mod_accueil_ui("accueil_ui_1"),
-          uiOutput(outputId = "my_logo")
-        ),
-        
-        tabPanel(
-          "Observer 1 élection",
-          mod_observer_1_election_ui("observer_1_election_ui_1")
+    navbarPage(
+      
+      theme = theme_bdxmetro_shiny(
+        bg = "#3FD2C7",
+        fg = "white",
+        base_font = font_google("Nunito"), 
+        heading_font = font_google("Nunito")
+      ),
+      
+      title = "Elections",
+      collapsible = TRUE,
+      
+      footer = includeHTML(app_sys("app/www/footer.html")),
+      
+      tabPanel(
+        "Accueil",
+        div(class = "content",
+            mod_accueil_ui("accueil_ui_1")
         )
-      )
+      ),
+      
+      tabPanel(
+        "Observer 1 élection",
+        div(class = "content",
+        mod_observer_1_election_resultats_globaux_ui("observer_1_election_ui_1")
+        )
+      ),
+      
+      tabPanel(
+        "Observer 1 BV ou 1 LV d'1 élection",
+        mod_observer_1_election_resultats_selectionLVBV_ui("observer_1_election_selection_LV_sur_carte_ui_1")
+      ),
+      
+      tabPanel(
+        "Observer 1 candidat",
+        mod_observer_1_election_resultats_1candidat_ui("observer_1_candidat_ui_1")
+      )#,
+      
+      # tabPanel(
+      #   "Observer plusieurs élections",
+      #   mod_observer_plusieurs_elections_ui("observer_plusieurs_elections_ui_1")
+      # )
     )
   )
+  
 }
 
 

@@ -1,17 +1,32 @@
-graphique_resultats_election <- function(data, x, y, fill) {
+graphique_resultats_election <- function(data, x, y, fill, 
+                                         facet = TRUE, facet_var = NULL,
+                                         theme_fun = NULL,
+                                         title = "", subtitle = "", caption = "", xlab = "", ylab = "", legend_name = "") {
   
   g <- data %>%
-    # ggplot(aes(x = as.factor(get(x)), y = get(y), fill = as.factor(get(fill)))) +
     ggplot(aes(x = as.factor({{x}}), y = {{y}}, fill = as.factor({{fill}}))) +
     geom_col() +
     scale_y_continuous(labels = scales::percent) +
-    scale_fill_viridis(discrete = TRUE) +
-    create_theme()
+    scale_fill_viridis(discrete = TRUE, name = legend_name, direction = 1, begin = 0.2, end = 1) +
+    labs(title = title, subtitle = subtitle, caption = caption) +
+    xlab(xlab) +
+    ylab(ylab)
   
-  if(any(!is.na(data$numero_tour))) {
-    g <- g + facet_wrap(vars(numero_tour), scales = "free") 
+  if(!is.null(theme_fun)) {
+    
+    g <- g + theme_fun 
   }
+    
   
+  # if(any(!is.na(data$numero_tour))) {
+  # if((!is.null(facet_var))) {
+  #   g <- g + facet_wrap(vars({{facet_var}}), scales = "free") 
+  # }
+  if(facet) {
+    
+    g <- g + facet_wrap(vars(as.factor({{facet_var}})), scales = "free") 
+  }
+  # 
   g
   
 }
