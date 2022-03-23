@@ -8,10 +8,7 @@ graphique_resultats_election <- function(data, x, y, fill,
   g <- data %>%
     ggplot(aes(x = as.factor({{x}}), y = {{y}}, fill = as.factor({{fill}}))) +
     geom_col() +
-    scale_y_continuous(labels = scales::percent) +
-    labs(title = title, subtitle = subtitle, caption = caption) +
-    xlab(xlab) +
-    ylab(ylab)
+    scale_y_continuous(labels = scales::percent) 
   
   if(!is.null(scale_fill_function)) {
     
@@ -21,7 +18,7 @@ graphique_resultats_election <- function(data, x, y, fill,
   } else {
     
     g <- g + 
-      scale_fill_viridis(discrete = TRUE, name = legend_name, direction = 1, begin = 0.2, end = 1)
+      scale_fill_viridis(discrete = TRUE, direction = 1, begin = 0.2, end = 1)
     
   }
   
@@ -34,9 +31,12 @@ graphique_resultats_election <- function(data, x, y, fill,
   
   if(facet) {
     
-    g <- g + facet_wrap(vars(as.factor({{facet_var}})), scales = "free") 
+    g <- g + facet_wrap(vars(as.factor({{facet_var}}))) 
   }
   
-  g
+  g +
+    labs(title = title, subtitle = subtitle, caption = caption, fill = legend_name) +
+    xlab(xlab) +
+    ylab(ylab)
   
 }
