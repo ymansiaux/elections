@@ -75,15 +75,15 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_ui <- function(id
                           flex-direction : column;
                           justify-content: space-between",
                  
-                 div(class ="title_section title_container",
-                     div(icon(name="democrat", class = "icon_title")),
-                     div(h2("Résultats par BV", class = "text-uppercase")),
-                     div(icon(name="democrat", class = "icon_title"))
-                 ),
-                 
-                 div(
-                   plotOutput(ns("barplot_BV"))
-                 ),
+                 # div(class ="title_section title_container",
+                 #     div(icon(name="democrat", class = "icon_title")),
+                 #     div(h2("Résultats par BV", class = "text-uppercase")),
+                 #     div(icon(name="democrat", class = "icon_title"))
+                 # ),
+                 # 
+                 # div(
+                 #   plotOutput(ns("barplot_BV"))
+                 # ),
                  
                  div(class ="title_section title_container",
                      div(icon(name="democrat", class = "icon_title")),
@@ -92,7 +92,7 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_ui <- function(id
                  ),
                  
                  div(
-                   plotOutput(ns("barplot_LV"))
+                   plotOutput(ns("barplot_LV"), height = "600px")
                  )
              )
       )
@@ -266,52 +266,17 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
         addLegend(pal = pal, values = ~pct, group = "circles", position = "topright") 
     })
     
-    output$carto_resultats <- renderLeaflet({
-      #####################################
-      # création de la palette de couleur #
-      ####################################
-      
-      # quels sont les candidats vainqueurs ?
-      donnees_cartos <- donnees_cartos() %>% 
-        mutate(couleur = sample(viridis::viridis_pal()(10), 1)) %>% 
-        mutate(pct = pct * 100)
-      
-      
-      # donnees_geo_selectionnees()[!donnees_geo_selectionnees()$code%in% data$id_bureau,]
-      
-      popup <-  paste0("<strong>Zone: </strong>",
-                       donnees_cartos$libelle,
-                       "<br><strong>Candidat: </strong>",
-                       donnees_cartos$nom_candidat,
-                       "<br><strong>% recueillis: </strong>",
-                       sprintf("%.2f",donnees_cartos$pct))
-      
-      pal <- colorNumeric(palette = "YlOrRd", domain = donnees_cartos$pct)
-      
-      leaflet(donnees_cartos) %>% 
-        addTiles() %>% 
-        setView(zoom = 11.5, lat = 44.859684, lng = -0.568365) %>%
-        # addPolygons(fillColor = ~couleur, color = "grey",
-        addPolygons(fillColor = ~pal(pct), color = "grey",
-                    weight = 1, smoothFactor = 0.5,
-                    opacity = 1, fillOpacity = .8,
-                    popup = popup,
-                    highlightOptions = leaflet::highlightOptions(color = "black", weight = 2,
-                                                                 bringToFront = TRUE)) %>% 
-        addLegend(pal = pal, values = ~pct, group = "circles", position = "topright") 
-    })
-    
-    output$barplot_BV <- renderPlot({
-      graphique_resultats_election(data = resultats_elections_candidat()$resultats_BV, 
-                                   x = id_bureau, y = pct, fill = id_bureau,  
-                                   facet = FALSE, 
-                                   theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
-                                                                       light_font_family = "Nunito",
-                                                                       axis.text.x = element_blank()),
-                                   title = "", subtitle = "", caption = "", xlab = "", ylab = "Vote (%)", legend_name = "BV")
-      
-    })
-    
+    # output$barplot_BV <- renderPlot({
+    #   graphique_resultats_election(data = resultats_elections_candidat()$resultats_BV, 
+    #                                x = id_bureau, y = pct, fill = id_bureau,  
+    #                                facet = FALSE, 
+    #                                theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
+    #                                                                    light_font_family = "Nunito",
+    #                                                                    axis.text.x = element_blank()),
+    #                                title = "", subtitle = "", caption = "", xlab = "", ylab = "Vote (%)", legend_name = "BV")
+    #   
+    # })
+    # 
     
     output$barplot_LV <- renderPlot({
       graphique_resultats_election(data = resultats_elections_candidat()$resultats_LV, 
@@ -319,7 +284,11 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
                                    facet = FALSE, 
                                    theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
                                                                        light_font_family = "Nunito",
-                                                                       axis.text.x = element_blank()),
+                                                                       axis.text.x = element_blank(),
+                                                                       legend.position = "bottom",
+                                                                       axis_title_size = 15,
+                                                                       axis_text_size = 13,
+                                                                       legend_text_size = 10),
                                    title = "", subtitle = "", caption = "", xlab = "", ylab = "Vote (%)", legend_name = "LV")
       
     })
