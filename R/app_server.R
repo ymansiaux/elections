@@ -3,7 +3,7 @@
 #' @param input,output,session Internal parameters for {shiny}. 
 #'     DO NOT REMOVE.
 #' @import shiny
-#' @importFrom dplyr mutate select filter group_by arrange distinct as_tibble summarise mutate_at vars ungroup inner_join rename
+#' @importFrom dplyr mutate select filter group_by arrange distinct as_tibble summarise mutate_at vars ungroup inner_join rename slice_max
 #' @import sf
 #' @importFrom shinyYM closeWaiter add_notie_alert
 #' @importFrom xtradata xtradata_requete_features
@@ -14,6 +14,8 @@
 #' @importFrom sysfonts font_add_google
 #' @importFrom showtext showtext_auto
 #' @importFrom shinyjs runjs
+#' @importFrom cols4all scale_color_discrete_c4a_cat
+
 #' @noRd
 app_server <- function( input, output, session ) {
   # Your application server logic 
@@ -22,15 +24,15 @@ app_server <- function( input, output, session ) {
   observe(closeWaiter(golem::app_prod(), 3))
   
   debug_whereami <- TRUE
-  light_dataset <- TRUE
+  light_dataset <- FALSE
   
   
   mod_accueil_server("accueil_ui_1")
-
+  
   mod_observer_1_election_resultats_globaux_server("observer_1_election_ui_1", data_elections = data_elections, debug_whereami = debug_whereami)
-
+  
   mod_observer_1_election_resultats_selectionLVBV_server("observer_1_election_selection_LV_sur_carte_ui_1", data_elections = data_elections)
-
+  
   mod_observer_1_election_resultats_1candidat_server("observer_1_candidat_ui_1", data_elections = data_elections)
   
   font_add_google(name = "Nunito", family = "Nunito")
@@ -43,31 +45,36 @@ app_server <- function( input, output, session ) {
   data_elections <- reactiveValues(data = NULL)
   
   observeEvent(NULL, ignoreNULL = FALSE, ignoreInit = FALSE, once = TRUE, {
-
+    
     runjs('$(".nav-link").addClass("disabled");');
-
+    
     add_notie_alert(type = "info", text = "Récupération des données ... Patience ...",
                     stay = FALSE, time = 10, position = "top", session)
-
-    filter <- ifelse(light_dataset, list(type_election = "Présidentielle"), NULL)
     
-    dat <- try(xtradata_requete_features(key = Sys.getenv("XTRADATA_KEY"), typename = "EL_RESULTAT_A",
-                                         filter = filter,
-                                         showURL = TRUE))
+    if(light_dataset) {
+      dat <-
+        try(xtradata_requete_features(key = Sys.getenv("XTRADATA_KEY"), typename = "EL_RESULTAT_A",
+                                      filter = list(type_election = "Présidentielle"),
+                                      showURL = TRUE))
+    } else {
+      dat <- 
+      try(xtradata_requete_features(key = Sys.getenv("XTRADATA_KEY"), typename = "EL_RESULTAT_A",
+                                    showURL = TRUE))
+    }
     print(dat)
-
+    
     if(inherits(dat, "try-error")) {
-
+      
       add_notie_alert(type = "error", text = "Echec de récupération des données",
                       stay = FALSE, time = 5, position = "bottom", session)
-
-
+      
+      
     } else {
-
+      
       add_notie_alert(type = "success", text = "Connexion à la base OK",
                       stay = FALSE, time = 5, position = "bottom", session)
-
-
+      
+      
       data_elections$data <-  dat %>%
         mutate(
           date_election = as_datetime(date_evenement, tz = "Europe/Paris"),
@@ -80,9 +87,9 @@ app_server <- function( input, output, session ) {
         select(-date_evenement, -cdate, -mdate) %>%
         rename(nb_voix = valeur, code_insee = insee) %>%
         clean_names()
-
+      
       runjs('$(".nav-link").removeClass("disabled");');
-
+      
     }
   })
   

@@ -31,7 +31,7 @@ graphique_resultats_election <- function(data, x, y, fill,
   
   if(facet) {
     
-    g <- g + facet_wrap(vars(as.factor({{facet_var}}))) 
+    g <- g + facet_wrap(vars(as.factor({{facet_var}})), scales = "free_x") 
   }
   
   g +
