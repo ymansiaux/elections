@@ -15,6 +15,7 @@
 #' @importFrom showtext showtext_auto
 #' @importFrom shinyjs runjs
 #' @importFrom cols4all scale_color_discrete_c4a_cat
+#' @importFrom purrr pmap
 
 #' @noRd
 app_server <- function( input, output, session ) {
@@ -31,9 +32,9 @@ app_server <- function( input, output, session ) {
   
   mod_observer_1_election_resultats_globaux_server("observer_1_election_ui_1", data_elections = data_elections, debug_whereami = debug_whereami)
   
-  mod_observer_1_election_resultats_selectionLVBV_server("observer_1_election_selection_LV_sur_carte_ui_1", data_elections = data_elections)
-  
-  mod_observer_1_election_resultats_1candidat_server("observer_1_candidat_ui_1", data_elections = data_elections)
+  # mod_observer_1_election_resultats_selectionLVBV_server("observer_1_election_selection_LV_sur_carte_ui_1", data_elections = data_elections)
+  # 
+  # mod_observer_1_election_resultats_1candidat_server("observer_1_candidat_ui_1", data_elections = data_elections)
   
   font_add_google(name = "Nunito", family = "Nunito")
   showtext_auto()
@@ -42,7 +43,7 @@ app_server <- function( input, output, session ) {
   #######################################
   # Chargement des données au démarrage #
   #######################################
-  data_elections <- reactiveValues(data = NULL)
+  data_elections <- reactiveValues(data = NULL, elections_dispo = NULL)
   
   observeEvent(NULL, ignoreNULL = FALSE, ignoreInit = FALSE, once = TRUE, {
     
@@ -58,8 +59,8 @@ app_server <- function( input, output, session ) {
                                       showURL = TRUE))
     } else {
       dat <- 
-      try(xtradata_requete_features(key = Sys.getenv("XTRADATA_KEY"), typename = "EL_RESULTAT_A",
-                                    showURL = TRUE))
+        try(xtradata_requete_features(key = Sys.getenv("XTRADATA_KEY"), typename = "EL_RESULTAT_A",
+                                      showURL = TRUE))
     }
     print(dat)
     
@@ -74,8 +75,7 @@ app_server <- function( input, output, session ) {
       add_notie_alert(type = "success", text = "Connexion à la base OK",
                       stay = FALSE, time = 5, position = "bottom", session)
       
-      
-      data_elections$data <-  dat %>%
+      dat <- dat %>%
         mutate(
           date_election = as_datetime(date_evenement, tz = "Europe/Paris"),
           annee_election = year(date_election)) %>%
@@ -87,6 +87,20 @@ app_server <- function( input, output, session ) {
         select(-date_evenement, -cdate, -mdate) %>%
         rename(nb_voix = valeur, code_insee = insee) %>%
         clean_names()
+      
+      elections_distinctes <- dat %>% 
+        select(type_election, annee_election, code_insee) %>% 
+        distinct() 
+      
+      data_elections$data <- pmap(elections_distinctes, ~ createR6Election(dat, ..1, ..2, ..3))
+      
+      names_elections <- elections_distinctes %>% 
+        mutate(name_election = paste(type_election, annee_election, code_insee, sep = "_"))
+      
+      names(elections_list) <- names_elections$name_election
+      
+      data_elections$data <- elections_list
+      data_elections$elections_dispo <- names_elections
       
       runjs('$(".nav-link").removeClass("disabled");');
       

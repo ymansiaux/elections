@@ -63,12 +63,11 @@ mod_filter_donnees_observer_1_election_server <- function(id, data_elections){
   moduleServer( id, function(input, output, session){
     # ns <- session$ns
     
-    
     type_elections <- reactive({
       req(data_elections$data)
       sort(
         unique(
-          data_elections$data$type_election
+          data_elections$elections_dispo$type_election
         )
       )
     })
@@ -77,7 +76,7 @@ mod_filter_donnees_observer_1_election_server <- function(id, data_elections){
       req(data_elections$data)
       req(input$type_elections)
       
-      data_elections$data %>%
+      data_elections$elections_dispo %>%
         filter(type_election %in% input$type_elections) %>% 
         select(annee_election) %>% 
         distinct %>%
@@ -92,7 +91,7 @@ mod_filter_donnees_observer_1_election_server <- function(id, data_elections){
       req(input$type_elections)
       req(input$annee_elections)
       
-      data_elections$data %>%
+      data_elections$elections_dispo %>%
         filter(type_election %in% input$type_elections & annee_election %in% input$annee_elections) %>% 
         select(code_insee) %>% 
         distinct %>%
@@ -136,10 +135,9 @@ mod_filter_donnees_observer_1_election_server <- function(id, data_elections){
       req(input$type_elections)
       req(input$commune_elections)
       
-      data_elections$data %>%
-        filter(type_election %in% input$type_elections &
-                 annee_election %in% input$annee_elections &
-                 code_insee %in% input$commune_elections) %>%
+      name_election <- paste(input$type_elections, input$annee_elections, input$commune_elections, sep = "_")
+      
+      data_elections$data[[name_election]]$donneesElection %>%
         mutate(numero_tour = ifelse(is.na(numero_tour), 1, numero_tour))
       
     })

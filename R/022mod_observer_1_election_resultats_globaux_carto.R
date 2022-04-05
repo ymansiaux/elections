@@ -132,7 +132,7 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, election_
     donnees_carto_vainqueur_by_unite_geo <- reactive({ 
       ## FONCTIONNE TB AVEC LES MUNICIPALES DE 2020
       ## VOIR UNE FOIS QUE L'HISTO SERA DISPO
-      data <-  compute_resultats_elections(data = election_selectionnee_tour_selectionne_d(),
+      resultats_elections <-  compute_resultats_elections(data = election_selectionnee_tour_selectionne_d(),
                                            type = "participation",
                                            grouping_vars = c(
                                              "nom_election", "type_election", "annee_election",
@@ -141,12 +141,15 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, election_
                                              input$niveau_geo_restitution)) %>% 
         mutate_at(vars(input$niveau_geo_restitution),as.character)
       
-      winner <- data %>% 
+      candidats_unique <- sort(unique(resultats_elections$nom_candidat))
+      palette <- pal_npg("nrc")(length(candidats_unique))
+      df_couleurs_candidats <- data.frame("nom_candidat" = candidats_unique, "couleur" = palette)
+      
+      winner <- resultats_elections %>% 
         group_by(!!!syms(c("numero_tour", input$niveau_geo_restitution))) %>% 
         mutate(pctmax = max(pct)) %>%
         filter(pctmax == pct) %>% 
         ungroup()
-      
       
       if(input$niveau_geo_restitution == "id_bureau") {
         donnees_geo_winner <- merge(donnees_geo_selectionnees(),
@@ -160,7 +163,7 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, election_
         
       }
       
-      donnees_geo_winner
+      merge(donnees_geo_winner, df_couleurs_candidats, by = "nom_candidat")
       
     })
     
@@ -170,14 +173,16 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, election_
       ####################################
       
       # quels sont les candidats vainqueurs ?
-      candidats_vainqueurs_couleurs <- data.frame(
-        "nom_candidat" = sort(unique(donnees_carto_vainqueur_by_unite_geo()$nom_candidat)),
-        "couleur" = viridis::viridis_pal()(length(unique(donnees_carto_vainqueur_by_unite_geo()$nom_candidat))))
+      # candidats_vainqueurs_couleurs <- data.frame(
+      #   "nom_candidat" = sort(unique(donnees_carto_vainqueur_by_unite_geo()$nom_candidat)),
+      #   "couleur" = viridis::viridis_pal()(length(unique(donnees_carto_vainqueur_by_unite_geo()$nom_candidat))))
       
-      donnees_geo_winner <- merge(donnees_carto_vainqueur_by_unite_geo(),
-                                  candidats_vainqueurs_couleurs,
-                                  by = "nom_candidat") %>% 
-        mutate(pct = pct * 100)
+      donnees_geo_winner <- #merge(donnees_carto_vainqueur_by_unite_geo(),
+                             #     candidats_vainqueurs_couleurs,
+                              #    by = "nom_candidat") %>%
+        #mutate(pct = pct * 100)
+       donnees_carto_vainqueur_by_unite_geo() %>% 
+         mutate(pct = pct * 100)
       
       
       # donnees_geo_selectionnees()[!donnees_geo_selectionnees()$code%in% data$id_bureau,]

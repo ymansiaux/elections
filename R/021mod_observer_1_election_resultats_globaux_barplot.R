@@ -7,6 +7,8 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
+#' @importFrom ggplot2 scale_fill_manual
+#' @importFrom ggsci pal_npg
 mod_observer_1_election_resultats_globaux_barplot_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -57,21 +59,33 @@ mod_observer_1_election_resultats_globaux_barplot_server <- function(id, electio
     output$graphique_resultats <- renderPlot({
       req(election_selectionnee_d())
       
-      compute_resultats_elections(data = election_selectionnee_d(), 
-                                  type = "participation", 
-                                  grouping_vars = c(
-                                    "nom_election", "type_election", "annee_election", 
-                                    "numero_tour", "nom_candidat", "nom", "nom_candidat_short"
-                                  ),
-                                  truncate_results = TRUE, n_first_results = 8
-                                  ) %>%
-        
-        graphique_resultats_election(data = ., x = nom_candidat_short, y = pct, fill = nom_candidat, 
-                                     facet = TRUE, facet_var = numero_tour, 
-                                     theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
-                                                                         light_font_family = "Nunito",
-                                                                         axis.text.x = element_blank()),
-                                     title = "", subtitle = "", caption = "NB : seuls les 8 premiers candidats sont affichés", xlab = "", ylab = "Voix (%)", legend_name = "Candidat")
+      resultats_elections <- compute_resultats_elections(data = election_selectionnee_d(), 
+                                                         type = "participation", 
+                                                         grouping_vars = c(
+                                                           "nom_election", "type_election", "annee_election", 
+                                                           "numero_tour", "nom_candidat", "nom", "nom_candidat_short"
+                                                         ),
+                                                         truncate_results = TRUE, n_first_results = 8
+      ) 
+      
+      candidats_unique <- sort(unique(resultats_elections$nom_candidat))
+      palette <- pal_npg("nrc")(length(candidats_unique))
+      
+      
+      
+      # ici il faudrait impacter la palette pour le graphe et avoir la même partie carto
+      
+      graphique_resultats_election(data = arrange(resultats_elections, nom_candidat),
+                                   x = nom_candidat_short, y = pct, fill = nom_candidat, 
+                                   facet = TRUE, facet_var = numero_tour, 
+                                   theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
+                                                                       light_font_family = "Nunito",
+                                                                       axis.text.x = element_blank()),
+                                   title = "", subtitle = "", caption = "NB : seuls les 8 premiers candidats sont affichés",
+                                   xlab = "", ylab = "Voix (%)", legend_name = "Candidat",
+                                   scale_fill_function = scale_fill_manual(values = palette,
+                                                                           breaks = candidats_unique)
+      )
       
     })
     
