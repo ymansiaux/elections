@@ -27,6 +27,8 @@ utilisee ensuite par classe Occupation et Saturation
 
 \item{\code{résultats}}{globaux commune}
 
+\item{\code{résultats}}{abstention commune}
+
 \item{\code{résultats}}{par LV}
 
 \item{\code{résultats}}{par BV}
@@ -44,6 +46,8 @@ utilisee ensuite par classe Occupation et Saturation
 
 \item{\code{résultats}}{globaux commune}
 
+\item{\code{résultats}}{abstention commune}
+
 \item{\code{résultats}}{par LV}
 
 \item{\code{résultats}}{par BV}
@@ -54,6 +58,11 @@ utilisee ensuite par classe Occupation et Saturation
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Election$new()}}
+\item \href{#method-download_data}{\code{Election$download_data()}}
+\item \href{#method-compute_resultats_globaux_commune}{\code{Election$compute_resultats_globaux_commune()}}
+\item \href{#method-compute_abstention_commune}{\code{Election$compute_abstention_commune()}}
+\item \href{#method-compute_resultats_par_BV}{\code{Election$compute_resultats_par_BV()}}
+\item \href{#method-compute_resultats_par_LV}{\code{Election$compute_resultats_par_LV()}}
 \item \href{#method-clone}{\code{Election$clone()}}
 }
 }
@@ -73,6 +82,7 @@ Create a new occupation object.
   couleursCandidats = NULL,
   resultatsRequete = NULL,
   resultatsGlobauxCommune = NULL,
+  resultatsAbstention = NULL,
   resultatsLV = NULL,
   resultatsBV = NULL
 )}\if{html}{\out{</div>}}
@@ -98,6 +108,51 @@ Create a new occupation object.
 \subsection{Returns}{
 A new `Occupation` object.
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-download_data"></a>}}
+\if{latex}{\out{\hypertarget{method-download_data}{}}}
+\subsection{Method \code{download_data()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Election$download_data()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-compute_resultats_globaux_commune"></a>}}
+\if{latex}{\out{\hypertarget{method-compute_resultats_globaux_commune}{}}}
+\subsection{Method \code{compute_resultats_globaux_commune()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Election$compute_resultats_globaux_commune(donneesElection)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-compute_abstention_commune"></a>}}
+\if{latex}{\out{\hypertarget{method-compute_abstention_commune}{}}}
+\subsection{Method \code{compute_abstention_commune()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Election$compute_abstention_commune(donneesElection)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-compute_resultats_par_BV"></a>}}
+\if{latex}{\out{\hypertarget{method-compute_resultats_par_BV}{}}}
+\subsection{Method \code{compute_resultats_par_BV()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Election$compute_resultats_par_BV(donneesElection)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-compute_resultats_par_LV"></a>}}
+\if{latex}{\out{\hypertarget{method-compute_resultats_par_LV}{}}}
+\subsection{Method \code{compute_resultats_par_LV()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Election$compute_resultats_par_LV(donneesElection)}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

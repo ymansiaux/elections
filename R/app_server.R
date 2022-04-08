@@ -62,7 +62,7 @@ app_server <- function( input, output, session ) {
         try(xtradata_requete_features(key = Sys.getenv("XTRADATA_KEY"), typename = "EL_RESULTAT_A",
                                       showURL = TRUE))
     }
-    print(dat)
+    # print(dat)
     
     if(inherits(dat, "try-error")) {
       
@@ -89,9 +89,6 @@ app_server <- function( input, output, session ) {
       names(data_elections$data) <- names_elections$name_election
       
       data_elections$elections_dispo <- names_elections
-      
-      # browser()
-      # verifier les 2 tors de la présidentielle
       
       runjs('$(".nav-link").removeClass("disabled");');
       

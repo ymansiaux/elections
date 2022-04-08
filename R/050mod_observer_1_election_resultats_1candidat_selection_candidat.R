@@ -109,7 +109,7 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     # #whereami::cat_where(where = whereami::whereami())
-    observeEvent(input$pause, browser())
+    # observeEvent(input$pause, browser())
     
     observe({
       
