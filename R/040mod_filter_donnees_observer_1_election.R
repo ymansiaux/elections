@@ -135,6 +135,8 @@ mod_filter_donnees_observer_1_election_server <- function(id, data_elections){
       req(input$type_elections)
       req(input$commune_elections)
       
+      browser()
+      
       name_election <- paste(input$type_elections, input$annee_elections, input$commune_elections, sep = "_")
       
       data_elections$data[[name_election]]$donneesElection %>%

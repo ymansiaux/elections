@@ -13,11 +13,23 @@ utilisee ensuite par classe Occupation et Saturation
 
 \item{\code{anneeElection}}{annee de l'election}
 
+\item{\code{xtradataParameters}}{parametre de filtre pour xtradata}
+
 \item{\code{donneesElection}}{donnees de l'election}
 
 \item{\code{inseeElection}}{code INSEE de la commune}
 
 \item{\code{candidat}}{avec palette de couleur}
+
+\item{\code{palette}}{de couleurs pour les candidats}
+
+\item{\code{resultats}}{de la requete}
+
+\item{\code{résultats}}{globaux commune}
+
+\item{\code{résultats}}{par LV}
+
+\item{\code{résultats}}{par BV}
 }
 \if{html}{\out{</div>}}
 }
@@ -25,6 +37,16 @@ utilisee ensuite par classe Occupation et Saturation
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{candidat}}{avec palette de couleur}
+
+\item{\code{palette}}{de couleurs pour les candidats}
+
+\item{\code{resultats}}{de la requete}
+
+\item{\code{résultats}}{globaux commune}
+
+\item{\code{résultats}}{par LV}
+
+\item{\code{résultats}}{par BV}
 }
 \if{html}{\out{</div>}}
 }
@@ -43,10 +65,16 @@ Create a new occupation object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Election$new(
   typeElection = NULL,
+  xtradataParameters = NULL,
   anneeElection = NULL,
   donneesElection = NULL,
   inseeElection = NULL,
-  candidatsElection = NULL
+  candidatsElection = NULL,
+  couleursCandidats = NULL,
+  resultatsRequete = NULL,
+  resultatsGlobauxCommune = NULL,
+  resultatsLV = NULL,
+  resultatsBV = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -57,13 +85,13 @@ Create a new occupation object.
 
 \item{\code{anneeElection}}{rangeEnd}
 
-\item{\code{rangeStep}}{rangeStep}
+\item{\code{donneesElection}}{rangeStep}
 
-\item{\code{aggregation_unit}}{aggregation_unit}
+\item{\code{inseeElection}}{aggregation_unit}
 
-\item{\code{plageHoraire}}{plageHoraire}
+\item{\code{candidatsElection}}{plageHoraire}
 
-\item{\code{parkings_list}}{liste des parkings analyses}
+\item{\code{couleursCandidats}}{liste des parkings analyses}
 }
 \if{html}{\out{</div>}}
 }

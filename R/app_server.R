@@ -75,32 +75,23 @@ app_server <- function( input, output, session ) {
       add_notie_alert(type = "success", text = "Connexion à la base OK",
                       stay = FALSE, time = 5, position = "bottom", session)
       
-      dat <- dat %>%
-        mutate(
-          date_election = as_datetime(date_evenement, tz = "Europe/Paris"),
-          annee_election = year(date_election)) %>%
-        mutate(prenom = get_first_name(nom_candidat)) %>%
-        mutate(nom = get_last_name(nom_candidat, prenom)) %>%
-        mutate(nom = ifelse(nom == "", prenom, nom)) %>%
-        mutate(nom_candidat_short = str_sub(nom_candidat,1,10)) %>%
-        mutate(across(starts_with("nb_"), as.numeric)) %>%
-        select(-date_evenement, -cdate, -mdate) %>%
-        rename(nb_voix = valeur, code_insee = insee) %>%
-        clean_names()
-      
+
       elections_distinctes <- dat %>% 
-        select(type_election, annee_election, code_insee) %>% 
-        distinct() 
+        mutate(annee_election = year(as_datetime(date_evenement))) %>% 
+        select(type_election, annee_election, insee) %>% 
+        distinct()  
       
       data_elections$data <- pmap(elections_distinctes, ~ createR6Election(dat, ..1, ..2, ..3))
       
       names_elections <- elections_distinctes %>% 
-        mutate(name_election = paste(type_election, annee_election, code_insee, sep = "_"))
+        mutate(name_election = paste(type_election, annee_election, insee, sep = "_"))
       
-      names(elections_list) <- names_elections$name_election
+      names(data_elections$data) <- names_elections$name_election
       
-      data_elections$data <- elections_list
       data_elections$elections_dispo <- names_elections
+      
+      # browser()
+      # verifier les 2 tors de la présidentielle
       
       runjs('$(".nav-link").removeClass("disabled");');
       
