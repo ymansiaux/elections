@@ -20,7 +20,7 @@ mod_observer_1_election_resultats_globaux_ui <- function(id){
   ns <- NS(id)
   tagList(
     fluidRow(
-      actionButton(ns("pause2"), "pause2"),
+      # actionButton(ns("pause2"), "pause2"),
       column(width = 12,
              mod_filter_donnees_observer_1_election_ui(ns("observer_1_election_resultats_globaux_ui_1"))
       )
@@ -35,7 +35,7 @@ mod_observer_1_election_resultats_globaux_ui <- function(id){
              mod_observer_1_election_resultats_globaux_barplot_ui(ns("observer_1_election_resultats_globaux_barplot_ui_1")))
       
     )
-  
+    
   )
 }
 
@@ -46,16 +46,19 @@ mod_observer_1_election_resultats_globaux_server <- function(id, data_elections,
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     rv <- reactiveValues(name_election = NULL)
-    mod_filter_donnees_observer_1_election_server("observer_1_election_resultats_globaux_ui_1", data_elections, rv)
-    # observeEvent(rv$name_election, print(rv$name_election))
-    observeEvent(input$pause2, browser())
     
-    # election_selectionnee_d <- debounce(election_selectionnee, 500)
+    mod_filter_donnees_observer_1_election_server("observer_1_election_resultats_globaux_ui_1", data_elections, rv)
+    
     
     ## SOUS MODULES ( COMPARER AVEC LES NS )
     mod_observer_1_election_resultats_globaux_barplot_server("observer_1_election_resultats_globaux_barplot_ui_1", 
                                                              data_elections, 
                                                              election_selectionnee = reactive(rv$name_election)
+    )
+    
+    mod_observer_1_election_resultats_globaux_carto_server("observer_1_election_resultats_globaux_carto_ui_1", 
+                                                           data_elections, 
+                                                           election_selectionnee = reactive(rv$name_election)
     )
     # mod_observer_1_election_resultats_globaux_barplot_server("observer_1_election_resultats_globaux_ui_1", election_selectionnee_d)
     # mod_observer_1_election_resultats_globaux_carto_server("observer_1_election_resultats_globaux_ui_1", election_selectionnee_d)

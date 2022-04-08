@@ -17,7 +17,7 @@ mod_filter_donnees_observer_1_election_ui <- function(id){
                   flex-direction : row;
                   justify-content: space-evenly",
                  
-                 actionButton(ns("pause"), "pause"),
+                 actionButton(ns("download_data"), "Telecharger"),
                  
                  div(
                    selectizeInput(
@@ -130,20 +130,20 @@ mod_filter_donnees_observer_1_election_server <- function(id, data_elections, rv
     })
     
     
-    # observeEvent(input$pause, browser())
+    # observeEvent(input$download_data, browser())
     
     # observe(print(data_elections$elections_dispo))
     
     # election_selectionnee <- reactive({
   
-    observeEvent(input$pause, {
+    observeEvent(input$download_data, {
       
       req(input$annee_elections)
       req(input$type_elections)
       req(input$commune_elections)
       
       # 
-      # input$pause
+      # input$download_data
       
       name_election <- paste(input$type_elections, input$annee_elections, input$commune_elections, sep = "_")
       

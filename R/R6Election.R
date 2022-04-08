@@ -127,7 +127,9 @@ Election <- R6::R6Class(
                                       "numero_tour", "nom_candidat", "nom", "nom_candidat_short",
                                       "id_bureau"
                                     )
-        )
+        )   %>% 
+          mutate_at(vars("id_bureau"),as.character)
+
       }
       
     },
@@ -140,9 +142,10 @@ Election <- R6::R6Class(
                                                         grouping_vars = c(
                                                           "nom_election", "type_election", "annee_election", 
                                                           "numero_tour", "nom_candidat", "nom", "nom_candidat_short",
-                                                          "nom_lieu"
+                                                          "nom_lieu", "id_lieu"
                                                         )
-        )
+        )    %>% 
+          mutate_at(vars("nom_lieu"),as.character)
       }
       
     }
