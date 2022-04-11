@@ -133,6 +133,8 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, data_elec
       # browser()
       
       req(election_selectionnee())
+      req(input$numero_scrutin)
+      req(input$niveau_geo_restitution)
       
       if(input$niveau_geo_restitution == "id_bureau") {
         resultats_elections <- data_elections$data[[election_selectionnee()]]$resultatsBV %>% 
@@ -144,7 +146,7 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, data_elec
         
         
       }
-      
+      # browser()
       winner <- resultats_elections %>%
         group_by(!!!syms(c("numero_tour", input$niveau_geo_restitution))) %>%
         mutate(pctmax = max(pct)) %>%
