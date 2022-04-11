@@ -118,14 +118,8 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
       if(is.null(election_selectionnee()))  {
         
         runjs(glue('$("#{ns("message_absence_donnees_carto")}").hide();'));
-        
+ 
       } else {
-        
-        # updateRadioButtons(session,
-        #                    inputId = "numero_scrutin",
-        #                    choiceNames = paste("Tour", sort(unique(data_elections$data[[election_selectionnee()]]$donneesElection$numero_tour))),
-        #                    choiceValues = sort(unique(data_elections$data[[election_selectionnee()]]$donneesElection$numero_tour))
-        # )
         
         updateSelectizeInput(session,
                              inputId = "candidat",
@@ -133,6 +127,7 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
                              selected = sort(unique(data_elections$data[[election_selectionnee()]]$donneesElection$nom_candidat))[1],
                              server = TRUE
         )
+
         
         if(!data_elections$data[[election_selectionnee()]]$donneesElection$annee_election[1] %in% annees_elections_avec_donnees_geo | 
            !data_elections$data[[election_selectionnee()]]$donneesElection$code_insee[1] %in% communes_elections_avec_donnees_geo) {
@@ -170,99 +165,102 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
     })
     
 
-    # resultats_elections_candidat <- reactive({
-    #   
-    #   req(input$candidat %in% data_elections$data[[election_selectionnee()]]$donneesElection$nom_candidat)
-    #   req(input$candidat)
-    #   req(input$numero_scrutin)
-    #   
-    #   list("resultats_BV" = data_elections$data[[election_selectionnee()]]$resultatsBV %>% 
-    #          filter(nom_candidat %in% input$candidat & numero_tour %in% input$numero_scrutin),
-    #        
-    #        "resultats_LV" = data_elections$data[[election_selectionnee()]]$resultatsLV %>% 
-    #          filter(nom_candidat %in% input$candidat & numero_tour %in% input$numero_scrutin)
-    #        
-    #        
-    #        
-    #   )
-    #   
-    # })
+    resultats_elections_candidat <- reactive({
+
+      req(input$candidat %in% data_elections$data[[election_selectionnee()]]$donneesElection$nom_candidat)
+      req(input$candidat)
+      req(input$numero_scrutin)
+
+      list("resultats_BV" = data_elections$data[[election_selectionnee()]]$resultatsBV %>%
+             filter(nom_candidat %in% input$candidat & numero_tour %in% input$numero_scrutin),
+
+           "resultats_LV" = data_elections$data[[election_selectionnee()]]$resultatsLV %>%
+             filter(nom_candidat %in% input$candidat & numero_tour %in% input$numero_scrutin)
+
+
+
+      )
+
+    })
     
     
-    # donnees_geo_selectionnees <- reactive({
-    #   if(input$niveau_geo_restitution == "id_bureau") {
-    #     elections::bureaux_votes_bdx
-    #   } else {
-    #     elections::bureaux_votes_bdx %>% 
-    #       group_by(libelle, rs_el_lieuvote_p) %>% 
-    #       summarise(geometry = st_union(geometry)) %>% 
-    #       ungroup()
-    #   }
-    #   
-    # })
+    donnees_geo_selectionnees <- reactive({
+      if(input$niveau_geo_restitution == "id_bureau") {
+        elections::bureaux_votes_bdx
+      } else {
+        elections::bureaux_votes_bdx %>%
+          group_by(libelle, rs_el_lieuvote_p) %>%
+          summarise(geometry = st_union(geometry)) %>%
+          ungroup()
+      }
+
+    })
     
-    # donnees_cartos <- reactive({ 
-    #   if(input$niveau_geo_restitution == "id_bureau") {
-    #     merge(donnees_geo_selectionnees(),
-    #           resultats_elections_candidat()$resultats_BV,
-    #           by.x = "code", by.y = input$niveau_geo_restitution)
-    #     
-    #   } else {
-    #     
-    #     merge(donnees_geo_selectionnees(),
-    #           resultats_elections_candidat()$resultats_LV,
-    #           by.x = "rs_el_lieuvote_p", by.y = input$niveau_geo_restitution)
-    #     
-    #   }
-    #   
-    # })
+    donnees_cartos <- reactive({
+      if(input$niveau_geo_restitution == "id_bureau") {
+        merge(donnees_geo_selectionnees(),
+              resultats_elections_candidat()$resultats_BV,
+              by.x = "code", by.y = input$niveau_geo_restitution)
+
+      } else {
+
+        merge(donnees_geo_selectionnees(),
+              resultats_elections_candidat()$resultats_LV,
+              by.x = "rs_el_lieuvote_p", by.y = input$niveau_geo_restitution)
+
+      }
+
+    })
     
-    # output$carto_resultats <- renderLeaflet({
-      #####################################
-      # création de la palette de couleur #
-      ####################################
+    output$carto_resultats <- renderLeaflet({
+
+      validate(
+        need(!is.null(election_selectionnee()), "Sélectionnez 1 élection")
+      )
       
-      # quels sont les candidats vainqueurs ?
-    #   donnees_cartos <- donnees_cartos() %>% 
-    #     mutate(couleur = sample(viridis::viridis_pal()(10), 1)) %>% 
-    #     mutate(pct = pct * 100)
-    #   
-    #   
-    #   popup <-  paste0("<strong>Zone: </strong>",
-    #                    donnees_cartos$libelle,
-    #                    "<br><strong>Candidat: </strong>",
-    #                    donnees_cartos$nom_candidat,
-    #                    "<br><strong>% recueillis: </strong>",
-    #                    sprintf("%.2f",donnees_cartos$pct))
-    #   
-    #   pal <- colorNumeric(palette = "YlOrRd", domain = donnees_cartos$pct)
-    #   # une palette qui va du bleu au rouge ?
-    #   leaflet(donnees_cartos) %>% 
-    #     addTiles() %>% 
-    #     setView(zoom = 11.5, lat = 44.859684, lng = -0.568365) %>%
-    #     addPolygons(fillColor = ~pal(pct), color = "grey",
-    #                 weight = 1, smoothFactor = 0.5,
-    #                 opacity = 1, fillOpacity = .8,
-    #                 popup = popup,
-    #                 highlightOptions = leaflet::highlightOptions(color = "black", weight = 2,
-    #                                                              bringToFront = TRUE)) %>% 
-    #     addLegend(pal = pal, values = ~pct, group = "circles", position = "topright") 
-    # })
-    # 
-    # output$barplot_LV <- renderPlot({
-    #   graphique_resultats_election(data = resultats_elections_candidat()$resultats_LV, 
-    #                                x = nom_lieu, y = pct, fill = nom_lieu,  
-    #                                facet = FALSE, 
-    #                                theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
-    #                                                              -      light_font_family = "Nunito",
-    #                                                                    axis.text.x = element_blank(),
-    #                                                                    legend.position = "bottom",
-    #                                                                    axis_title_size = 15,
-    #                                                                    axis_text_size = 13,
-    #                                                                    legend_text_size = 10),
-    #                                title = "", subtitle = "", caption = "", xlab = "", ylab = "Vote (%)", legend_name = "LV")
-    #   
-    # })
+      donnees_carte <- donnees_cartos() %>%
+        mutate(pct = pct * 100)
+
+      popup <-  paste0("<strong>Zone: </strong>",
+                       donnees_carte$libelle,
+                       "<br><strong>Candidat: </strong>",
+                       donnees_carte$nom_candidat,
+                       "<br><strong>% recueillis: </strong>",
+                       sprintf("%.2f",donnees_carte$pct))
+     
+     pal <- colorNumeric(palette = "YlOrRd", domain = donnees_carte$pct)
+   
+      leaflet(donnees_carte) %>%
+        addTiles() %>%
+        setView(zoom = 11.5, lat = 44.859684, lng = -0.568365) %>%
+        addPolygons(fillColor = ~pal(pct), color = "grey",
+                    weight = 1, smoothFactor = 0.5,
+                    opacity = 1, fillOpacity = .8,
+                    popup = popup,
+                    highlightOptions = leaflet::highlightOptions(color = "black", weight = 2,
+                                                                 bringToFront = TRUE)) %>%
+        addLegend(pal = pal, values = ~pct, group = "circles", position = "topright")
+    })
+
+    output$barplot_LV <- renderPlot({
+      validate(
+        need(!is.null(election_selectionnee()), "Sélectionnez 1 élection")
+      )
+      graphique_resultats_election(data = resultats_elections_candidat()$resultats_LV,
+                                   x = nom_lieu, y = pct, fill = nom_lieu,
+                                   facet = FALSE,
+                                   theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
+                                                                       light_font_family = "Nunito",
+                                                                       axis.text.x = element_blank(),
+                                                                       legend.position = "none",
+                                                                       axis_title_size = 15,
+                                                                       axis_text_size = 13,
+                                                                       legend_text_size = 10),
+                                   title = "", subtitle = "", caption = "Passer la souris sur le graphe pour avoir les valeurs", 
+                                   xlab = "", ylab = "Vote (%)", legend_name = "LV",
+                                   scale_fill_function = scale_color_discrete_c4a_cat(palette = "harmonic"))
+
+    })
     
     
   })

@@ -18,8 +18,7 @@ mod_observer_1_election_resultats_1candidat_ui <- function(id){
     # 
     fluidRow(
       column(width = 12,
-             # h2("titi")
-             mod_observer_1_election_resultats_1candidat_selection_candidat_ui(ns("observer_1_election_resultats_selectionLVBVspecifique_ui_1"))
+             mod_observer_1_election_resultats_1candidat_selection_candidat_ui(ns("observer_1_election_resultats_selection_candidat_specifique_ui_1"))
              
       )
     )
@@ -34,11 +33,13 @@ mod_observer_1_election_resultats_1candidat_server <- function(id, data_election
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
-    election_selectionnee <- mod_filter_donnees_observer_1_election_server("observer_1_election_resultats_1candidat_ui_1", data_elections)
-    election_selectionnee_d <- debounce(election_selectionnee, 500)
+    rv <- reactiveValues(name_election = NULL)
     
-    mod_observer_1_election_resultats_1candidat_selection_candidat_server("observer_1_election_resultats_selectionLVBVspecifique_ui_1", election_selectionnee_d)
+    mod_filter_donnees_observer_1_election_server("observer_1_election_resultats_1candidat_ui_1", data_elections, rv)
     
+    mod_observer_1_election_resultats_1candidat_selection_candidat_server("observer_1_election_resultats_selection_candidat_specifique_ui_1",  
+                                                          data_elections, 
+                                                          election_selectionnee = reactive(rv$name_election))
   })
 }
 ## To be copied in the UI
