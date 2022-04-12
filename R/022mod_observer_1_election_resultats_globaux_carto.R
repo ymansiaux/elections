@@ -25,16 +25,6 @@ mod_observer_1_election_resultats_globaux_carto_ui <- function(id){
                      div(icon(name="democrat", class = "icon_title"))
                  ),
                  
-                 div(class = "map_container",
-                     div(class = "map", id = ns("map"),
-                         leafletOutput(ns("carto_resultats"), height = 800)
-                     ),
-                     div(class = "centered", id = ns("message_absence_donnees_carto"),
-                         h1("Les données de localisation des bureaux ne sont pas disponibles pour ce scrutin ou cette commune")
-                     )
-                     
-                 ),
-                 
                  div(
                    class = "container",
                    style = "display:flex;
@@ -44,6 +34,7 @@ mod_observer_1_election_resultats_globaux_carto_ui <- function(id){
                    div(
                      radioButtons(inputId = ns("numero_scrutin"),
                                   label = "Choisir un scrutin",
+                                  inline = TRUE,
                                   choiceNames = "Aucune élection sélectionnée",
                                   choiceValues = "")
                    ),
@@ -57,9 +48,17 @@ mod_observer_1_election_resultats_globaux_carto_ui <- function(id){
                        options = list(deselectBehavior = "top")
                      )
                    )
+                 ),
+                 
+                 div(class = "map_container",
+                     div(class = "map", id = ns("map"),
+                         leafletOutput(ns("carto_resultats"), height = 800)
+                     ),
+                     div(class = "centered", id = ns("message_absence_donnees_carto"),
+                         h1("Les données de localisation des bureaux ne sont pas disponibles pour ce scrutin ou cette commune")
+                     )
+                     
                  )
-                 
-                 
              )
       )
     )
@@ -109,7 +108,7 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, data_elec
           summarise(geometry = st_union(geometry)) %>%
           ungroup()
       }
-
+      
     })
     
     
@@ -151,56 +150,56 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, data_elec
         mutate(pctmax = max(pct)) %>%
         filter(pctmax == pct) %>%
         ungroup()
-
+      
       if(input$niveau_geo_restitution == "id_bureau") {
         donnees_geo_winner <- merge(donnees_geo_selectionnees(),
                                     winner,
                                     by.x = "code", by.y = input$niveau_geo_restitution)
-
+        
       } else {
         donnees_geo_winner <- merge(donnees_geo_selectionnees(),
                                     winner,
                                     by.x = "rs_el_lieuvote_p", by.y = input$niveau_geo_restitution)
-
+        
       }
       
       df_couleurs_candidats <- data.frame("nom_candidat" = data_elections$data[[election_selectionnee()]]$candidatsElection,
                                           "couleur" = data_elections$data[[election_selectionnee()]]$couleursCandidats)
       merge(donnees_geo_winner, df_couleurs_candidats, by = "nom_candidat")
       
-
+      
     })
     
     output$carto_resultats <- renderLeaflet({
       #####################################
       # création de la palette de couleur #
       ####################################
-
+      
       donnees_geo_winner <-
-       donnees_carto_vainqueur_by_unite_geo() %>%
-         mutate(pct = pct * 100)
-
+        donnees_carto_vainqueur_by_unite_geo() %>%
+        mutate(pct = pct * 100)
+      
       
       # donnees_geo_selectionnees()[!donnees_geo_selectionnees()$code%in% data$id_bureau,]
       
-        popup <-  paste0("<strong>Zone: </strong>",
-                         donnees_geo_winner$libelle,
-                         "<br><strong>Candidat: </strong>",
-                         donnees_geo_winner$nom_candidat,
-                         "<br><strong>% recueillis: </strong>",
-                         sprintf("%.2f",donnees_geo_winner$pct))
-
-        leaflet(donnees_geo_winner) %>%
-          addTiles() %>%
-          setView(zoom = 11.5, lat = 44.859684, lng = -0.568365) %>%
-          addPolygons(fillColor = ~couleur, color = "grey",
-                      weight = 1, smoothFactor = 0.5,
-                      opacity = 1, fillOpacity = .8,
-                      popup = popup,
-                      highlightOptions = leaflet::highlightOptions(color = "black", weight = 2,
-                                                                   bringToFront = TRUE))
-      })
-
+      popup <-  paste0("<strong>Zone: </strong>",
+                       donnees_geo_winner$libelle,
+                       "<br><strong>Candidat: </strong>",
+                       donnees_geo_winner$nom_candidat,
+                       "<br><strong>% recueillis: </strong>",
+                       sprintf("%.2f",donnees_geo_winner$pct))
+      
+      leaflet(donnees_geo_winner) %>%
+        addTiles() %>%
+        setView(zoom = 11.5, lat = 44.859684, lng = -0.568365) %>%
+        addPolygons(fillColor = ~couleur, color = "grey",
+                    weight = 1, smoothFactor = 0.5,
+                    opacity = 1, fillOpacity = .8,
+                    popup = popup,
+                    highlightOptions = leaflet::highlightOptions(color = "black", weight = 2,
+                                                                 bringToFront = TRUE))
+    })
+    
     
   })
 }
