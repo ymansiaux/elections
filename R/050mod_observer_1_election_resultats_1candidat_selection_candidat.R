@@ -12,7 +12,7 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_ui <- function(id
   tagList(
     fluidRow(
       column(width = 7,
-             actionButton(ns("pause"), "Poz"),
+             # actionButton(ns("pause"), "Poz"),
              
              div(class = "container",
                  style = "display:flex;

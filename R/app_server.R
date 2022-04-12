@@ -16,6 +16,10 @@
 #' @importFrom shinyjs runjs
 #' @importFrom cols4all scale_color_discrete_c4a_cat
 #' @importFrom purrr pmap
+#' @importFrom glue glue glue_data
+#' @importFrom rlang as_string ensym
+#' @importFrom ggiraph geom_col_interactive girafeOutput renderGirafe girafe
+
 
 #' @noRd
 app_server <- function( input, output, session ) {
@@ -33,7 +37,7 @@ app_server <- function( input, output, session ) {
   mod_observer_1_election_resultats_globaux_server("observer_1_election_ui_1", data_elections = data_elections, debug_whereami = debug_whereami)
   
   mod_observer_1_election_resultats_selectionLVBV_server("observer_1_election_selection_LV_sur_carte_ui_1", data_elections = data_elections)
-   
+  
   mod_observer_1_election_resultats_1candidat_server("observer_1_candidat_ui_1", data_elections = data_elections)
   
   font_add_google(name = "Nunito", family = "Nunito")

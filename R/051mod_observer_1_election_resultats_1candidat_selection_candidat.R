@@ -12,7 +12,7 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_ui <- function(id
   tagList(
     fluidRow(
       column(width = 7,
-             actionButton(ns("pause"), "Poz"),
+             # actionButton(ns("pause"), "Poz"),
              
              div(class = "container",
                  style = "display:flex;
@@ -93,7 +93,7 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_ui <- function(id
                  ),
                  
                  div(
-                   plotOutput(ns("barplot_LV"), height = "600px")
+                   girafeOutput(ns("barplot_LV"), height = "600px")
                  )
              )
       )
@@ -242,11 +242,11 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
         addLegend(pal = pal, values = ~pct, group = "circles", position = "topright")
     })
 
-    output$barplot_LV <- renderPlot({
+    output$barplot_LV <- renderGirafe({
       validate(
         need(!is.null(election_selectionnee()), "Sélectionnez 1 élection")
       )
-      graphique_resultats_election(data = resultats_elections_candidat()$resultats_LV,
+      g <- graphique_resultats_election(data = resultats_elections_candidat()$resultats_LV,
                                    x = nom_lieu, y = pct, fill = nom_lieu,
                                    facet = FALSE,
                                    theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
@@ -259,6 +259,10 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
                                    title = "", subtitle = "", caption = "Passer la souris sur le graphe pour avoir les valeurs", 
                                    xlab = "", ylab = "Vote (%)", legend_name = "LV",
                                    scale_fill_function = scale_color_discrete_c4a_cat(palette = "harmonic"))
+      
+      girafe(
+        ggobj = g, 
+      )
 
     })
     

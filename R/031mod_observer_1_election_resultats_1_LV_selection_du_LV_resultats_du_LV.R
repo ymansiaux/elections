@@ -57,7 +57,7 @@ mod_observer_1_election_selection_LV_sur_carte_ui <- function(id){
         ),
         
         div(
-          plotOutput(ns("plot_resultats_BV"))
+          girafeOutput(ns("plot_resultats_BV"))
         ),
         
         div(class ="title_section title_container",
@@ -67,7 +67,7 @@ mod_observer_1_election_selection_LV_sur_carte_ui <- function(id){
         ),
         
         div(
-          plotOutput(ns("plot_resultats_LV"))
+          girafeOutput(ns("plot_resultats_LV"))
         )
              )
       )
@@ -210,12 +210,12 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
     })
     
     
-    output$plot_resultats_BV <- renderPlot({
+    output$plot_resultats_BV <- renderGirafe({
       validate(
         need(!is.null(input$myBVmap_marker_click), "Sélectionnez 1 lieu de vote")
       )
       
-      graphique_resultats_election(data = arrange(resultats_by_BV(), nom), 
+      g <- graphique_resultats_election(data = arrange(resultats_by_BV(), nom), 
                                    x = nom_candidat_short, y = pct,
                                    fill = nom_candidat,
                                    facet = TRUE, facet_var = id_bureau,
@@ -227,17 +227,21 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
                                    scale_fill_function = scale_fill_manual(values = data_elections$data[[election_selectionnee()]]$couleursCandidats,
                                                                            breaks = data_elections$data[[election_selectionnee()]]$candidatsElection))
       
+      girafe(
+        ggobj = g, 
+      )
+      
     })
     
     
-    output$plot_resultats_LV <- renderPlot({
+    output$plot_resultats_LV <- renderGirafe({
       
       validate(
         need(!is.null(input$myBVmap_marker_click), "Sélectionnez 1 lieu de vote")
         
       )
       
-      graphique_resultats_election(data = arrange(resultats_by_LV(), nom),
+      g <- graphique_resultats_election(data = arrange(resultats_by_LV(), nom),
                                    x = nom_candidat_short, y = pct, fill = nom_candidat,
                                    facet = TRUE, facet_var = nom_lieu,
                                    theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
@@ -247,6 +251,10 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
                                    xlab = "", ylab = "Vote (%)", legend_name = "Candidat",
                                    scale_fill_function = scale_fill_manual(values = data_elections$data[[election_selectionnee()]]$couleursCandidats,
                                                                            breaks = data_elections$data[[election_selectionnee()]]$candidatsElection))
+      
+      girafe(
+        ggobj = g, 
+      )
       
       
     })

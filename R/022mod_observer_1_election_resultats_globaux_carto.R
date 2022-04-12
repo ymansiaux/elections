@@ -7,13 +7,12 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-#' @importFrom glue glue
 mod_observer_1_election_resultats_globaux_carto_ui <- function(id){
   ns <- NS(id)
   tagList(
     
     fluidRow(
-      actionButton(ns("pause"), "Poz"),
+      # actionButton(ns("pause"), "Poz"),
       column(width = 12,
              div(class = "container",
                  style = "display:flex;

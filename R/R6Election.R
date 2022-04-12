@@ -182,4 +182,13 @@ createR6Election <- function(dat, type_elections, annee_evenement, code_insee) {
 }
 
 
+### GERER NSE dans GLUE
+# as_string(ensym(x))
+# deparse(substitute(expr = x))
+# glue_data(
+#   data,
+#   glue("{[as_name(enquo(x))]}", .open = "[", .close = "]")
+#   )
+
+
 # https://cran.r-project.org/web/packages/roxygen2/vignettes/rd.html

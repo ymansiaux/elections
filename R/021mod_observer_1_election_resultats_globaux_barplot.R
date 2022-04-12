@@ -14,7 +14,7 @@ mod_observer_1_election_resultats_globaux_barplot_ui <- function(id){
   tagList(
     
     fluidRow(
-      actionButton(ns("pause"), "Pause"),
+      # actionButton(ns("pause"), "Pause"),
       column(width = 12,
              div(class = "container",
                  style = "display:flex;
@@ -28,7 +28,7 @@ mod_observer_1_election_resultats_globaux_barplot_ui <- function(id){
                  ),
                  
                  div(
-                   plotOutput(ns("graphique_resultats"))
+                   girafeOutput(ns("graphique_resultats"))
                  ),
                  
                  div(class ="title_section title_container",
@@ -38,7 +38,7 @@ mod_observer_1_election_resultats_globaux_barplot_ui <- function(id){
                  ),
                  
                  div(
-                   plotOutput(ns("graphique_abstention"))
+                   girafeOutput(ns("graphique_abstention"))
                  )
              )
       )
@@ -56,30 +56,35 @@ mod_observer_1_election_resultats_globaux_barplot_server <- function(id, data_el
     observe(print(election_selectionnee())
     )
     
-    output$graphique_resultats <- renderPlot({
+    output$graphique_resultats <- renderGirafe({
       req(election_selectionnee())
       
-      graphique_resultats_election(data = arrange(data_elections$data[[election_selectionnee()]]$resultatsGlobauxCommune, nom),
-                                   x = nom_candidat_short, y = pct, fill = nom_candidat,
-                                   facet = TRUE, facet_var = numero_tour,
-                                   theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
-                                                                       light_font_family = "Nunito",
-                                                                       axis.text.x = element_blank()),
-                                   title = "", subtitle = "", caption = "NB : seuls les 8 premiers candidats sont affichés",
-                                   xlab = "", ylab = "Voix (%)", legend_name = "Candidat",
-                                   scale_fill_function = scale_fill_manual(values = data_elections$data[[election_selectionnee()]]$couleursCandidats,
-                                                                           breaks = data_elections$data[[election_selectionnee()]]$candidatsElection)
+      g <- graphique_resultats_election(data = arrange(data_elections$data[[election_selectionnee()]]$resultatsGlobauxCommune, nom),
+                                        x = nom_candidat_short, y = pct, fill = nom_candidat,
+                                        facet = TRUE, facet_var = numero_tour,
+                                        theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
+                                                                            light_font_family = "Nunito",
+                                                                            axis.text.x = element_blank()),
+                                        title = "", subtitle = "", caption = "NB : seuls les 8 premiers candidats sont affichés",
+                                        xlab = "", ylab = "Voix (%)", legend_name = "Candidat",
+                                        scale_fill_function = scale_fill_manual(values = data_elections$data[[election_selectionnee()]]$couleursCandidats,
+                                                                                breaks = data_elections$data[[election_selectionnee()]]$candidatsElection)
       )
+      
+      girafe(
+        ggobj = g, 
+      )
+      
       
     })
     # 
     # 
-    output$graphique_abstention <- renderPlot({
+    output$graphique_abstention <- renderGirafe({
       
       req(election_selectionnee())
       
       
-      graphique_resultats_election(data = data_elections$data[[election_selectionnee()]]$resultatsAbstention,
+      g <- graphique_resultats_election(data = data_elections$data[[election_selectionnee()]]$resultatsAbstention,
                                    x = numero_tour, y = pct, fill = numero_tour,
                                    facet = FALSE,
                                    theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
@@ -88,6 +93,11 @@ mod_observer_1_election_resultats_globaux_barplot_server <- function(id, data_el
                                    title = "", subtitle = "", caption = "",
                                    xlab = "", ylab = "Abstention (%)", legend_name = "Tour",
                                    scale_fill_function = scale_color_discrete_c4a_cat(palette = "harmonic"))
+      
+      girafe(
+        ggobj = g 
+      )
+      
       
     })
     
