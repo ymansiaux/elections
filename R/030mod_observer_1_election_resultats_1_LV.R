@@ -12,16 +12,16 @@ mod_observer_1_election_resultats_selectionLVBV_ui <- function(id){
   tagList(
     fluidRow(
       column(width = 12,
-             mod_filter_donnees_observer_1_election_ui(ns("observer_1_election_resultats_selectionLVBVspecifique_ui_1"))
+             mod_filter_donnees_observer_1_election_ui(ns("observer_1_election_resultats_carto_ui_1"))
       )
     ),
     # 
-     fluidRow(
-       column(width = 12,
-              mod_observer_1_election_selection_LV_sur_carte_ui(ns("observer_1_election_resultats_selectionLVBVspecifique_ui_1"))
-              
+    fluidRow(
+      column(width = 12,
+             mod_observer_1_election_selection_LV_sur_carte_ui(ns("observer_1_election_resultats_selectionLVBVspecifique_ui_1"))
+             
       )
-     )
+    )
     
   )
 }
@@ -33,11 +33,13 @@ mod_observer_1_election_resultats_selectionLVBV_server <- function(id, data_elec
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
-    election_selectionnee <- mod_filter_donnees_observer_1_election_server("observer_1_election_resultats_selectionLVBVspecifique_ui_1", data_elections)
-    election_selectionnee_d <- debounce(election_selectionnee, 500)
+    rv <- reactiveValues(name_election = NULL)
     
-    mod_observer_1_election_selection_LV_sur_carte_server("observer_1_election_resultats_selectionLVBVspecifique_ui_1", election_selectionnee_d)
+    mod_filter_donnees_observer_1_election_server("observer_1_election_resultats_carto_ui_1", data_elections, rv)
     
+    mod_observer_1_election_selection_LV_sur_carte_server("observer_1_election_resultats_selectionLVBVspecifique_ui_1",  
+                                                          data_elections, 
+                                                          election_selectionnee = reactive(rv$name_election))
   })
 }
 ## To be copied in the UI

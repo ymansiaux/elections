@@ -15,6 +15,11 @@
 #' @importFrom showtext showtext_auto
 #' @importFrom shinyjs runjs
 #' @importFrom cols4all scale_color_discrete_c4a_cat
+#' @importFrom purrr pmap
+#' @importFrom glue glue glue_data
+#' @importFrom rlang as_string ensym
+#' @importFrom ggiraph geom_col_interactive girafeOutput renderGirafe girafe
+
 
 #' @noRd
 app_server <- function( input, output, session ) {
@@ -42,7 +47,7 @@ app_server <- function( input, output, session ) {
   #######################################
   # Chargement des données au démarrage #
   #######################################
-  data_elections <- reactiveValues(data = NULL)
+  data_elections <- reactiveValues(data = NULL, elections_dispo = NULL)
   
   observeEvent(NULL, ignoreNULL = FALSE, ignoreInit = FALSE, once = TRUE, {
     
@@ -58,10 +63,10 @@ app_server <- function( input, output, session ) {
                                       showURL = TRUE))
     } else {
       dat <- 
-      try(xtradata_requete_features(key = Sys.getenv("XTRADATA_KEY"), typename = "EL_RESULTAT_A",
-                                    showURL = TRUE))
+        try(xtradata_requete_features(key = Sys.getenv("XTRADATA_KEY"), typename = "EL_RESULTAT_A",
+                                      showURL = TRUE))
     }
-    print(dat)
+    # print(dat)
     
     if(inherits(dat, "try-error")) {
       
@@ -74,19 +79,20 @@ app_server <- function( input, output, session ) {
       add_notie_alert(type = "success", text = "Connexion à la base OK",
                       stay = FALSE, time = 5, position = "bottom", session)
       
+
+      elections_distinctes <- dat %>% 
+        mutate(annee_election = year(as_datetime(date_evenement))) %>% 
+        select(type_election, annee_election, insee) %>% 
+        distinct()  
       
-      data_elections$data <-  dat %>%
-        mutate(
-          date_election = as_datetime(date_evenement, tz = "Europe/Paris"),
-          annee_election = year(date_election)) %>%
-        mutate(prenom = get_first_name(nom_candidat)) %>%
-        mutate(nom = get_last_name(nom_candidat, prenom)) %>%
-        mutate(nom = ifelse(nom == "", prenom, nom)) %>%
-        mutate(nom_candidat_short = str_sub(nom_candidat,1,10)) %>%
-        mutate(across(starts_with("nb_"), as.numeric)) %>%
-        select(-date_evenement, -cdate, -mdate) %>%
-        rename(nb_voix = valeur, code_insee = insee) %>%
-        clean_names()
+      data_elections$data <- pmap(elections_distinctes, ~ createR6Election(dat, ..1, ..2, ..3))
+      
+      names_elections <- elections_distinctes %>% 
+        mutate(name_election = paste(type_election, annee_election, insee, sep = "_"))
+      
+      names(data_elections$data) <- names_elections$name_election
+      
+      data_elections$elections_dispo <- names_elections
       
       runjs('$(".nav-link").removeClass("disabled");');
       
