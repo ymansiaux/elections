@@ -20,14 +20,14 @@ mod_observer_1_election_selection_LV_sur_carte_ui <- function(id){
                  
                  div(class ="title_section title_container",
                      div(icon(name="democrat", class = "icon_title")),
-                     div(h2("Sélection d'un lieu de vote", class = "text-uppercase")),
+                     div(h2("S\u00e9lection d\'un lieu de vote", class = "text-uppercase")),
                      div(icon(name="democrat", class = "icon_title"))
                  ),
                  
                  div(
                    radioButtons(inputId = ns("numero_scrutin"),
                                 label = "Choisir un scrutin",
-                                choiceNames = "Aucune élection sélectionnée",
+                                choiceNames = "Aucune \u00e9lection s\u00e9lectionn\u00e9e",
                                 choiceValues = "",
                                 inline = TRUE)
                  ),
@@ -37,7 +37,7 @@ mod_observer_1_election_selection_LV_sur_carte_ui <- function(id){
                          leafletOutput(ns("myBVmap"), height = 800)
                      ),
                      div(class = "centered", id = ns("message_absence_donnees_carto"),
-                         h1("Les données de localisation des bureaux ne sont pas disponibles pour ce scrutin ou cette commune")
+                         h1("Les donn\u00e9es de localisation des bureaux ne sont pas disponibles pour ce scrutin ou cette commune")
                      )
                      
                  )
@@ -52,7 +52,7 @@ mod_observer_1_election_selection_LV_sur_carte_ui <- function(id){
         
         div(class ="title_section title_container",
             div(icon(name="democrat", class = "icon_title")),
-            div(h2("Résultats par BV", class = "text-uppercase")),
+            div(h2("R\u00e9sultats par BV", class = "text-uppercase")),
             div(icon(name="democrat", class = "icon_title"))
         ),
         
@@ -62,7 +62,7 @@ mod_observer_1_election_selection_LV_sur_carte_ui <- function(id){
         
         div(class ="title_section title_container",
             div(icon(name="democrat", class = "icon_title")),
-            div(h2("Résultats par LV", class = "text-uppercase")),
+            div(h2("R\u00e9sultats par LV", class = "text-uppercase")),
             div(icon(name="democrat", class = "icon_title"))
         ),
         
@@ -91,7 +91,7 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
       
       if(is.null(election_selectionnee()))  {
         
-        runjs(glue('$("#{ns("message_absence_donnees_carto")}").hide();'));
+        runjs(glue('$(\"#{ns(\"message_absence_donnees_carto\")}\").hide();'));
         
       } else {
         
@@ -104,13 +104,13 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
         if(!data_elections$data[[election_selectionnee()]]$donneesElection$annee_election[1] %in% annees_elections_avec_donnees_geo | 
            !data_elections$data[[election_selectionnee()]]$donneesElection$code_insee[1] %in% communes_elections_avec_donnees_geo) {
           
-          runjs(glue('$("#{ns("map")}").addClass("map_with_opacity");'));
-          runjs(glue('$("#{ns("message_absence_donnees_carto")}").show();'));
+          runjs(glue('$(\"#{ns(\"map\")}\").addClass(\"map_with_opacity\");'));
+          runjs(glue('$(\"#{ns(\"message_absence_donnees_carto\")}\").show();'));
           
         } else {
           
-          runjs(glue('$("#{ns("map")}").removeClass("map_with_opacity");'));
-          runjs(glue('$("#{ns("message_absence_donnees_carto")}").hide();'));
+          runjs(glue('$(\"#{ns(\"map\")}\").removeClass(\"map_with_opacity\");'));
+          runjs(glue('$(\"#{ns(\"message_absence_donnees_carto\")}\").hide();'));
           
         }
       }
@@ -212,7 +212,7 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
     
     output$plot_resultats_BV <- renderGirafe({
       validate(
-        need(!is.null(input$myBVmap_marker_click), "Sélectionnez 1 lieu de vote")
+        need(!is.null(input$myBVmap_marker_click), "S\u00e9lectionnez 1 lieu de vote")
       )
       
       g <- graphique_resultats_election(data = arrange(resultats_by_BV(), nom), 
@@ -222,7 +222,7 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
                                    theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
                                                                        light_font_family = "Nunito",
                                                                        axis.text.x = element_blank()),
-                                   title = "", subtitle = "", caption = "NB : seuls les 8 premiers candidats sont affichés",
+                                   title = "", subtitle = "", caption = "NB : seuls les 8 premiers candidats sont affich\u00e9s",
                                    xlab = "", ylab = "Vote (%)", legend_name = "Candidat",
                                    scale_fill_function = scale_fill_manual(values = data_elections$data[[election_selectionnee()]]$couleursCandidats,
                                                                            breaks = data_elections$data[[election_selectionnee()]]$candidatsElection))
@@ -237,7 +237,7 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
     output$plot_resultats_LV <- renderGirafe({
       
       validate(
-        need(!is.null(input$myBVmap_marker_click), "Sélectionnez 1 lieu de vote")
+        need(!is.null(input$myBVmap_marker_click), "S\u00e9lectionnez 1 lieu de vote")
         
       )
       
@@ -247,7 +247,7 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
                                    theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
                                                                        light_font_family = "Nunito",
                                                                        axis.text.x = element_blank()),
-                                   title = "", subtitle = "", caption = "NB : seuls les 8 premiers candidats sont affichés",
+                                   title = "", subtitle = "", caption = "NB : seuls les 8 premiers candidats sont affich\u00e9s",
                                    xlab = "", ylab = "Vote (%)", legend_name = "Candidat",
                                    scale_fill_function = scale_fill_manual(values = data_elections$data[[election_selectionnee()]]$couleursCandidats,
                                                                            breaks = data_elections$data[[election_selectionnee()]]$candidatsElection))

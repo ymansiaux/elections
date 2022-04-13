@@ -23,7 +23,7 @@ mod_observer_1_election_resultats_globaux_barplot_ui <- function(id){
                  
                  div(class ="title_section title_container",
                      div(icon(name="democrat", class = "icon_title")),
-                     div(h2("Résultats par candidats", class = "text-uppercase")),
+                     div(h2("R\u00e9sultats par candidats", class = "text-uppercase")),
                      div(icon(name="democrat", class = "icon_title"))
                  ),
                  
@@ -65,7 +65,7 @@ mod_observer_1_election_resultats_globaux_barplot_server <- function(id, data_el
                                         theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
                                                                             light_font_family = "Nunito",
                                                                             axis.text.x = element_blank()),
-                                        title = "", subtitle = "", caption = "NB : seuls les 8 premiers candidats sont affichés",
+                                        title = "", subtitle = "", caption = "NB : seuls les 8 premiers candidats sont affich\u00e9s",
                                         xlab = "", ylab = "Voix (%)", legend_name = "Candidat",
                                         scale_fill_function = scale_fill_manual(values = data_elections$data[[election_selectionnee()]]$couleursCandidats,
                                                                                 breaks = data_elections$data[[election_selectionnee()]]$candidatsElection)

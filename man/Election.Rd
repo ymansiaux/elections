@@ -19,46 +19,21 @@ utilisee ensuite par classe Occupation et Saturation
 
 \item{\code{inseeElection}}{code INSEE de la commune}
 
-\item{\code{candidat}}{avec palette de couleur}
+\item{\code{candidatsElection}}{candidat avec palette de couleur}
 
-\item{\code{palette}}{de couleurs pour les candidats}
+\item{\code{couleursCandidats}}{palette de couleurs pour les candidats}
 
-\item{\code{resultats}}{de la requete}
+\item{\code{resultatsGlobauxCommune}}{résultats globaux commune}
 
-\item{\code{résultats}}{globaux commune}
+\item{\code{resultatsAbstention}}{résultats abstention commune}
 
-\item{\code{résultats}}{abstention commune}
+\item{\code{resultatsLV}}{résultats par LV}
 
-\item{\code{résultats}}{par LV}
+\item{\code{resultatsBV}}{résultats par BV}
 
-\item{\code{résultats}}{par BV}
+\item{\code{resultatsAbstentionBV}}{résultats abstention BV}
 
-\item{\code{résultats}}{abstention BV}
-
-\item{\code{résultats}}{abstention LV}
-}
-\if{html}{\out{</div>}}
-}
-\section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{candidat}}{avec palette de couleur}
-
-\item{\code{palette}}{de couleurs pour les candidats}
-
-\item{\code{resultats}}{de la requete}
-
-\item{\code{résultats}}{globaux commune}
-
-\item{\code{résultats}}{abstention commune}
-
-\item{\code{résultats}}{par LV}
-
-\item{\code{résultats}}{par BV}
-
-\item{\code{résultats}}{abstention BV}
-
-\item{\code{résultats}}{abstention LV}
+\item{\code{resultatsAbstentionLV}}{résultats abstention LV}
 }
 \if{html}{\out{</div>}}
 }
@@ -90,7 +65,6 @@ Create a new occupation object.
   inseeElection = NULL,
   candidatsElection = NULL,
   couleursCandidats = NULL,
-  resultatsRequete = NULL,
   resultatsGlobauxCommune = NULL,
   resultatsAbstention = NULL,
   resultatsLV = NULL,
@@ -105,26 +79,41 @@ Create a new occupation object.
 \describe{
 \item{\code{typeElection}}{typeElection}
 
-\item{\code{anneeElection}}{rangeEnd}
+\item{\code{xtradataParameters}}{xtradataParameters}
 
-\item{\code{donneesElection}}{rangeStep}
+\item{\code{anneeElection}}{anneeElection}
 
-\item{\code{inseeElection}}{aggregation_unit}
+\item{\code{donneesElection}}{donneesElection}
 
-\item{\code{candidatsElection}}{plageHoraire}
+\item{\code{inseeElection}}{inseeElection}
 
-\item{\code{couleursCandidats}}{liste des parkings analyses}
+\item{\code{candidatsElection}}{candidatsElection}
+
+\item{\code{couleursCandidats}}{couleursCandidats}
+
+\item{\code{resultatsGlobauxCommune}}{resultatsGlobauxCommune}
+
+\item{\code{resultatsAbstention}}{resultatsAbstention}
+
+\item{\code{resultatsLV}}{resultatsLV}
+
+\item{\code{resultatsBV}}{resultatsBV}
+
+\item{\code{resultatsAbstentionBV}}{resultatsAbstentionBV}
+
+\item{\code{resultatsAbstentionLV}}{resultatsAbstentionLV}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A new `Occupation` object.
+A new `Election` object.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-download_data"></a>}}
 \if{latex}{\out{\hypertarget{method-download_data}{}}}
 \subsection{Method \code{download_data()}}{
+Interroge le WS features
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Election$download_data()}\if{html}{\out{</div>}}
 }
@@ -134,55 +123,103 @@ A new `Occupation` object.
 \if{html}{\out{<a id="method-compute_resultats_globaux_commune"></a>}}
 \if{latex}{\out{\hypertarget{method-compute_resultats_globaux_commune}{}}}
 \subsection{Method \code{compute_resultats_globaux_commune()}}{
+Calcule les résultats globaux pour la commune
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Election$compute_resultats_globaux_commune(donneesElection)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{donneesElection}}{donnees issue du WS features}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-compute_abstention_commune"></a>}}
 \if{latex}{\out{\hypertarget{method-compute_abstention_commune}{}}}
 \subsection{Method \code{compute_abstention_commune()}}{
+Calcule les résultats d'abstention pour la commune
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Election$compute_abstention_commune(donneesElection)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{donneesElection}}{donnees issue du WS features}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-compute_resultats_par_BV"></a>}}
 \if{latex}{\out{\hypertarget{method-compute_resultats_par_BV}{}}}
 \subsection{Method \code{compute_resultats_par_BV()}}{
+Calcule les résultats par BV
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Election$compute_resultats_par_BV(donneesElection)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{donneesElection}}{donnees issue du WS features}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-compute_resultats_par_LV"></a>}}
 \if{latex}{\out{\hypertarget{method-compute_resultats_par_LV}{}}}
 \subsection{Method \code{compute_resultats_par_LV()}}{
+Calcule les résultats par LV
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Election$compute_resultats_par_LV(donneesElection)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{donneesElection}}{donnees issue du WS features}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-compute_abstention_par_BV"></a>}}
 \if{latex}{\out{\hypertarget{method-compute_abstention_par_BV}{}}}
 \subsection{Method \code{compute_abstention_par_BV()}}{
+Calcule les résultats d'abstention par BV
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Election$compute_abstention_par_BV(donneesElection)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{donneesElection}}{donnees issue du WS features}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-compute_abstention_par_LV"></a>}}
 \if{latex}{\out{\hypertarget{method-compute_abstention_par_LV}{}}}
 \subsection{Method \code{compute_abstention_par_LV()}}{
+Calcule les résultats d'abstention par LV
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Election$compute_abstention_par_LV(donneesElection)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{donneesElection}}{donnees issue du WS features}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

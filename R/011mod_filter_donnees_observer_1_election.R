@@ -15,9 +15,10 @@ mod_filter_donnees_observer_1_election_ui <- function(id){
              div(class = "container",
                  style = "display:flex;
                   flex-direction : row;
-                  justify-content: space-evenly",
+                  justify-content: space-evenly;
+                  align-items: center;",
                  
-                 actionButton(ns("download_data"), "Telecharger"),
+                 actionButton(ns("download_data"), "Telecharger", class = "btn btn-primary", style = "height:50%;"),
                  
                  div(
                    selectizeInput(

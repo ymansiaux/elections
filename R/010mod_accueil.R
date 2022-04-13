@@ -57,7 +57,7 @@ mod_accueil_ui <- function(id){
                                tags$div(class = "card_title_flex_style",
                                         tags$h5(
                                           class = "card-title",
-                                          "Résultats globaux"
+                                          "R\u00e9sultats globaux"
                                         )
                                ),
                                
@@ -65,7 +65,7 @@ mod_accueil_ui <- function(id){
                                  class = "card_text_flex_style",
                                  tags$p(
                                    class = "card-text",
-                                   "Observer les résultats complets d'une élection : voix obtenues pour chaque liste ou candidat, abstention"
+                                   "Observer les r\u00e9sultats complets d\'une \u00e9lection : voix obtenues pour chaque liste ou candidat, abstention"
                                  )),
                                
                                tags$div(
@@ -74,7 +74,7 @@ mod_accueil_ui <- function(id){
                                    href = "#!",
                                    class = "btn btn-primary",
                                    "Go",
-                                   onclick="$('li:eq(1) a').tab('show');"
+                                   onclick="$(\'li:eq(1) a\').tab(\'show\');"
                                  )
                                )
                              )
@@ -109,7 +109,7 @@ mod_accueil_ui <- function(id){
                                tags$div(class = "card_title_flex_style",
                                         tags$h5(
                                           class = "card-title",
-                                          "Résultats pour un lieu de vote"
+                                          "R\u00e9sultats pour un lieu de vote"
                                         )
                                ),
                                
@@ -117,7 +117,7 @@ mod_accueil_ui <- function(id){
                                  class = "card_text_flex_style",
                                  tags$p(
                                    class = "card-text",
-                                    "Résultats détaillés pour un lieu de vote et les bureaux qui y sont rattachés"
+                                    "R\u00e9sultats d\u00e9taill\u00e9s pour un lieu de vote et les bureaux qui y sont rattach\u00e9s"
                                  )),
                                
                                tags$div(
@@ -126,7 +126,7 @@ mod_accueil_ui <- function(id){
                                    href = "#!",
                                    class = "btn btn-primary",
                                    "Go",
-                                   onclick="$('li:eq(2) a').tab('show');"
+                                   onclick="$(\'li:eq(2) a\').tab(\'show\');"
                                  )
                                )
                              )
@@ -161,7 +161,7 @@ mod_accueil_ui <- function(id){
                                  tags$div(class = "card_title_flex_style",
                                           tags$h5(
                                             class = "card-title",
-                                            "Résultats d'un candidat"
+                                            "R\u00e9sultats d\'un candidat"
                                           )
                                  ),
                                  
@@ -169,7 +169,7 @@ mod_accueil_ui <- function(id){
                                    class = "card_text_flex_style",
                                    tags$p(
                                      class = "card-text",
-                                     "Résultats détaillés d'un candidat dans les différents lieux et bureaux de vote"
+                                     "R\u00e9sultats d\u00e9taill\u00e9s d\'un candidat dans les diff\u00e9rents lieux et bureaux de vote"
                                    )),
                                  
                                  tags$div(
@@ -178,7 +178,7 @@ mod_accueil_ui <- function(id){
                                      href = "#!",
                                      class = "btn btn-primary",
                                      "Go",
-                                     onclick="$('li:eq(3) a').tab('show');"
+                                     onclick="$(\'li:eq(3) a\').tab(\'show\');"
                                    )
                                  )
                                )

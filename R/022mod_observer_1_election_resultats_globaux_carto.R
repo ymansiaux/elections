@@ -21,7 +21,7 @@ mod_observer_1_election_resultats_globaux_carto_ui <- function(id){
                  
                  div(class ="title_section title_container",
                      div(icon(name="democrat", class = "icon_title")),
-                     div(h2("Vainqueur par unité géo.", class = "text-uppercase")),
+                     div(h2("Vainqueur par unit\u00e9 g\u00e9o.", class = "text-uppercase")),
                      div(icon(name="democrat", class = "icon_title"))
                  ),
                  
@@ -35,7 +35,7 @@ mod_observer_1_election_resultats_globaux_carto_ui <- function(id){
                      radioButtons(inputId = ns("numero_scrutin"),
                                   label = "Choisir un scrutin",
                                   inline = TRUE,
-                                  choiceNames = "Aucune élection sélectionnée",
+                                  choiceNames = "Aucune \u00e9lection s\u00e9lectionn\u00e9e",
                                   choiceValues = "")
                    ),
                    
@@ -52,8 +52,8 @@ mod_observer_1_election_resultats_globaux_carto_ui <- function(id){
                    div(
                      selectizeInput(
                        inputId = ns("type_resultats"),
-                       label = "Résultats à afficher",
-                       choices = c("Résultats" = "resultats", "Abstention" = "abstention"),
+                       label = "R\u00e9sultats \u00e0 afficher",
+                       choices = c("R\u00e9sultats" = "resultats", "Abstention" = "abstention"),
                        multiple = FALSE,
                        options = list(deselectBehavior = "top")
                      )
@@ -65,7 +65,7 @@ mod_observer_1_election_resultats_globaux_carto_ui <- function(id){
                          leafletOutput(ns("carto_resultats"), height = 800)
                      ),
                      div(class = "centered", id = ns("message_absence_donnees_carto"),
-                         h1("Les données de localisation des bureaux ne sont pas disponibles pour ce scrutin ou cette commune")
+                         h1("Les donn\u00e9es de localisation des bureaux ne sont pas disponibles pour ce scrutin ou cette commune")
                      )
                      
                  )
@@ -96,13 +96,13 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, data_elec
         if(!data_elections$data[[election_selectionnee()]]$donneesElection$annee_election[1] %in% annees_elections_avec_donnees_geo | 
            !data_elections$data[[election_selectionnee()]]$donneesElection$code_insee[1] %in% communes_elections_avec_donnees_geo) {
           
-          runjs(glue('$("#{ns("map")}").addClass("map_with_opacity");'));
-          runjs(glue('$("#{ns("message_absence_donnees_carto")}").show();'));
+          runjs(glue('$(\"#{ns(\"map\")}\").addClass(\"map_with_opacity\");'));
+          runjs(glue('$(\"#{ns(\"message_absence_donnees_carto\")}\").show();'));
           
         } else {
           
-          runjs(glue('$("#{ns("map")}").removeClass("map_with_opacity");'));
-          runjs(glue('$("#{ns("message_absence_donnees_carto")}").hide();'));
+          runjs(glue('$(\"#{ns(\"map\")}\").removeClass(\"map_with_opacity\");'));
+          runjs(glue('$(\"#{ns(\"message_absence_donnees_carto\")}\").hide();'));
           
         }
       }

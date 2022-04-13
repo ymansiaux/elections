@@ -3,10 +3,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway+Dots&display=swap'); */
 
 .content {
-   min-height: calc(100vh - 200px);
+   min-height: calc(100vh - 250px);
 }
 .footer {
-  height: 100px;
+  height: 200px;
 }
 
 .title_section {

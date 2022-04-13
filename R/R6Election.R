@@ -21,46 +21,50 @@ Election <- R6::R6Class(
     #' @field inseeElection code INSEE de la commune
     inseeElection = "",
     
-    #' @field candidat avec palette de couleur
+    #' @field candidatsElection candidat avec palette de couleur
     candidatsElection = "",
     
-    #' @field palette de couleurs pour les candidats
+    #' @field couleursCandidats palette de couleurs pour les candidats
     couleursCandidats = "",
-    
-    #' @field resultats de la requete
-    resultatsRequete = "",
-    
-    #' @field résultats globaux commune
+
+    #' @field resultatsGlobauxCommune résultats globaux commune
     resultatsGlobauxCommune = "",
     
-    #' @field résultats abstention commune
+    #' @field resultatsAbstention résultats abstention commune
     resultatsAbstention = "",
     
-    #' @field résultats par LV
+    #' @field resultatsLV résultats par LV
     resultatsLV = "",
     
-    #' @field résultats par BV
+    #' @field resultatsBV résultats par BV
     resultatsBV = "",
     
-    #' @field résultats abstention BV
+    #' @field resultatsAbstentionBV résultats abstention BV
     resultatsAbstentionBV = "",
     
-    #' @field résultats abstention LV
+    #' @field resultatsAbstentionLV résultats abstention LV
     resultatsAbstentionLV = "",
     
     #' @description
     #' Create a new occupation object.
     #' @param typeElection typeElection
-    #' @param anneeElection rangeEnd
-    #' @param donneesElection rangeStep
-    #' @param inseeElection aggregation_unit
-    #' @param candidatsElection plageHoraire
-    #' @param couleursCandidats liste des parkings analyses
-    #' @return A new `Occupation` object.
+    #' @param xtradataParameters xtradataParameters
+    #' @param anneeElection anneeElection
+    #' @param donneesElection donneesElection
+    #' @param inseeElection inseeElection
+    #' @param candidatsElection candidatsElection
+    #' @param couleursCandidats couleursCandidats
+    #' @param resultatsGlobauxCommune resultatsGlobauxCommune
+    #' @param resultatsAbstention resultatsAbstention
+    #' @param resultatsLV resultatsLV
+    #' @param resultatsBV resultatsBV
+    #' @param resultatsAbstentionBV resultatsAbstentionBV
+    #' @param resultatsAbstentionLV resultatsAbstentionLV
+    #' @return A new `Election` object.
     
     initialize = function(typeElection = NULL, xtradataParameters = NULL, anneeElection = NULL, donneesElection = NULL, 
                           inseeElection = NULL, candidatsElection = NULL, couleursCandidats = NULL,
-                          resultatsRequete = NULL, resultatsGlobauxCommune = NULL, resultatsAbstention = NULL,
+                         resultatsGlobauxCommune = NULL, resultatsAbstention = NULL,
                           resultatsLV = NULL, resultatsBV = NULL, resultatsAbstentionBV = NULL, resultatsAbstentionLV = NULL) {
       self$typeElection <- typeElection
       self$anneeElection <- anneeElection
@@ -69,7 +73,6 @@ Election <- R6::R6Class(
       self$inseeElection <- inseeElection
       self$candidatsElection <- candidatsElection
       self$couleursCandidats <- couleursCandidats
-      self$resultatsRequete <- resultatsRequete
       self$resultatsGlobauxCommune <- resultatsGlobauxCommune
       self$resultatsAbstention <- resultatsAbstention
       self$resultatsLV <- resultatsLV
@@ -79,6 +82,8 @@ Election <- R6::R6Class(
       
     },
     
+    #' @description
+    #' Interroge le WS features
     download_data = function() {
       
       download <- try(xtradata_requete_features(
@@ -106,6 +111,9 @@ Election <- R6::R6Class(
       }
     },
     
+    #' @description
+    #' Calcule les résultats globaux pour la commune
+    #' @param donneesElection donnees issue du WS features
     compute_resultats_globaux_commune = function(donneesElection) {
       
       self$resultatsGlobauxCommune <- compute_resultats_elections(data = donneesElection,
@@ -119,6 +127,9 @@ Election <- R6::R6Class(
       
     },
     
+    #' @description
+    #' Calcule les résultats d'abstention pour la commune
+    #' @param donneesElection donnees issue du WS features
     compute_abstention_commune = function(donneesElection) {
       self$resultatsAbstention <- compute_resultats_elections(data = donneesElection,
                                                               type = "abstention",
@@ -127,6 +138,9 @@ Election <- R6::R6Class(
       
     },
     
+    #' @description
+    #' Calcule les résultats par BV
+    #' @param donneesElection donnees issue du WS features
     compute_resultats_par_BV = function(donneesElection) {
       
       if("id_bureau" %in% colnames(donneesElection)) {
@@ -144,6 +158,9 @@ Election <- R6::R6Class(
       
     },
     
+    #' @description
+    #' Calcule les résultats par LV
+    #' @param donneesElection donnees issue du WS features
     compute_resultats_par_LV = function(donneesElection) {
       
       if("nom_lieu" %in% colnames(donneesElection)) {
@@ -160,6 +177,9 @@ Election <- R6::R6Class(
       
     },
     
+    #' @description
+    #' Calcule les résultats d'abstention par BV
+    #' @param donneesElection donnees issue du WS features
     compute_abstention_par_BV = function(donneesElection) {
       
       if("id_bureau" %in% colnames(donneesElection)) {
@@ -177,6 +197,9 @@ Election <- R6::R6Class(
       
     },
     
+    #' @description
+    #' Calcule les résultats d'abstention par LV
+    #' @param donneesElection donnees issue du WS features
     compute_abstention_par_LV = function(donneesElection) {
       
       if("nom_lieu" %in% colnames(donneesElection)) {
@@ -211,14 +234,7 @@ createR6Election <- function(dat, type_elections, annee_evenement, code_insee) {
     typeElection = type_elections,
     anneeElection = annee_evenement,
     xtradataParameters = filterXtradata,
-    inseeElection = code_insee,
-    donneesElection = NULL,
-    candidatsElection = NULL,
-    couleursCandidats = NULL,
-    resultatsRequete = NULL, 
-    resultatsGlobauxCommune = NULL, 
-    resultatsLV = NULL, 
-    resultatsBV = NULL
+    inseeElection = code_insee
   )
   
 }
