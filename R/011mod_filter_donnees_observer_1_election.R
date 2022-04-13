@@ -170,6 +170,12 @@ mod_filter_donnees_observer_1_election_server <- function(id, data_elections, rv
         # Calcul des résultats / LV
         data_elections$data[[name_election]]$compute_resultats_par_LV(data_elections$data[[name_election]]$donneesElection)
         
+        # Calcul de l'abstention / BV
+        data_elections$data[[name_election]]$compute_abstention_par_BV(data_elections$data[[name_election]]$donneesElection)
+        
+        # Calcul de l'abstention / LV
+        data_elections$data[[name_election]]$compute_abstention_par_LV(data_elections$data[[name_election]]$donneesElection)
+        
         
         # browser()
         # download <- try(xtradata_requete_features(

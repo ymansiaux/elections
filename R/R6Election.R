@@ -42,6 +42,12 @@ Election <- R6::R6Class(
     #' @field résultats par BV
     resultatsBV = "",
     
+    #' @field résultats abstention BV
+    resultatsAbstentionBV = "",
+    
+    #' @field résultats abstention LV
+    resultatsAbstentionLV = "",
+    
     #' @description
     #' Create a new occupation object.
     #' @param typeElection typeElection
@@ -54,7 +60,8 @@ Election <- R6::R6Class(
     
     initialize = function(typeElection = NULL, xtradataParameters = NULL, anneeElection = NULL, donneesElection = NULL, 
                           inseeElection = NULL, candidatsElection = NULL, couleursCandidats = NULL,
-                          resultatsRequete = NULL, resultatsGlobauxCommune = NULL, resultatsAbstention = NULL, resultatsLV = NULL, resultatsBV = NULL) {
+                          resultatsRequete = NULL, resultatsGlobauxCommune = NULL, resultatsAbstention = NULL,
+                          resultatsLV = NULL, resultatsBV = NULL, resultatsAbstentionBV = NULL, resultatsAbstentionLV = NULL) {
       self$typeElection <- typeElection
       self$anneeElection <- anneeElection
       self$xtradataParameters <- xtradataParameters
@@ -67,6 +74,9 @@ Election <- R6::R6Class(
       self$resultatsAbstention <- resultatsAbstention
       self$resultatsLV <- resultatsLV
       self$resultatsBV <- resultatsBV
+      self$resultatsAbstentionBV <- resultatsAbstentionBV
+      self$resultatsAbstentionLV <- resultatsAbstentionLV
+      
     },
     
     download_data = function() {
@@ -148,8 +158,40 @@ Election <- R6::R6Class(
           mutate_at(vars("nom_lieu"),as.character)
       }
       
-    }
+    },
     
+    compute_abstention_par_BV = function(donneesElection) {
+      
+      if("id_bureau" %in% colnames(donneesElection)) {
+        self$resultatsAbstentionBV <- compute_resultats_elections(data = donneesElection, 
+                                                        type = "abstention", 
+                                                        grouping_vars = c(
+                                                          "nom_election", "type_election", "annee_election", 
+                                                          "numero_tour",
+                                                          "id_bureau"
+                                                        )
+        )   %>% 
+          mutate_at(vars("id_bureau"),as.character)
+        
+      }
+      
+    },
+    
+    compute_abstention_par_LV = function(donneesElection) {
+      
+      if("nom_lieu" %in% colnames(donneesElection)) {
+        self$resultatsAbstentionLV <- compute_resultats_elections(data = donneesElection, 
+                                                        type = "abstention", 
+                                                        grouping_vars = c(
+                                                          "nom_election", "type_election", "annee_election", 
+                                                          "numero_tour", 
+                                                          "nom_lieu", "id_lieu"
+                                                        )
+        )    %>% 
+          mutate_at(vars("nom_lieu"),as.character)
+      }
+      
+    }
     
   )
 )

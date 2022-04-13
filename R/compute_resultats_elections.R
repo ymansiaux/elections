@@ -27,7 +27,7 @@ compute_resultats_elections <- function(data, type = "participation", grouping_v
       group_by(!!!syms(grouping_vars)) %>% 
       summarise(nb_inscrits = sum(nb_inscrits, na.rm = TRUE),
                 nb_votants = sum(nb_votants, na.rm = TRUE)) %>% 
-      mutate(pct = nb_votants / nb_inscrits) %>% 
+      mutate(pct = 1 - (nb_votants / nb_inscrits)) %>% 
       ungroup()
   }
 }

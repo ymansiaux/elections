@@ -32,6 +32,10 @@ utilisee ensuite par classe Occupation et Saturation
 \item{\code{résultats}}{par LV}
 
 \item{\code{résultats}}{par BV}
+
+\item{\code{résultats}}{abstention BV}
+
+\item{\code{résultats}}{abstention LV}
 }
 \if{html}{\out{</div>}}
 }
@@ -51,6 +55,10 @@ utilisee ensuite par classe Occupation et Saturation
 \item{\code{résultats}}{par LV}
 
 \item{\code{résultats}}{par BV}
+
+\item{\code{résultats}}{abstention BV}
+
+\item{\code{résultats}}{abstention LV}
 }
 \if{html}{\out{</div>}}
 }
@@ -63,6 +71,8 @@ utilisee ensuite par classe Occupation et Saturation
 \item \href{#method-compute_abstention_commune}{\code{Election$compute_abstention_commune()}}
 \item \href{#method-compute_resultats_par_BV}{\code{Election$compute_resultats_par_BV()}}
 \item \href{#method-compute_resultats_par_LV}{\code{Election$compute_resultats_par_LV()}}
+\item \href{#method-compute_abstention_par_BV}{\code{Election$compute_abstention_par_BV()}}
+\item \href{#method-compute_abstention_par_LV}{\code{Election$compute_abstention_par_LV()}}
 \item \href{#method-clone}{\code{Election$clone()}}
 }
 }
@@ -84,7 +94,9 @@ Create a new occupation object.
   resultatsGlobauxCommune = NULL,
   resultatsAbstention = NULL,
   resultatsLV = NULL,
-  resultatsBV = NULL
+  resultatsBV = NULL,
+  resultatsAbstentionBV = NULL,
+  resultatsAbstentionLV = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -151,6 +163,24 @@ A new `Occupation` object.
 \subsection{Method \code{compute_resultats_par_LV()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Election$compute_resultats_par_LV(donneesElection)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-compute_abstention_par_BV"></a>}}
+\if{latex}{\out{\hypertarget{method-compute_abstention_par_BV}{}}}
+\subsection{Method \code{compute_abstention_par_BV()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Election$compute_abstention_par_BV(donneesElection)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-compute_abstention_par_LV"></a>}}
+\if{latex}{\out{\hypertarget{method-compute_abstention_par_LV}{}}}
+\subsection{Method \code{compute_abstention_par_LV()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Election$compute_abstention_par_LV(donneesElection)}\if{html}{\out{</div>}}
 }
 
 }
