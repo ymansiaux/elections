@@ -133,27 +133,45 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, data_elec
       req(input$niveau_geo_restitution)
       req(input$type_resultats)
       
-      if(input$niveau_geo_restitution == "id_bureau" & input$type_resultats == "resultats") {
-        
-        resultats_elections <- data_elections$data[[election_selectionnee()]]$resultatsBV %>% 
-          filter(numero_tour == input$numero_scrutin)
-        
-      } else if (input$niveau_geo_restitution == "id_bureau" & input$type_resultats == "abstention"){
-        
-        resultats_elections <- data_elections$data[[election_selectionnee()]]$resultatsAbstentionBV %>% 
-          filter(numero_tour == input$numero_scrutin)
-        
-      } else if (input$niveau_geo_restitution != "id_bureau" & input$type_resultats == "resultats") {
-        
-        resultats_elections <-  data_elections$data[[election_selectionnee()]]$resultatsLV %>% 
-          filter(numero_tour == input$numero_scrutin)
-        
-      } else {
-        
-        resultats_elections <- data_elections$data[[election_selectionnee()]]$resultatsAbstentionLV %>% 
-          filter(numero_tour == input$numero_scrutin)
-      }
+      source_resultats <- ifelse(
+        input$niveau_geo_restitution == "id_bureau" & input$type_resultats == "resultats",
+        "resultatsBV",
+        ifelse(input$niveau_geo_restitution == "id_bureau" & input$type_resultats == "abstention",
+               "resultatsAbstentionBV",
+               ifelse(input$niveau_geo_restitution != "id_bureau" & input$type_resultats == "resultats",
+                      "resultatsLV", 
+                      "resultatsAbstentionLV"
+               )
+        )
+      )
       
+      resultats_elections <- data_elections$data[[election_selectionnee()]][[source_resultats]]
+      
+      # 
+      # resultats_elections <- data_elections$data[[election_selectionnee()]]resultatsAbstentionLV %>% 
+      #   filter(numero_tour == input$numero_scrutin)
+      
+      # if(input$niveau_geo_restitution == "id_bureau" & input$type_resultats == "resultats") {
+      #   
+      #   resultats_elections <- data_elections$data[[election_selectionnee()]]$resultatsBV %>% 
+      #     filter(numero_tour == input$numero_scrutin)
+      #   
+      # } else if (input$niveau_geo_restitution == "id_bureau" & input$type_resultats == "abstention"){
+      #   
+      #   resultats_elections <- data_elections$data[[election_selectionnee()]]$resultatsAbstentionBV %>% 
+      #     filter(numero_tour == input$numero_scrutin)
+      #   
+      # } else if (input$niveau_geo_restitution != "id_bureau" & input$type_resultats == "resultats") {
+      #   
+      #   resultats_elections <-  data_elections$data[[election_selectionnee()]]$resultatsLV %>% 
+      #     filter(numero_tour == input$numero_scrutin)
+      #   
+      # } else {
+      #   
+      #   resultats_elections <- data_elections$data[[election_selectionnee()]]$resultatsAbstentionLV %>% 
+      #     filter(numero_tour == input$numero_scrutin)
+      # }
+      # 
       
       winner <- resultats_elections %>%
         group_by(!!!syms(c("numero_tour", input$niveau_geo_restitution))) %>%
@@ -203,7 +221,7 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, data_elec
       
       
       if(input$type_resultats == "resultats") {
-    
+        
         popup <-  paste0("<strong>Zone: </strong>",
                          # donnees_geo_winner$libelle,
                          zone,
