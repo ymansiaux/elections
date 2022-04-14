@@ -174,6 +174,7 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, data_elec
       # 
       
       winner <- resultats_elections %>%
+        filter(numero_tour %in% input$numero_scrutin) %>% 
         group_by(!!!syms(c("numero_tour", input$niveau_geo_restitution))) %>%
         mutate(pctmax = max(pct)) %>%
         filter(pctmax == pct) %>%

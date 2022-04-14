@@ -183,6 +183,7 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
       
       data_elections$data[[election_selectionnee()]]$resultatsBV %>%
         filter(id_bureau %in% bv_selectionnes$code) %>% 
+        filter(numero_tour %in% input$numero_scrutin) %>% 
         # on filtre pour ne garder que les 8 premiers candidats 
         filter(nom_candidat %in% unique(
           data_elections$data[[election_selectionnee()]]$resultatsGlobauxCommune$nom_candidat
@@ -201,6 +202,7 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
       
       data_elections$data[[election_selectionnee()]]$resultatsLV %>%
         filter(id_lieu %in% unique(bv_selectionnes$rs_el_lieuvote_p)) %>% 
+        filter(numero_tour %in% input$numero_scrutin) %>% 
         # on filtre pour ne garder que les 8 premiers candidats 
         filter(nom_candidat %in% unique(
           data_elections$data[[election_selectionnee()]]$resultatsGlobauxCommune$nom_candidat

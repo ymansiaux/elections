@@ -17,13 +17,11 @@ mod_filter_donnees_observer_1_election_ui <- function(id){
                   flex-direction : row;
                   justify-content: space-evenly;
                   align-items: center;",
-                 
-                 actionButton(ns("download_data"), "Telecharger", class = "btn btn-primary", style = "height:50%;"),
-                 
+             
                  div(
                    selectizeInput(
                      inputId = ns("type_elections"),
-                     label = "Type d'election",
+                     label = "Type d\'election",
                      choices = NULL,
                      multiple = FALSE,
                      options = list(deselectBehavior = "top")
@@ -32,7 +30,7 @@ mod_filter_donnees_observer_1_election_ui <- function(id){
                  div(
                    selectizeInput(
                      inputId = ns("annee_elections"),
-                     label = "Annee de l'election",
+                     label = "Annee de l\'election",
                      choices = NULL,
                      multiple = FALSE,
                      options = list(deselectBehavior = "top")
@@ -45,9 +43,10 @@ mod_filter_donnees_observer_1_election_ui <- function(id){
                      choices = NULL,
                      multiple = FALSE,
                      options = list(deselectBehavior = "top")
-                   ),
+                   )
                    
-                 )
+                 ),
+                 actionButton(ns("download_data"), "MAJ les donn\u00e9es", class = "btn btn-primary", style = "height:50%;")
                  
              )
       )
