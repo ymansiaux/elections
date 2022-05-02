@@ -56,6 +56,8 @@ mod_observer_1_election_resultats_globaux_barplot_server <- function(id, data_el
     observe(print(election_selectionnee())
     )
     
+    observeEvent(input$pause, browser())
+    
     output$graphique_resultats <- renderGirafe({
       req(election_selectionnee())
       
@@ -77,12 +79,10 @@ mod_observer_1_election_resultats_globaux_barplot_server <- function(id, data_el
       
       
     })
-    # 
-    # 
+    
     output$graphique_abstention <- renderGirafe({
       
       req(election_selectionnee())
-      
       
       g <- graphique_resultats_election(data = data_elections$data[[election_selectionnee()]]$resultatsAbstention,
                                    x = numero_tour, y = pct, fill = numero_tour,

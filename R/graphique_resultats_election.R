@@ -5,18 +5,28 @@ graphique_resultats_election <- function(data, x, y, fill,
                                          xlab = "", ylab = "", legend_name = "",
                                          scale_fill_function = NULL) {
   
-  # browser()
   candidat <- as_string(ensym(fill))
   pct <- as_string(ensym(y))
-  data$tooltip <- glue_data(
-    data,
-    glue("{[candidat]} {sprintf('%.2f',100*[pct])}%", .open = "[", .close = "]")
-  )
+  
+  if("nb_voix" %in% colnames(data)) {
+    data$tooltip <- glue_data(
+      data,
+      glue("{[candidat]} 
+         {sprintf('%.2f',100*[pct])}%
+         {['nb_voix']} voix", .open = "[", .close = "]")
+    ) 
+  } else {
+    
+    data$tooltip <- glue_data(
+      data,
+      glue("{[candidat]} 
+         {sprintf('%.2f',100*[pct])}%"
+         , .open = "[", .close = "]")
+    )
+  }
+  
+  
   g <- data %>%
-    # mutate(tooltip = glue_data(
-    #   .,
-    #   glue("{[candidat]} {sprintf('%.2f',100*[pct])}%", .open = "[", .close = "]")
-    # )) %>% 
     ggplot(aes(x = as.factor({{x}}), y = {{y}}, fill = as.factor({{fill}}))) +
     geom_col_interactive(aes(data_id = {{x}}, tooltip = tooltip)) +
     scale_y_continuous(labels = scales::percent) 
