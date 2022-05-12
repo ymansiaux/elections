@@ -1,0 +1,13 @@
+name: elections
+title: elections
+username: y.mansiaux
+account: y.mansiaux
+server: rstudio-connect.bordeaux-it.fr
+hostUrl: https://rstudio-connect.bordeaux-it.fr/__api__
+appId: 67
+bundleId: 193
+url: https://rstudio-connect.bordeaux-it.fr/elections/
+when: 1649943362.3139
+lastSyncTime: 1649943362.31393
+asMultiple: FALSE
+asStatic: FALSE

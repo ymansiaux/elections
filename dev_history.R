@@ -6,24 +6,19 @@ usethis::use_r("_disable_autoload")
 usethis::use_build_ignore("R/_disable_autoload.R")
 
 renv::init()
+
+attachment::att_amend_desc()
 renv::status()
 renv::snapshot()
-# usethis::use_build_ignore("vignettes/occupationparkingsapp")
-# usethis::use_build_ignore("vignettes/questions")
-# usethis::use_build_ignore("vignettes/designApp")
 
-
-
-usethis::use_data_raw("parkings")
-
-usethis::use_vignette("occupationparkingsapp")
-usethis::use_vignette("questions")
 usethis::use_vignette("designApp")
 
 
+usethis::use_data_raw("donnees_geo_election_bdx")
+usethis::use_data_raw("sample_DACI_bdx")
 
 
-attachment::att_amend_desc()
+
 vignette <- FALSE
 devtools::check(document = TRUE, vignettes = vignette)
 devtools::build(vignettes = vignette)
