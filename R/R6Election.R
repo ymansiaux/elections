@@ -26,7 +26,7 @@ Election <- R6::R6Class(
     
     #' @field couleursCandidats palette de couleurs pour les candidats
     couleursCandidats = "",
-
+    
     #' @field resultatsGlobauxCommune résultats globaux commune
     resultatsGlobauxCommune = "",
     
@@ -45,6 +45,12 @@ Election <- R6::R6Class(
     #' @field resultatsAbstentionLV résultats abstention LV
     resultatsAbstentionLV = "",
     
+    #' @field cartoBV fichier sf de localisation des bureaux de vote
+    cartoBV = "",
+    
+    #' @field cartoLV fichier sf de localisation des lieux de vote
+    cartoLV = "",
+    
     #' @description
     #' Create a new occupation object.
     #' @param typeElection typeElection
@@ -60,12 +66,15 @@ Election <- R6::R6Class(
     #' @param resultatsBV resultatsBV
     #' @param resultatsAbstentionBV resultatsAbstentionBV
     #' @param resultatsAbstentionLV resultatsAbstentionLV
+    #' @param cartoBV cartoBV
+    #' @param cartoLV cartoLV
     #' @return A new `Election` object.
     
     initialize = function(typeElection = NULL, xtradataParameters = NULL, anneeElection = NULL, donneesElection = NULL, 
                           inseeElection = NULL, candidatsElection = NULL, couleursCandidats = NULL,
-                         resultatsGlobauxCommune = NULL, resultatsAbstention = NULL,
-                          resultatsLV = NULL, resultatsBV = NULL, resultatsAbstentionBV = NULL, resultatsAbstentionLV = NULL) {
+                          resultatsGlobauxCommune = NULL, resultatsAbstention = NULL,
+                          resultatsLV = NULL, resultatsBV = NULL, resultatsAbstentionBV = NULL, resultatsAbstentionLV = NULL,
+                          cartoBV = NULL, cartoLV = NULL) {
       self$typeElection <- typeElection
       self$anneeElection <- anneeElection
       self$xtradataParameters <- xtradataParameters
@@ -79,6 +88,8 @@ Election <- R6::R6Class(
       self$resultatsBV <- resultatsBV
       self$resultatsAbstentionBV <- resultatsAbstentionBV
       self$resultatsAbstentionLV <- resultatsAbstentionLV
+      self$cartoBV <- cartoBV
+      self$cartoLV <- cartoLV
       
     },
     
@@ -86,17 +97,17 @@ Election <- R6::R6Class(
     #' Interroge le WS features
     download_data = function() {
       
-      download <- try(xtradata_requete_features(
+      download_resultats <- try(xtradata_requete_features(
         key = Sys.getenv("XTRADATA_KEY"),
         typename = "EL_RESULTAT_A",
         filter = self$xtradataParameters,
         showURL = TRUE
       ))
       
-      if (inherits(download, "try-error")) {
+      if (inherits(download_resultats, "try-error")) {
         self$donneesElection <- NULL
       } else {
-        self$donneesElection <- download %>% 
+        self$donneesElection <- download_resultats %>% 
           mutate(
             date_election = as_datetime(date_evenement, tz = "Europe/Paris"),
             annee_election = year(date_election)) %>%
@@ -109,6 +120,29 @@ Election <- R6::R6Class(
           rename(nb_voix = valeur, code_insee = insee) %>%
           clean_names()
       }
+      
+      # ON NE RECUPERE LES DONNEES DE BV ET LV QUE POUR BORDEAUX POUR LE MOMENT
+      if(self$xtradataParameters$insee == "33063" & !is.null(self$donneesElection)) {
+      download_sf_bv <- try(xtradata_requete_features(
+        key = Sys.getenv("XTRADATA_KEY"),
+        typename = "EL_BUREAUVOTE_S",
+        filter = list(insee = self$xtradataParameters$insee),
+        backintime = self$donneesElection$date_election[1],
+        showURL = TRUE
+      ))
+      
+      download_sf_lv <- try(xtradata_requete_features(
+        key = Sys.getenv("XTRADATA_KEY"),
+        typename = "EL_LIEUVOTE_P",
+        filter = list(insee = self$xtradataParameters$insee),
+        backintime = self$donneesElection$date_election[1],
+        showURL = TRUE
+      ))
+      
+      if (!inherits(download_sf_bv, "try-error") & nrow(download_sf_bv)>0) self$cartoBV <- download_sf_bv
+      if (!inherits(download_sf_lv, "try-error") & nrow(download_sf_lv)>0) self$cartoLV <- download_sf_lv
+      }
+      
     },
     
     #' @description
@@ -145,15 +179,15 @@ Election <- R6::R6Class(
       
       if("id_bureau" %in% colnames(donneesElection)) {
         self$resultatsBV <- compute_resultats_elections(data = donneesElection, 
-                                    type = "participation", 
-                                    grouping_vars = c(
-                                      "nom_election", "type_election", "annee_election", 
-                                      "numero_tour", "nom_candidat", "nom", "nom_candidat_short",
-                                      "id_bureau"
-                                    )
+                                                        type = "participation", 
+                                                        grouping_vars = c(
+                                                          "nom_election", "type_election", "annee_election", 
+                                                          "numero_tour", "nom_candidat", "nom", "nom_candidat_short",
+                                                          "id_bureau"
+                                                        )
         )   %>% 
           mutate_at(vars("id_bureau"),as.character)
-
+        
       }
       
     },
@@ -184,12 +218,12 @@ Election <- R6::R6Class(
       
       if("id_bureau" %in% colnames(donneesElection)) {
         self$resultatsAbstentionBV <- compute_resultats_elections(data = donneesElection, 
-                                                        type = "abstention", 
-                                                        grouping_vars = c(
-                                                          "nom_election", "type_election", "annee_election", 
-                                                          "numero_tour",
-                                                          "id_bureau"
-                                                        )
+                                                                  type = "abstention", 
+                                                                  grouping_vars = c(
+                                                                    "nom_election", "type_election", "annee_election", 
+                                                                    "numero_tour",
+                                                                    "id_bureau"
+                                                                  )
         )   %>% 
           mutate_at(vars("id_bureau"),as.character)
         
@@ -204,12 +238,12 @@ Election <- R6::R6Class(
       
       if("nom_lieu" %in% colnames(donneesElection)) {
         self$resultatsAbstentionLV <- compute_resultats_elections(data = donneesElection, 
-                                                        type = "abstention", 
-                                                        grouping_vars = c(
-                                                          "nom_election", "type_election", "annee_election", 
-                                                          "numero_tour", 
-                                                          "nom_lieu", "id_lieu"
-                                                        )
+                                                                  type = "abstention", 
+                                                                  grouping_vars = c(
+                                                                    "nom_election", "type_election", "annee_election", 
+                                                                    "numero_tour", 
+                                                                    "nom_lieu", "id_lieu"
+                                                                  )
         )    %>% 
           mutate_at(vars("nom_lieu"),as.character)
       }

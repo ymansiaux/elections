@@ -47,7 +47,7 @@ app_server <- function( input, output, session ) {
   #######################################
   # Chargement des données au démarrage #
   #######################################
-  data_elections <- reactiveValues(data = NULL, elections_dispo = NULL)
+  data_elections <- reactiveValues(data = NULL, elections_dispo = NULL, bureaux_vote = NULL, lieux_vote = NULL)
   
   observeEvent(NULL, ignoreNULL = FALSE, ignoreInit = FALSE, once = TRUE, {
     
@@ -55,6 +55,13 @@ app_server <- function( input, output, session ) {
     
     add_notie_alert(type = "info", text = "Récupération des données ... Patience ...",
                     stay = FALSE, time = 10, position = "top", session)
+    
+    # # Récupération des bureaux de vote
+    # dat_BV <- try(xtradata_requete_features(key = Sys.getenv("XTRADATA_KEY"), typename = "EL_BUREAUVOTE_S",
+    #                                         filter = list(type_election = "Présidentielle"),
+    #                                         showURL = TRUE))
+    # 
+    # 
     
     if(light_dataset) {
       dat <-
