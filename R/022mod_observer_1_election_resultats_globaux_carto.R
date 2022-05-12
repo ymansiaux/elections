@@ -85,8 +85,12 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, data_elec
     observeEvent(input$pause, browser())
     
     observe({
-      if(!is.null(election_selectionnee())) {
+      
+      if(is.null(election_selectionnee()))  {
         
+        runjs(glue('$(\"#{ns(\"message_absence_donnees_carto\")}\").hide();'));
+        
+      } else {        
         updateRadioButtons(session,
                            inputId = "numero_scrutin",
                            choiceNames = paste("Tour", sort(unique(data_elections$data[[election_selectionnee()]]$donneesElection$numero_tour))),

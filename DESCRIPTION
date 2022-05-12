@@ -1,6 +1,6 @@
 Package: elections
 Title: Elections
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person("Yohann", "Mansiaux", , "y.mansiaux@bordeaux-metropole.fr", role = c("cre", "aut"))
 Description: Resultats des elections (historiques).
