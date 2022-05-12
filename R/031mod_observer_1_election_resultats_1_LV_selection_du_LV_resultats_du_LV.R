@@ -101,8 +101,8 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
                            choiceValues = sort(unique(data_elections$data[[election_selectionnee()]]$donneesElection$numero_tour))
         )
         
-        if(!data_elections$data[[election_selectionnee()]]$donneesElection$annee_election[1] %in% annees_elections_avec_donnees_geo | 
-           !data_elections$data[[election_selectionnee()]]$donneesElection$code_insee[1] %in% communes_elections_avec_donnees_geo) {
+        if(is.null(data_elections$data[[election_selectionnee()]]$cartoBV) | 
+           is.null(data_elections$data[[election_selectionnee()]]$cartoLV)) {
           
           runjs(glue('$(\"#{ns(\"map\")}\").addClass(\"map_with_opacity\");'));
           runjs(glue('$(\"#{ns(\"message_absence_donnees_carto\")}\").show();'));
@@ -125,8 +125,9 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
       output$myBVmap <- renderLeaflet({
         
         req(election_selectionnee())
+        req(data_elections$data[[election_selectionnee()]]$cartoLV)
         
-        popup_markers <- paste("<b>Lieu de vote</b>", elections::lieux_votes_bdx$libelle)
+        popup_markers <- paste("<b>Lieu de vote</b>", data_elections$data[[election_selectionnee()]]$cartoLV$libelle)
         
         icons <- awesomeIcons(
           icon = 'ios-close',
@@ -135,11 +136,17 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
           markerColor = color_vector()
         )
         
-        leaflet(elections::lieux_votes_bdx) %>% 
+        secteurs_votes <- data_elections$data[[election_selectionnee()]]$cartoBV %>%
+          group_by(libelle, rs_el_lieuvote_p) %>%
+          summarise(geometry = st_union(geometry)) %>%
+          ungroup()
+        
+        
+        leaflet(data_elections$data[[election_selectionnee()]]$cartoLV) %>% 
           addTiles() %>% 
           setView(zoom = 11.5, lat =44.859684, lng=-0.568365) %>% 
-          addAwesomeMarkers(popup = popup_markers, layerId = elections::lieux_votes_bdx$gid, icon = icons) %>% 
-          addPolygons( data = elections::secteurs_votes_bdx,
+          addAwesomeMarkers(popup = popup_markers, layerId = data_elections$data[[election_selectionnee()]]$cartoLV$gid, icon = icons) %>% 
+          addPolygons( data = secteurs_votes,
                        weight = 1, smoothFactor = 0.5,
                        opacity = .75, fillOpacity = .2,
                        highlightOptions = highlightOptions(color = "black", weight = 2,
@@ -165,22 +172,24 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
     
     color_vector <- reactive({
       
-      if(is.null(input$myBVmap_marker_click)) rep("blue", length(elections::lieux_votes_bdx$gid))
+      if(is.null(input$myBVmap_marker_click)) rep("blue", length(data_elections$data[[election_selectionnee()]]$cartoLV$gid))
       else {
         clicked_marker <- input$myBVmap_marker_click$id 
         
-        ifelse(elections::lieux_votes_bdx$gid == clicked_marker, "red", "blue")
+        ifelse(data_elections$data[[election_selectionnee()]]$cartoLV$gid == clicked_marker, "red", "blue")
       }
       
     })
     
     resultats_by_BV <- reactive({
-      
+      req(election_selectionnee())
+      req(data_elections$data[[election_selectionnee()]]$cartoLV)
       req(input$myBVmap_marker_click)
       
       # on récupère les bv associés au lv sélectionné
-      bv_selectionnes <- elections::bureaux_votes_bdx[elections::bureaux_votes_bdx$rs_el_lieuvote_p %in% input$myBVmap_marker_click$id, ]
-      
+      bv_selectionnes <- data_elections$data[[election_selectionnee()]]$cartoBV %>% 
+        filter(rs_el_lieuvote_p %in% input$myBVmap_marker_click$id)
+        
       data_elections$data[[election_selectionnee()]]$resultatsBV %>%
         filter(id_bureau %in% bv_selectionnes$code) %>% 
         filter(numero_tour %in% input$numero_scrutin) %>% 
@@ -194,11 +203,13 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
     
     
     resultats_by_LV <- reactive({
-      
+      req(election_selectionnee())
+      req(data_elections$data[[election_selectionnee()]]$cartoLV)
       req(input$myBVmap_marker_click)
       
       # on récupère les bv associés au lv sélectionné
-      bv_selectionnes <- elections::bureaux_votes_bdx[elections::bureaux_votes_bdx$rs_el_lieuvote_p %in% input$myBVmap_marker_click$id, ]
+      bv_selectionnes <- data_elections$data[[election_selectionnee()]]$cartoBV %>% 
+        filter(rs_el_lieuvote_p %in% input$myBVmap_marker_click$id)
       
       data_elections$data[[election_selectionnee()]]$resultatsLV %>%
         filter(id_lieu %in% unique(bv_selectionnes$rs_el_lieuvote_p)) %>% 
@@ -216,6 +227,9 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
       validate(
         need(!is.null(input$myBVmap_marker_click), "S\u00e9lectionnez 1 lieu de vote")
       )
+      
+      req(election_selectionnee())
+      req(data_elections$data[[election_selectionnee()]]$cartoLV)
       
       g <- graphique_resultats_election(data = arrange(resultats_by_BV(), nom), 
                                    x = nom_candidat_short, y = pct,
@@ -240,8 +254,10 @@ mod_observer_1_election_selection_LV_sur_carte_server <- function(id, data_elect
       
       validate(
         need(!is.null(input$myBVmap_marker_click), "S\u00e9lectionnez 1 lieu de vote")
-        
       )
+      
+      req(election_selectionnee())
+      req(data_elections$data[[election_selectionnee()]]$cartoLV)
       
       g <- graphique_resultats_election(data = arrange(resultats_by_LV(), nom),
                                    x = nom_candidat_short, y = pct, fill = nom_candidat,

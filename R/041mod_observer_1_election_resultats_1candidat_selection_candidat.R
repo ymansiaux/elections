@@ -76,16 +76,6 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_ui <- function(id
                           flex-direction : column;
                           justify-content: space-between",
                  
-                 # div(class ="title_section title_container",
-                 #     div(icon(name="democrat", class = "icon_title")),
-                 #     div(h2("R\u00e9sultats par BV", class = "text-uppercase")),
-                 #     div(icon(name="democrat", class = "icon_title"))
-                 # ),
-                 # 
-                 # div(
-                 #   plotOutput(ns("barplot_BV"))
-                 # ),
-                 
                  div(class ="title_section title_container",
                      div(icon(name="democrat", class = "icon_title")),
                      div(h2("R\u00e9sultats par LV", class = "text-uppercase")),
@@ -118,7 +108,7 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
       if(is.null(election_selectionnee()))  {
         
         runjs(glue('$(\"#{ns(\"message_absence_donnees_carto\")}\").hide();'));
- 
+        
       } else {
         
         updateSelectizeInput(session,
@@ -127,10 +117,10 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
                              selected = sort(unique(data_elections$data[[election_selectionnee()]]$donneesElection$nom_candidat))[1],
                              server = TRUE
         )
-
         
-        if(!data_elections$data[[election_selectionnee()]]$donneesElection$annee_election[1] %in% annees_elections_avec_donnees_geo | 
-           !data_elections$data[[election_selectionnee()]]$donneesElection$code_insee[1] %in% communes_elections_avec_donnees_geo) {
+        
+        if(is.null(data_elections$data[[election_selectionnee()]]$cartoBV) | 
+           is.null(data_elections$data[[election_selectionnee()]]$cartoLV)) {
           
           runjs(glue('$(\"#{ns(\"map\")}\").addClass(\"map_with_opacity\");'));
           runjs(glue('$(\"#{ns(\"message_absence_donnees_carto\")}\").show();'));
@@ -143,7 +133,7 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
         }
       }
     })
-
+    
     observeEvent(input$candidat, {
       #whereami::cat_where(where = whereami::whereami())
       
@@ -164,72 +154,88 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
       }
     })
     
-
+    
     resultats_elections_candidat <- reactive({
-
+      
       req(input$candidat %in% data_elections$data[[election_selectionnee()]]$donneesElection$nom_candidat)
       req(input$candidat)
       req(input$numero_scrutin)
-
+      
       list("resultats_BV" = data_elections$data[[election_selectionnee()]]$resultatsBV %>%
              filter(nom_candidat %in% input$candidat & numero_tour %in% input$numero_scrutin),
-
+           
            "resultats_LV" = data_elections$data[[election_selectionnee()]]$resultatsLV %>%
              filter(nom_candidat %in% input$candidat & numero_tour %in% input$numero_scrutin)
-
-
-
+           
+           
+           
       )
-
+      
     })
     
     
     donnees_geo_selectionnees <- reactive({
       if(input$niveau_geo_restitution == "id_bureau") {
-        elections::bureaux_votes_bdx
+        
+        data_elections$data[[election_selectionnee()]]$cartoBV
+        
       } else {
-        elections::bureaux_votes_bdx %>%
-          group_by(libelle, rs_el_lieuvote_p) %>%
-          summarise(geometry = st_union(geometry)) %>%
-          ungroup()
+        
+        if(!is.null(data_elections$data[[election_selectionnee()]]$cartoBV)) {
+          
+          data_elections$data[[election_selectionnee()]]$cartoBV %>%
+            group_by(libelle, rs_el_lieuvote_p) %>%
+            summarise(geometry = st_union(geometry)) %>%
+            ungroup()
+          
+        } else {
+          NULL
+        }
       }
-
+      
     })
     
     donnees_cartos <- reactive({
+      
+      req(election_selectionnee())
+      req(data_elections$data[[election_selectionnee()]]$cartoBV)
+      
       if(input$niveau_geo_restitution == "id_bureau") {
         merge(donnees_geo_selectionnees(),
               resultats_elections_candidat()$resultats_BV,
               by.x = "code", by.y = input$niveau_geo_restitution)
-
+        
       } else {
-
+        
         merge(donnees_geo_selectionnees(),
               resultats_elections_candidat()$resultats_LV,
               by.x = "rs_el_lieuvote_p", by.y = input$niveau_geo_restitution)
-
+        
       }
-
+      
     })
     
     output$carto_resultats <- renderLeaflet({
-
+      
       validate(
         need(!is.null(election_selectionnee()), "S\u00e9lectionnez 1 \u00e9lection")
       )
       
+      req(election_selectionnee())
+      req(data_elections$data[[election_selectionnee()]]$cartoBV)
+      
       donnees_carte <- donnees_cartos() %>%
         mutate(pct = pct * 100)
-
+      
       popup <-  paste0("<strong>Zone: </strong>",
                        donnees_carte$libelle,
                        "<br><strong>Candidat: </strong>",
                        donnees_carte$nom_candidat,
                        "<br><strong>% recueillis: </strong>",
                        sprintf("%.2f",donnees_carte$pct))
-     
-     pal <- colorNumeric(palette = "YlOrRd", domain = donnees_carte$pct)
-   
+      
+      pal <- colorNumeric(palette = "YlOrRd", domain = donnees_carte$pct)
+      
       leaflet(donnees_carte) %>%
         addTiles() %>%
         setView(zoom = 11.5, lat = 44.859684, lng = -0.568365) %>%
@@ -241,29 +247,34 @@ mod_observer_1_election_resultats_1candidat_selection_candidat_server <- functio
                                                                  bringToFront = TRUE)) %>%
         addLegend(pal = pal, values = ~pct, group = "circles", position = "topright")
     })
-
+    
     output$barplot_LV <- renderGirafe({
+      
       validate(
         need(!is.null(election_selectionnee()), "S\u00e9lectionnez 1 \u00e9lection")
       )
+      
+      req(election_selectionnee())
+      req(data_elections$data[[election_selectionnee()]]$cartoBV)
+      
       g <- graphique_resultats_election(data = resultats_elections_candidat()$resultats_LV,
-                                   x = nom_lieu, y = pct, fill = nom_lieu,
-                                   facet = FALSE,
-                                   theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
-                                                                       light_font_family = "Nunito",
-                                                                       axis.text.x = element_blank(),
-                                                                       legend.position = "none",
-                                                                       axis_title_size = 15,
-                                                                       axis_text_size = 13,
-                                                                       legend_text_size = 10),
-                                   title = "", subtitle = "", caption = "Passer la souris sur le graphe pour avoir les valeurs", 
-                                   xlab = "", ylab = "Vote (%)", legend_name = "LV",
-                                   scale_fill_function = scale_color_discrete_c4a_cat(palette = "harmonic"))
+                                        x = nom_lieu, y = pct, fill = nom_lieu,
+                                        facet = FALSE,
+                                        theme_fun = theme_bdxmetro_dark_mod(regular_font_family = "Nunito",
+                                                                            light_font_family = "Nunito",
+                                                                            axis.text.x = element_blank(),
+                                                                            legend.position = "none",
+                                                                            axis_title_size = 15,
+                                                                            axis_text_size = 13,
+                                                                            legend_text_size = 10),
+                                        title = "", subtitle = "", caption = "Passer la souris sur le graphe pour avoir les valeurs", 
+                                        xlab = "", ylab = "Vote (%)", legend_name = "LV",
+                                        scale_fill_function = scale_color_discrete_c4a_cat(palette = "harmonic"))
       
       girafe(
         ggobj = g, 
       )
-
+      
     })
     
     

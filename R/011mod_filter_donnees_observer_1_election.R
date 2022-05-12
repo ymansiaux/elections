@@ -46,7 +46,7 @@ mod_filter_donnees_observer_1_election_ui <- function(id){
                    )
                    
                  ),
-                 actionButton(ns("download_data"), "MAJ les donn\u00e9es", class = "btn btn-primary", style = "height:50%;")
+                 actionButton(ns("download_data"), "MAJ des donn\u00e9es", class = "btn btn-primary", style = "height:50%;")
                  
              )
       )
