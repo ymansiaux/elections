@@ -34,6 +34,10 @@ utilisee ensuite par classe Occupation et Saturation
 \item{\code{resultatsAbstentionBV}}{résultats abstention BV}
 
 \item{\code{resultatsAbstentionLV}}{résultats abstention LV}
+
+\item{\code{cartoBV}}{fichier sf de localisation des bureaux de vote}
+
+\item{\code{cartoLV}}{fichier sf de localisation des lieux de vote}
 }
 \if{html}{\out{</div>}}
 }
@@ -70,7 +74,9 @@ Create a new occupation object.
   resultatsLV = NULL,
   resultatsBV = NULL,
   resultatsAbstentionBV = NULL,
-  resultatsAbstentionLV = NULL
+  resultatsAbstentionLV = NULL,
+  cartoBV = NULL,
+  cartoLV = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -102,6 +108,10 @@ Create a new occupation object.
 \item{\code{resultatsAbstentionBV}}{resultatsAbstentionBV}
 
 \item{\code{resultatsAbstentionLV}}{resultatsAbstentionLV}
+
+\item{\code{cartoBV}}{cartoBV}
+
+\item{\code{cartoLV}}{cartoLV}
 }
 \if{html}{\out{</div>}}
 }

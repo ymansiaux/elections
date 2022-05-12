@@ -93,8 +93,8 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, data_elec
                            choiceValues = sort(unique(data_elections$data[[election_selectionnee()]]$donneesElection$numero_tour))
         )
         
-        if(!data_elections$data[[election_selectionnee()]]$donneesElection$annee_election[1] %in% annees_elections_avec_donnees_geo | 
-           !data_elections$data[[election_selectionnee()]]$donneesElection$code_insee[1] %in% communes_elections_avec_donnees_geo) {
+        if(is.null(data_elections$data[[election_selectionnee()]]$cartoBV) | 
+           is.null(data_elections$data[[election_selectionnee()]]$cartoLV)) {
           
           runjs(glue('$(\"#{ns(\"map\")}\").addClass(\"map_with_opacity\");'));
           runjs(glue('$(\"#{ns(\"message_absence_donnees_carto\")}\").show();'));
@@ -111,24 +111,30 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, data_elec
     
     donnees_geo_selectionnees <- reactive({
       if(input$niveau_geo_restitution == "id_bureau") {
-        elections::bureaux_votes_bdx
+        
+        data_elections$data[[election_selectionnee()]]$cartoBV
+        
       } else {
-        elections::bureaux_votes_bdx %>%
-          group_by(libelle, rs_el_lieuvote_p) %>%
-          summarise(geometry = st_union(geometry)) %>%
-          ungroup()
+        
+        if(!is.null(data_elections$data[[election_selectionnee()]]$cartoBV)) {
+          
+          data_elections$data[[election_selectionnee()]]$cartoBV %>%
+            group_by(libelle, rs_el_lieuvote_p) %>%
+            summarise(geometry = st_union(geometry)) %>%
+            ungroup()
+          
+        } else {
+          NULL
+        }
       }
       
     })
     
     
-    # CARTO OK BV
     donnees_carto_vainqueur_by_unite_geo <- reactive({
-      ## FONCTIONNE TB AVEC LES MUNICIPALES DE 2020
-      ## VOIR UNE FOIS QUE L'HISTO SERA DISPO
-      # browser()
       
       req(election_selectionnee())
+      req(donnees_geo_selectionnees())
       req(input$numero_scrutin)
       req(input$niveau_geo_restitution)
       req(input$type_resultats)
@@ -146,32 +152,6 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, data_elec
       )
       
       resultats_elections <- data_elections$data[[election_selectionnee()]][[source_resultats]]
-      
-      # 
-      # resultats_elections <- data_elections$data[[election_selectionnee()]]resultatsAbstentionLV %>% 
-      #   filter(numero_tour == input$numero_scrutin)
-      
-      # if(input$niveau_geo_restitution == "id_bureau" & input$type_resultats == "resultats") {
-      #   
-      #   resultats_elections <- data_elections$data[[election_selectionnee()]]$resultatsBV %>% 
-      #     filter(numero_tour == input$numero_scrutin)
-      #   
-      # } else if (input$niveau_geo_restitution == "id_bureau" & input$type_resultats == "abstention"){
-      #   
-      #   resultats_elections <- data_elections$data[[election_selectionnee()]]$resultatsAbstentionBV %>% 
-      #     filter(numero_tour == input$numero_scrutin)
-      #   
-      # } else if (input$niveau_geo_restitution != "id_bureau" & input$type_resultats == "resultats") {
-      #   
-      #   resultats_elections <-  data_elections$data[[election_selectionnee()]]$resultatsLV %>% 
-      #     filter(numero_tour == input$numero_scrutin)
-      #   
-      # } else {
-      #   
-      #   resultats_elections <- data_elections$data[[election_selectionnee()]]$resultatsAbstentionLV %>% 
-      #     filter(numero_tour == input$numero_scrutin)
-      # }
-      # 
       
       winner <- resultats_elections %>%
         filter(numero_tour %in% input$numero_scrutin) %>% 
@@ -209,6 +189,8 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, data_elec
       #####################################
       # création de la palette de couleur #
       ####################################
+      req(donnees_carto_vainqueur_by_unite_geo())
+      req(donnees_geo_selectionnees())
       
       donnees_geo_winner <-
         donnees_carto_vainqueur_by_unite_geo() %>%
@@ -224,7 +206,6 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, data_elec
       if(input$type_resultats == "resultats") {
         
         popup <-  paste0("<strong>Zone: </strong>",
-                         # donnees_geo_winner$libelle,
                          zone,
                          "<br><strong>Candidat: </strong>",
                          donnees_geo_winner$nom_candidat,
@@ -245,7 +226,6 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, data_elec
         pal <- colorNumeric(palette = "YlOrRd", domain = donnees_geo_winner$pct)
         
         popup <-  paste0("<strong>Zone: </strong>",
-                         # donnees_geo_winner$libelle,
                          zone,
                          "<br><strong>Abstention (%): </strong>",
                          sprintf("%.2f",donnees_geo_winner$pct))
@@ -264,116 +244,8 @@ mod_observer_1_election_resultats_globaux_carto_server <- function(id, data_elec
       
     })
     
-    
   })
 }
-
-
-
-
-
-# election_selectionnee_tour_selectionne <- reactive({
-#   
-#   req(input$numero_scrutin)
-#   
-#   data_elections$data[[election_selectionnee()]]$donneesElection %>%
-#     filter(numero_tour %in% input$numero_scrutin)
-# })
-# 
-#### CARTO RESULTATS DETAILLES
-# 
-# ,
-# input$niveau_geo_restitution
-# 
-# donnees_geo_selectionnees <- reactive({
-#   if(input$niveau_geo_restitution == "id_bureau") {
-#     elections::bureaux_votes_bdx
-#   } else {
-#     elections::bureaux_votes_bdx %>% 
-#       group_by(libelle, rs_el_lieuvote_p) %>% 
-#       summarise(geometry = st_union(geometry)) %>% 
-#       ungroup()
-#   }
-#   
-# })
-
-
-## CARTO OK BV
-# donnees_carto_vainqueur_by_unite_geo <- reactive({ 
-#   ## FONCTIONNE TB AVEC LES MUNICIPALES DE 2020
-#   ## VOIR UNE FOIS QUE L'HISTO SERA DISPO
-#   resultats_elections <-  compute_resultats_elections(data = election_selectionnee_tour_selectionne_d(),
-#                                        type = "participation",
-#                                        grouping_vars = c(
-#                                          "nom_election", "type_election", "annee_election",
-#                                          "nom_candidat", "nom", "nom_candidat_short",
-#                                          "numero_tour", 
-#                                          input$niveau_geo_restitution)) %>% 
-#     mutate_at(vars(input$niveau_geo_restitution),as.character)
-#   
-#   candidats_unique <- sort(unique(resultats_elections$nom_candidat))
-#   palette <- pal_npg("nrc")(length(candidats_unique))
-#   df_couleurs_candidats <- data.frame("nom_candidat" = candidats_unique, "couleur" = palette)
-#   
-#   winner <- resultats_elections %>% 
-#     group_by(!!!syms(c("numero_tour", input$niveau_geo_restitution))) %>% 
-#     mutate(pctmax = max(pct)) %>%
-#     filter(pctmax == pct) %>% 
-#     ungroup()
-#   
-#   if(input$niveau_geo_restitution == "id_bureau") {
-#     donnees_geo_winner <- merge(donnees_geo_selectionnees(),
-#                                 winner,
-#                                 by.x = "code", by.y = input$niveau_geo_restitution)
-#     
-#   } else {
-#     donnees_geo_winner <- merge(donnees_geo_selectionnees(),
-#                                 winner,
-#                                 by.x = "rs_el_lieuvote_p", by.y = input$niveau_geo_restitution)
-#     
-#   }
-#   
-#   merge(donnees_geo_winner, df_couleurs_candidats, by = "nom_candidat")
-#   
-# })
-# 
-# output$carto_resultats <- renderLeaflet({
-#####################################
-# création de la palette de couleur #
-####################################
-
-# quels sont les candidats vainqueurs ?
-# candidats_vainqueurs_couleurs <- data.frame(
-#   "nom_candidat" = sort(unique(donnees_carto_vainqueur_by_unite_geo()$nom_candidat)),
-#   "couleur" = viridis::viridis_pal()(length(unique(donnees_carto_vainqueur_by_unite_geo()$nom_candidat))))
-# 
-# donnees_geo_winner <- 
-#  donnees_carto_vainqueur_by_unite_geo() %>% 
-#    mutate(pct = pct * 100)
-# 
-
-# donnees_geo_selectionnees()[!donnees_geo_selectionnees()$code%in% data$id_bureau,]
-
-#   popup <-  paste0("<strong>Zone: </strong>",
-#                    donnees_geo_winner$libelle,
-#                    "<br><strong>Candidat: </strong>",
-#                    donnees_geo_winner$nom_candidat,
-#                    "<br><strong>% recueillis: </strong>",
-#                    sprintf("%.2f",donnees_geo_winner$pct))
-#   
-#   leaflet(donnees_geo_winner) %>% 
-#     addTiles() %>% 
-#     setView(zoom = 11.5, lat = 44.859684, lng = -0.568365) %>%
-#     addPolygons(fillColor = ~couleur, color = "grey",
-#                 weight = 1, smoothFactor = 0.5,
-#                 opacity = 1, fillOpacity = .8,
-#                 popup = popup,
-#                 highlightOptions = leaflet::highlightOptions(color = "black", weight = 2,
-#                                                              bringToFront = TRUE))
-# })
-
-# })
-# }
 
 ## To be copied in the UI
 # mod_observer_1_election_resultats_carto_candidat_vainqueur_ui("observer_1_election_resultats_carto_candidat_vainqueur_ui_1")
