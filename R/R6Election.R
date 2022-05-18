@@ -111,6 +111,7 @@ Election <- R6::R6Class(
           mutate(
             date_election = as_datetime(date_evenement, tz = "Europe/Paris"),
             annee_election = year(date_election)) %>%
+          filter(annee_election == self$anneeElection) %>% 
           mutate(prenom = get_first_name(nom_candidat)) %>%
           mutate(nom = get_last_name(nom_candidat, prenom)) %>%
           mutate(nom = ifelse(nom == "", prenom, nom)) %>%
@@ -123,24 +124,24 @@ Election <- R6::R6Class(
       
       # ON NE RECUPERE LES DONNEES DE BV ET LV QUE POUR BORDEAUX POUR LE MOMENT
       if(self$xtradataParameters$insee == "33063" & !is.null(self$donneesElection)) {
-      download_sf_bv <- try(xtradata_requete_features(
-        key = Sys.getenv("XTRADATA_KEY"),
-        typename = "EL_BUREAUVOTE_S",
-        filter = list(insee = self$xtradataParameters$insee),
-        backintime = self$donneesElection$date_election[1],
-        showURL = TRUE
-      ))
-      
-      download_sf_lv <- try(xtradata_requete_features(
-        key = Sys.getenv("XTRADATA_KEY"),
-        typename = "EL_LIEUVOTE_P",
-        filter = list(insee = self$xtradataParameters$insee),
-        backintime = self$donneesElection$date_election[1],
-        showURL = TRUE
-      ))
-      
-      if (!inherits(download_sf_bv, "try-error") & nrow(download_sf_bv)>0) self$cartoBV <- download_sf_bv
-      if (!inherits(download_sf_lv, "try-error") & nrow(download_sf_lv)>0) self$cartoLV <- download_sf_lv
+        download_sf_bv <- try(xtradata_requete_features(
+          key = Sys.getenv("XTRADATA_KEY"),
+          typename = "EL_BUREAUVOTE_S",
+          filter = list(insee = self$xtradataParameters$insee),
+          backintime = self$donneesElection$date_election[1],
+          showURL = TRUE
+        ))
+        
+        download_sf_lv <- try(xtradata_requete_features(
+          key = Sys.getenv("XTRADATA_KEY"),
+          typename = "EL_LIEUVOTE_P",
+          filter = list(insee = self$xtradataParameters$insee),
+          backintime = self$donneesElection$date_election[1],
+          showURL = TRUE
+        ))
+        
+        if (!inherits(download_sf_bv, "try-error") & nrow(download_sf_bv)>0) self$cartoBV <- download_sf_bv
+        if (!inherits(download_sf_lv, "try-error") & nrow(download_sf_lv)>0) self$cartoLV <- download_sf_lv
       }
       
     },
@@ -260,8 +261,9 @@ createR6Election <- function(dat, type_elections, annee_evenement, code_insee) {
   
   filterXtradata <- list(
     "type_election" = unique(donneesElection$type_election),
-    "insee" = unique(donneesElection$insee),
-    "nom_election" = list("$in" = as.list(unique(donneesElection$nom_election)))
+    "insee" = unique(donneesElection$insee)#,
+    # "date_evenement" = list("$in" = as.list(unique(donneesElection$date_evenement ))
+    # )
   )
   
   Election$new(

@@ -5,9 +5,9 @@ account: y.mansiaux
 server: rstudio-connect.bordeaux-it.fr
 hostUrl: https://rstudio-connect.bordeaux-it.fr/__api__
 appId: 67
-bundleId: 194
+bundleId: 202
 url: https://rstudio-connect.bordeaux-it.fr/elections/
-when: 1651502585.06644
-lastSyncTime: 1651502585.06646
+when: 1652878710.0894
+lastSyncTime: 1652878710.08943
 asMultiple: FALSE
 asStatic: FALSE
