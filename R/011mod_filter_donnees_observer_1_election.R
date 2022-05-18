@@ -150,7 +150,6 @@ mod_filter_donnees_observer_1_election_server <- function(id, data_elections, rv
       # appel xtradata pour télécharger les données
       
       if(is.null(data_elections$data[[name_election]]$donneesElection)) {
-        # browser()
         # Telechargement des données
         data_elections$data[[name_election]]$download_data()
         
